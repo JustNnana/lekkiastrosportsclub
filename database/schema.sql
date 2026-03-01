@@ -322,6 +322,18 @@ CREATE TABLE IF NOT EXISTS notifications (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
+--  PASSWORD RESETS
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS password_resets (
+    user_id    INT UNSIGNED NOT NULL PRIMARY KEY,
+    token      VARCHAR(64)  NOT NULL,
+    expires_at DATETIME     NOT NULL,
+    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ============================================================
 --  AUDIT LOG
 -- ============================================================
 
