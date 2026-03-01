@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php --version)",
+      "Bash(composer --version)",
+      "Bash(where.exe php)",
+      "Bash(where.exe composer)"
+    ]
+  }
+}
