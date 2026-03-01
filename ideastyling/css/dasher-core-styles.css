@@ -1,0 +1,1211 @@
+/**
+ * GateWey - Dasher UI Core Styles
+ * Main component styling based on Dasher UI design system
+ */
+
+/* ===== BASE STYLES ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: var(--theme-transition);
+}
+
+/* ===== iOS ZOOM FIX ===== */
+/* Prevent iOS Safari from auto-zooming on input focus */
+/* CRITICAL: Must be 16px or larger to prevent iOS auto-zoom */
+input,
+select,
+textarea,
+button[type="submit"],
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="search"],
+input[type="url"],
+input[type="file"],
+.form-control,
+.form-select,
+.form-textarea {
+  font-size: 16px !important;
+  -webkit-text-size-adjust: 100% !important;
+}
+
+/* Override any specific form control sizes - keep them at 16px minimum */
+.form-control:not(.form-control-sm):not(.form-control-lg),
+.form-select:not(.form-select-sm):not(.form-select-lg),
+.form-textarea:not(.form-control-sm):not(.form-control-lg) {
+  font-size: 16px !important;
+  min-height: 44px !important; /* iOS touch target minimum */
+}
+
+/* Keep labels at the design system size */
+label,
+.form-label,
+.form-help,
+small {
+  font-size: var(--font-size-sm) !important;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-4);
+}
+
+h1 { font-size: var(--font-size-5xl); }
+h2 { font-size: var(--font-size-4xl); }
+h3 { font-size: var(--font-size-3xl); }
+h4 { font-size: var(--font-size-2xl); }
+h5 { font-size: var(--font-size-xl); }
+h6 { font-size: var(--font-size-lg); }
+
+p {
+  margin-bottom: var(--spacing-4);
+  color: var(--text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+a:hover {
+  color: var(--text-link-hover);
+}
+
+/* ===== LAYOUT ===== */
+.main-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--bg-navbar);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-xs);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  z-index: 1030;
+  padding: 0 var(--spacing-6);
+  display: flex;
+  align-items: center;
+  transition: var(--theme-transition);
+}
+
+.navbar-brand {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  margin-left: auto;
+}
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  transition: var(--theme-transition);
+  z-index: 1020;
+  padding: var(--spacing-6) 0;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-item {
+  margin-bottom: var(--spacing-1);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-6);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition-fast);
+  border-radius: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.sidebar-link:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.sidebar-link.active {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border-right: 3px solid var(--primary);
+}
+
+.sidebar-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Content Area */
+.content {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--navbar-height);
+  padding: var(--spacing-8);
+  min-height: calc(100vh - var(--navbar-height));
+  background-color: var(--bg-primary);
+  transition: var(--theme-transition);
+}
+
+.content-header {
+  margin-bottom: var(--spacing-8);
+}
+
+.content-title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-2);
+}
+
+.content-subtitle {
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  margin-bottom: 0;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-xs);
+  transition: var(--theme-transition);
+  margin-bottom: var(--spacing-6);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--spacing-5) var(--spacing-6);
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.card-body {
+  padding: var(--spacing-6);
+}
+
+.card-footer {
+  background-color: transparent;
+  border-top: 1px solid var(--border-color);
+  padding: var(--spacing-5) var(--spacing-6);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+/* ===== TABLES ===== */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0;
+  color: var(--text-primary);
+  background-color: transparent;
+}
+
+.table thead th {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: var(--spacing-4) var(--spacing-5);
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+  line-height: 1.2;
+}
+
+.table tbody td {
+  padding: var(--spacing-4) var(--spacing-5);
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  vertical-align: middle;
+}
+
+.table tbody tr:hover {
+  background-color: var(--bg-hover);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Table responsive wrapper */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ===== FORMS ===== */
+.form-group {
+  margin-bottom: var(--spacing-5);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--spacing-2);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--border-radius);
+  transition: var(--transition-fast);
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: var(--border-input-focus);
+  box-shadow: 0 0 0 3px rgba(0, 167, 111, 0.1);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23637381' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-3) center;
+  background-size: 16px 12px;
+  padding-right: var(--spacing-10);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-5);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.5;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition-fast);
+  outline: none;
+  min-height: 40px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  color: white;
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-600);
+  border-color: var(--primary-600);
+}
+
+.btn-secondary {
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-hover);
+}
+
+.btn-outline-primary {
+  color: var(--primary);
+  background-color: transparent;
+  border-color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+  color: white;
+  background-color: var(--primary);
+}
+
+.btn-success {
+  color: white;
+  background-color: var(--success);
+  border-color: var(--success);
+}
+
+.btn-success:hover {
+  background-color: var(--success-600);
+}
+
+.btn-danger {
+  color: white;
+  background-color: var(--danger);
+  border-color: var(--danger);
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-600);
+}
+
+.btn-warning {
+  color: var(--gray-900);
+  background-color: var(--warning);
+  border-color: var(--warning);
+}
+
+.btn-warning:hover {
+  background-color: var(--warning-600);
+}
+
+.btn-info {
+  color: white;
+  background-color: var(--info);
+  border-color: var(--info);
+}
+
+.btn-info:hover {
+  background-color: var(--info-600);
+}
+
+/* Button sizes */
+.btn-sm {
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--font-size-xs);
+  min-height: 32px;
+}
+
+.btn-lg {
+  padding: var(--spacing-4) var(--spacing-6);
+  font-size: var(--font-size-base);
+  min-height: 48px;
+}
+
+/* ===== BADGES ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  border-radius: var(--border-radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-primary {
+  color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+.badge-success {
+  color: var(--success);
+  background-color: var(--success-light);
+}
+
+.badge-danger {
+  color: var(--danger);
+  background-color: var(--danger-light);
+}
+
+.badge-warning {
+  color: var(--warning-800);
+  background-color: var(--warning-light);
+}
+
+.badge-info {
+  color: var(--info);
+  background-color: var(--info-light);
+}
+
+.badge-secondary {
+  color: var(--text-secondary);
+  background-color: var(--bg-tertiary);
+}
+
+/* ===== ALERTS ===== */
+.alert {
+  padding: var(--spacing-4) var(--spacing-5);
+  margin-bottom: var(--spacing-5);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+}
+
+.alert-primary {
+  color: var(--primary-800);
+  background-color: var(--primary-light);
+  border-color: var(--primary-200);
+}
+
+.alert-success {
+  color: var(--success-800);
+  background-color: var(--success-light);
+  border-color: var(--success-200);
+}
+
+.alert-danger {
+  color: var(--danger-800);
+  background-color: var(--danger-light);
+  border-color: var(--danger-200);
+}
+
+.alert-warning {
+  color: var(--warning-800);
+  background-color: var(--warning-light);
+  border-color: var(--warning-200);
+}
+
+.alert-info {
+  color: var(--info-800);
+  background-color: var(--info-light);
+  border-color: var(--info-200);
+}
+
+/* ===== DROPDOWNS ===== */
+.dropdown-menu {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-2) 0;
+  min-width: 180px;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-4);
+  color: var(--text-primary);
+  text-decoration: none;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  font-size: var(--font-size-sm);
+  transition: var(--transition-fast);
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-hover);
+  color: var(--primary);
+}
+
+.dropdown-divider {
+  height: 0;
+  margin: var(--spacing-2) 0;
+  border-top: 1px solid var(--border-color);
+}
+
+/* ===== MODALS ===== */
+.modal-backdrop {
+  background-color: var(--bg-overlay);
+}
+
+.modal-content {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+}
+
+.modal-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--spacing-6);
+}
+
+.modal-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.modal-body {
+  padding: var(--spacing-6);
+  color: var(--text-primary);
+}
+
+.modal-footer {
+  background-color: transparent;
+  border-top: 1px solid var(--border-color);
+  padding: var(--spacing-6);
+  display: flex;
+  gap: var(--spacing-3);
+  justify-content: flex-end;
+}
+
+/* ===== THEME TOGGLE ===== */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-full);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-size: var(--font-size-lg);
+}
+
+.theme-toggle:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--primary);
+}
+
+/* ===== PAGINATION ===== */
+.pagination {
+  display: flex;
+  gap: var(--spacing-1);
+  align-items: center;
+}
+
+.page-item {
+  list-style: none;
+}
+
+.page-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  transition: var(--transition-fast);
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.page-link:hover {
+  background-color: var(--bg-hover);
+  color: var(--primary);
+}
+
+.page-item.active .page-link {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.page-item.disabled .page-link {
+  color: var(--text-muted);
+  background-color: var(--bg-tertiary);
+  cursor: not-allowed;
+}
+
+/* ===== STATUS INDICATORS ===== */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--border-radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-active {
+  color: var(--success-700);
+  background-color: var(--success-light);
+}
+
+.status-active::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background-color: var(--success);
+  border-radius: var(--border-radius-full);
+}
+
+.status-inactive {
+  color: var(--danger-700);
+  background-color: var(--danger-light);
+}
+
+.status-inactive::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background-color: var(--danger);
+  border-radius: var(--border-radius-full);
+}
+
+.status-pending {
+  color: var(--warning-700);
+  background-color: var(--warning-light);
+}
+
+.status-pending::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background-color: var(--warning);
+  border-radius: var(--border-radius-full);
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.fw-light { font-weight: var(--font-weight-light); }
+.fw-normal { font-weight: var(--font-weight-normal); }
+.fw-medium { font-weight: var(--font-weight-medium); }
+.fw-semibold { font-weight: var(--font-weight-semibold); }
+.fw-bold { font-weight: var(--font-weight-bold); }
+
+.text-primary { color: var(--primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-success { color: var(--success) !important; }
+.text-danger { color: var(--danger) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-info { color: var(--info) !important; }
+.text-muted { color: var(--text-muted) !important; }
+
+.bg-primary { background-color: var(--primary) !important; }
+.bg-secondary { background-color: var(--bg-secondary) !important; }
+.bg-success { background-color: var(--success) !important; }
+.bg-danger { background-color: var(--danger) !important; }
+.bg-warning { background-color: var(--warning) !important; }
+.bg-info { background-color: var(--info) !important; }
+
+/* Spacing utilities */
+.m-0 { margin: 0 !important; }
+.m-1 { margin: var(--spacing-1) !important; }
+.m-2 { margin: var(--spacing-2) !important; }
+.m-3 { margin: var(--spacing-3) !important; }
+.m-4 { margin: var(--spacing-4) !important; }
+.m-5 { margin: var(--spacing-5) !important; }
+.m-6 { margin: var(--spacing-6) !important; }
+
+.p-0 { padding: 0 !important; }
+.p-1 { padding: var(--spacing-1) !important; }
+.p-2 { padding: var(--spacing-2) !important; }
+.p-3 { padding: var(--spacing-3) !important; }
+.p-4 { padding: var(--spacing-4) !important; }
+.p-5 { padding: var(--spacing-5) !important; }
+.p-6 { padding: var(--spacing-6) !important; }
+
+.mb-0 { margin-bottom: 0 !important; }
+.mb-1 { margin-bottom: var(--spacing-1) !important; }
+.mb-2 { margin-bottom: var(--spacing-2) !important; }
+.mb-3 { margin-bottom: var(--spacing-3) !important; }
+.mb-4 { margin-bottom: var(--spacing-4) !important; }
+.mb-5 { margin-bottom: var(--spacing-5) !important; }
+.mb-6 { margin-bottom: var(--spacing-6) !important; }
+
+.mt-0 { margin-top: 0 !important; }
+.mt-1 { margin-top: var(--spacing-1) !important; }
+.mt-2 { margin-top: var(--spacing-2) !important; }
+.mt-3 { margin-top: var(--spacing-3) !important; }
+.mt-4 { margin-top: var(--spacing-4) !important; }
+.mt-5 { margin-top: var(--spacing-5) !important; }
+.mt-6 { margin-top: var(--spacing-6) !important; }
+
+/* Display utilities */
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+.d-inline { display: inline !important; }
+.d-inline-block { display: inline-block !important; }
+
+/* Flexbox utilities */
+.justify-content-start { justify-content: flex-start !important; }
+.justify-content-end { justify-content: flex-end !important; }
+.justify-content-center { justify-content: center !important; }
+.justify-content-between { justify-content: space-between !important; }
+
+.align-items-start { align-items: flex-start !important; }
+.align-items-end { align-items: flex-end !important; }
+.align-items-center { align-items: center !important; }
+
+/* Border radius utilities */
+.rounded { border-radius: var(--border-radius) !important; }
+.rounded-sm { border-radius: var(--border-radius-sm) !important; }
+.rounded-lg { border-radius: var(--border-radius-lg) !important; }
+.rounded-xl { border-radius: var(--border-radius-xl) !important; }
+.rounded-full { border-radius: var(--border-radius-full) !important; }
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+    z-index: 1050;
+  }
+  
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  
+  .content {
+    margin-left: 0;
+    padding: var(--spacing-4);
+  }
+  
+  .navbar {
+    padding: 0 var(--spacing-4);
+  }
+  
+  .content-title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .card-body {
+    padding: var(--spacing-4);
+  }
+  
+  .table-responsive {
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 576px) {
+  .content {
+    padding: var(--spacing-3);
+  }
+  
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding: var(--spacing-4);
+  }
+  
+  .btn {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-xs);
+  }
+  
+  .content-title {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus styles for accessibility */
+.btn:focus,
+.form-control:focus,
+.sidebar-link:focus,
+.page-link:focus,
+.theme-toggle:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border-color: #000000;
+    --text-primary: #000000;
+  }
+  
+  [data-theme="dark"] {
+    --border-color: #ffffff;
+    --text-primary: #ffffff;
+  }
+}
+/**
+ * Dasher UI - Table Background Fixes for Dark Mode
+ * Add this to your dasher-core-styles.css or create as separate file
+ * Fixes white table backgrounds appearing in dark mode
+ */
+
+/* ===== TABLE BACKGROUND FIXES FOR DARK MODE ===== */
+
+/* Base table styling - ensure proper inheritance */
+.table {
+    background-color: transparent !important;
+    color: var(--text-primary);
+}
+
+/* Table headers - fix white backgrounds */
+.table thead th {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-secondary) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* Table body cells */
+.table tbody td {
+    background-color: transparent !important;
+    color: var(--text-primary) !important;
+    border-bottom: 1px solid var(--border-light) !important;
+}
+
+/* Table rows */
+.table tbody tr {
+    background-color: transparent !important;
+}
+
+.table tbody tr:hover {
+    background-color: var(--bg-hover) !important;
+}
+
+/* Dark mode specific fixes */
+[data-theme="dark"] .table {
+    background-color: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .table thead th {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-secondary) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table tbody td {
+    background-color: transparent !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table tbody tr {
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .table tbody tr:hover {
+    background-color: var(--bg-hover) !important;
+}
+
+/* Fix for striped tables */
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Fix for table containers */
+.table-container {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="dark"] .table-container {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Fix for card headers containing tables */
+.card-header {
+    background-color: transparent !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+[data-theme="dark"] .card-header {
+    background-color: transparent !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Fix for Bootstrap table variants in dark mode */
+[data-theme="dark"] .table-light {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .table-light > th,
+[data-theme="dark"] .table-light > td {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-secondary) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Fix for table-responsive wrapper */
+.table-responsive {
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .table-responsive {
+    background-color: transparent !important;
+}
+
+/* Fix for any remaining white backgrounds */
+[data-theme="dark"] .bg-white {
+    background-color: var(--bg-card) !important;
+}
+
+[data-theme="dark"] .table .bg-white {
+    background-color: transparent !important;
+}
+
+/* Fix for dropdown menus in tables */
+[data-theme="dark"] .table .dropdown-menu {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Fix for form controls in tables */
+[data-theme="dark"] .table .form-control {
+    background-color: var(--bg-input) !important;
+    border-color: var(--border-input) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix for buttons in tables */
+[data-theme="dark"] .table .btn-light {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix for pagination */
+[data-theme="dark"] .pagination .page-link {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .pagination .page-item.active .page-link {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+/* Fix for modal content containing tables */
+[data-theme="dark"] .modal-content .table {
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .modal-header {
+    background-color: transparent !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .modal-footer {
+    background-color: transparent !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Additional fixes for specific components */
+
+/* Fix for offcanvas */
+[data-theme="dark"] .offcanvas {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .offcanvas-header {
+    border-color: var(--border-color) !important;
+}
+
+/* Fix for accordion */
+[data-theme="dark"] .accordion-item {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .accordion-header button {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .accordion-body {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix for list groups */
+[data-theme="dark"] .list-group-item {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix for nav tabs */
+[data-theme="dark"] .nav-tabs .nav-link {
+    background-color: transparent !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link.active {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) var(--border-color) var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix for tab content */
+[data-theme="dark"] .tab-content {
+    background-color: var(--bg-card) !important;
+}
+
+/* Ensure proper text contrast */
+[data-theme="dark"] .text-dark {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Fix for any remaining Bootstrap white utilities */
+[data-theme="dark"] .bg-light {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .border-light {
+    border-color: var(--border-color) !important;
+}
+
+/* Fix for input groups */
+[data-theme="dark"] .input-group-text {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-input) !important;
+    color: var(--text-secondary) !important;
+}
+
+/* Final catch-all for any remaining white backgrounds */
+[data-theme="dark"] * {
+    --bs-bg-opacity: 1;
+}
+
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .bg-light {
+    background-color: var(--bg-card) !important;
+}
+
+/* Important: Override any inline styles that might set white backgrounds */
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"] {
+    background-color: var(--bg-card) !important;
+}
+
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"] {
+    background-color: var(--bg-card) !important;
+}
+/* ===== IMMEDIATE FOOTER FIX FOR DASHER CSS ===== */
+/* Add this to the end of your dasher-core-styles.css file */
+
+/* Fix for footer responsive display */
+@media (min-width: 768px) {
+  .d-md-block {
+    display: block !important;
+  }
+  
+  .d-md-none {
+    display: none !important;
+  }
+  
+  .d-md-flex {
+    display: flex !important;
+  }
+  
+  .d-md-inline-block {
+    display: inline-block !important;
+  }
+}
+
+/* Additional responsive utilities commonly used in your app */
+@media (max-width: 767.98px) {
+  .d-md-block {
+    /* On mobile, d-md-block should not override d-none */
+    display: none !important;
+  }
+}
+
+/* Footer specific fix to ensure proper behavior */
+.footer.d-none.d-md-block {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  .footer.d-none.d-md-block {
+    display: block !important;
+  }
+  .content-actions .btn {
+        white-space: nowrap;
+        font-size: var(--font-size-sm);
+    }
+    
+    .content-actions .btn i {
+        margin-right: var(--spacing-2);
+    }
+}
