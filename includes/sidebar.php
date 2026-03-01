@@ -72,7 +72,7 @@ $currentUri = $_SERVER['REQUEST_URI'];
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>polls/"
+                <a href="<?php echo BASE_URL; ?>polls/manage.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/polls') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-poll"></i></span>
                     Polls & Voting
@@ -176,7 +176,7 @@ $currentUri = $_SERVER['REQUEST_URI'];
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>polls/"
+                <a href="<?php echo BASE_URL; ?>polls/index.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/polls') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-poll"></i></span>
                     Polls
