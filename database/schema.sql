@@ -1,14 +1,9 @@
 -- ============================================================
 --  Lekki Astro Sports Club — Complete Database Schema
 --  Engine: MySQL 8.0+ | Charset: utf8mb4
---  Run once: mysql -u root -p lasc_db < schema.sql
+--  Database: demify_lekkiapp (created via cPanel)
+--  Import: phpMyAdmin → select demify_lekkiapp → Import → this file
 -- ============================================================
-
-CREATE DATABASE IF NOT EXISTS lasc_db
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
-
-USE lasc_db;
 
 -- ============================================================
 --  USERS & AUTH
