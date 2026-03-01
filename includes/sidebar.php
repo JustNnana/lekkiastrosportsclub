@@ -65,7 +65,7 @@ $currentUri = $_SERVER['REQUEST_URI'];
         <div class="sidebar-section-label">Communication</div>
         <ul class="sidebar-nav">
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>announcements/"
+                <a href="<?php echo BASE_URL; ?>announcements/manage.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/announcements') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-bullhorn"></i></span>
                     Announcements
@@ -149,7 +149,7 @@ $currentUri = $_SERVER['REQUEST_URI'];
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>payments/my-dues.php"
+                <a href="<?php echo BASE_URL; ?>payments/my-payments.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/payments') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-receipt"></i></span>
                     My Payments
@@ -157,13 +157,22 @@ $currentUri = $_SERVER['REQUEST_URI'];
             </li>
         </ul>
 
+        <?php
+        $annUnread = 0;
+        if (class_exists('Announcement')) {
+            $annUnread = (new Announcement())->getUnreadCount((int)$_SESSION['user_id']);
+        }
+        ?>
         <div class="sidebar-section-label">Club</div>
         <ul class="sidebar-nav">
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>announcements/"
+                <a href="<?php echo BASE_URL; ?>announcements/index.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/announcements') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-bullhorn"></i></span>
                     Announcements
+                    <?php if ($annUnread > 0): ?>
+                    <span class="badge badge-danger ms-auto" style="font-size:10px;padding:2px 6px"><?php echo $annUnread; ?></span>
+                    <?php endif; ?>
                 </a>
             </li>
             <li class="sidebar-item">
