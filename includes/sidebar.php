@@ -83,14 +83,14 @@ $currentUri = $_SERVER['REQUEST_URI'];
         <div class="sidebar-section-label">Club Activities</div>
         <ul class="sidebar-nav">
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>events/"
+                <a href="<?php echo BASE_URL; ?>events/manage.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/events') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-calendar-alt"></i></span>
                     Events & Calendar
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>tournaments/"
+                <a href="<?php echo BASE_URL; ?>tournaments/manage.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/tournaments') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-trophy"></i></span>
                     Tournaments
@@ -101,14 +101,14 @@ $currentUri = $_SERVER['REQUEST_URI'];
         <div class="sidebar-section-label">Resources</div>
         <ul class="sidebar-nav">
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>documents/"
+                <a href="<?php echo BASE_URL; ?>documents/manage.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/documents') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-folder-open"></i></span>
                     Documents
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>reports/"
+                <a href="<?php echo BASE_URL; ?>reports/index.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/reports') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-chart-bar"></i></span>
                     Reports & Analytics
@@ -183,21 +183,21 @@ $currentUri = $_SERVER['REQUEST_URI'];
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>events/"
+                <a href="<?php echo BASE_URL; ?>events/index.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/events') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-calendar-alt"></i></span>
                     Events
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>tournaments/"
+                <a href="<?php echo BASE_URL; ?>tournaments/index.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/tournaments') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-trophy"></i></span>
                     Tournaments
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>documents/"
+                <a href="<?php echo BASE_URL; ?>documents/index.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/documents') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-folder-open"></i></span>
                     Documents

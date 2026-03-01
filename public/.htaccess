@@ -1,6 +1,6 @@
 Options -Indexes
 
-# Force HTTPS in production (uncomment when live)
+# ─── HTTPS REDIRECT (uncomment when going live) ───────────────────────────────
 # RewriteCond %{HTTPS} off
 # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
@@ -13,26 +13,56 @@ RewriteCond %{REQUEST_FILENAME} !-d
 # Route everything else to index.php
 RewriteRule ^(.*)$ index.php [QSA,L]
 
-# Security headers
+# ─── SECURITY HEADERS ────────────────────────────────────────────────────────
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "SAMEORIGIN"
     Header set X-XSS-Protection "1; mode=block"
     Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    # HSTS — uncomment on live HTTPS only
+    # Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    # Remove server fingerprint headers
+    Header unset X-Powered-By
+    Header unset Server
 </IfModule>
 
-# Cache static assets
+# ─── PREVENT PHP EXECUTION IN UPLOADS ────────────────────────────────────────
+<IfModule mod_rewrite.c>
+    RewriteRule ^assets/uploads/.*\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$ - [F,NC]
+</IfModule>
+
+# ─── CACHE STATIC ASSETS ─────────────────────────────────────────────────────
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresByType image/png  "access plus 1 month"
-    ExpiresByType image/jpeg "access plus 1 month"
-    ExpiresByType image/gif  "access plus 1 month"
-    ExpiresByType image/webp "access plus 1 month"
-    ExpiresByType text/css   "access plus 1 week"
+    ExpiresByType image/png        "access plus 1 month"
+    ExpiresByType image/jpeg       "access plus 1 month"
+    ExpiresByType image/gif        "access plus 1 month"
+    ExpiresByType image/webp       "access plus 1 month"
+    ExpiresByType image/svg+xml    "access plus 1 month"
+    ExpiresByType text/css         "access plus 1 week"
     ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType application/json "access plus 0 seconds"
 </IfModule>
 
-# Protect sensitive directories
-<FilesMatch "\.(env|log|sql|md)$">
+# ─── BLOCK SENSITIVE FILE ACCESS ─────────────────────────────────────────────
+<FilesMatch "\.(env|log|sql|md|json|lock|bak|ini|cfg|sh|bash)$">
     Require all denied
 </FilesMatch>
+
+# Allow manifest.json specifically
+<Files "manifest.json">
+    Require all granted
+</Files>
+
+# ─── GZIP COMPRESSION ────────────────────────────────────────────────────────
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css
+    AddOutputFilterByType DEFLATE application/javascript application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ─── CUSTOM ERROR PAGES ──────────────────────────────────────────────────────
+ErrorDocument 404 /lekkiastrosportsclub/404.php
+ErrorDocument 500 /lekkiastrosportsclub/500.php

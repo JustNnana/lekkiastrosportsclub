@@ -1,0 +1,21 @@
+# ─── ROOT HTACCESS — deny direct access to all backend directories ────────────
+# Only the public/ folder should be web-accessible.
+# If your DocumentRoot is already set to public/, this file is a safety net.
+
+Options -Indexes
+
+# Deny direct access to backend directories
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block access to sensitive directories
+    RewriteRule ^(app|classes|includes|cron|database|vendor)(/|$) - [F,L]
+
+    # Block access to sensitive files
+    RewriteRule ^(composer\.(json|lock)|\.env|\.gitignore)$ - [F,L]
+</IfModule>
+
+# Deny access to sensitive file types
+<FilesMatch "\.(env|sql|log|md|lock|bak|sh|bash|cfg|ini)$">
+    Require all denied
+</FilesMatch>
