@@ -40,6 +40,12 @@ define('MAIL_FROM_NAME',  $_ENV['MAIL_FROM_NAME']   ?? 'Lekki Astro Sports Club'
 define('PAYSTACK_PUBLIC_KEY',  $_ENV['PAYSTACK_PUBLIC_KEY']  ?? '');
 define('PAYSTACK_SECRET_KEY',  $_ENV['PAYSTACK_SECRET_KEY']  ?? '');
 
+// ===== VAPID (Web Push) =====
+// Generate with: php setup/generate-vapid-keys.php
+define('VAPID_PUBLIC_KEY',   $_ENV['VAPID_PUBLIC_KEY']   ?? '');
+define('VAPID_PRIVATE_KEY',  $_ENV['VAPID_PRIVATE_KEY']  ?? '');
+define('VAPID_SUBJECT',      $_ENV['VAPID_SUBJECT']      ?? ('mailto:' . ($_ENV['MAIL_FROM_EMAIL'] ?? 'admin@lekkiastro.com')));
+
 // ===== SESSION CONFIG =====
 define('SESSION_LIFETIME', 3600); // 1 hour
 define('SESSION_NAME',     'lasc_session');

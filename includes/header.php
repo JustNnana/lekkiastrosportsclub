@@ -346,7 +346,7 @@ try {
         </a>
 
         <!-- Notifications bell -->
-        <a href="<?php echo BASE_URL; ?>notifications/"
+        <a href="<?php echo BASE_URL; ?>notifications/index.php"
            class="nav-icon-btn"
            title="Notifications">
             <i class="fas fa-bell"></i>
@@ -377,6 +377,9 @@ try {
                 </a></li>
                 <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>profile/edit.php">
                     <i class="fas fa-cog fa-fw"></i> Settings
+                </a></li>
+                <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>profile/notifications.php">
+                    <i class="fas fa-bell fa-fw"></i> Notification Settings
                 </a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger" href="<?php echo BASE_URL; ?>logout.php">

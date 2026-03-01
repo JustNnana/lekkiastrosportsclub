@@ -60,3 +60,48 @@ self.addEventListener('fetch', (e) => {
         )
     );
 });
+
+// ─── PUSH EVENT ────────────────────────────────────────────────────────────
+self.addEventListener('push', (e) => {
+    let data = { title: 'Lekki Astro SC', body: 'You have a new notification.' };
+
+    if (e.data) {
+        try {
+            data = e.data.json();
+        } catch {
+            data.body = e.data.text();
+        }
+    }
+
+    const options = {
+        body:    data.body    || '',
+        icon:    data.icon    || '/lekkiastrosportsclub/assets/images/icons/icon-192x192.png',
+        badge:   data.badge   || '/lekkiastrosportsclub/assets/images/icons/badge-96x96.png',
+        tag:     data.tag     || 'lasc-notification',
+        data:    { url: data.url || '/lekkiastrosportsclub/notifications/' },
+        vibrate: [100, 50, 100],
+        requireInteraction: false,
+    };
+
+    e.waitUntil(self.registration.showNotification(data.title, options));
+});
+
+// ─── NOTIFICATION CLICK ────────────────────────────────────────────────────
+self.addEventListener('notificationclick', (e) => {
+    e.notification.close();
+
+    const targetUrl = e.notification.data?.url || self.registration.scope;
+
+    e.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            for (const client of clientList) {
+                if ('focus' in client) {
+                    client.focus();
+                    if ('navigate' in client) client.navigate(targetUrl);
+                    return;
+                }
+            }
+            if (clients.openWindow) return clients.openWindow(targetUrl);
+        })
+    );
+});

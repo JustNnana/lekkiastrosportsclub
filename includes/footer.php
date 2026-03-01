@@ -39,12 +39,17 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
-<!-- Dasher Theme System -->
+<!-- Dasher Theme System + global config -->
 <script>
-// Override storage key to 'lasc-theme' before loading the theme system module
 window.LASC_THEME_KEY = 'lasc-theme';
+window.LASC_BASE_URL  = '<?php echo BASE_URL; ?>';
 </script>
 <script src="<?php echo BASE_URL; ?>assets/js/dasher-theme-system.js"></script>
+
+<!-- Push Notifications -->
+<?php if (defined('VAPID_PUBLIC_KEY') && VAPID_PUBLIC_KEY !== ''): ?>
+<script src="<?php echo BASE_URL; ?>assets/js/push-notifications.js"></script>
+<?php endif; ?>
 
 <!-- Page-specific script -->
 <?php if (isset($pageScript)): ?>

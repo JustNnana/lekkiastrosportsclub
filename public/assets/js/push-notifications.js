@@ -1,11 +1,14 @@
 /**
- * Push Notifications Manager - Fixed paths
+ * Push Notifications Manager
+ * Reads window.LASC_BASE_URL (set by footer.php) for dynamic API paths.
  */
 class PushNotificationsManager {
     constructor() {
         this.vapidPublicKey = null;
         this.isSubscribed = false;
         this.swRegistration = null;
+        // Use BASE_URL injected by PHP, fallback to root
+        this.baseUrl = (window.LASC_BASE_URL || '/').replace(/\/?$/, '/');
     }
 
     /**
@@ -30,7 +33,7 @@ class PushNotificationsManager {
             
             // Get VAPID public key from server
             console.log('Fetching VAPID public key...');
-            const response = await fetch('/api/get-vapid-public-key.php');
+            const response = await fetch(this.baseUrl + 'api/get-vapid-public-key.php');
             
             if (!response.ok) {
                 throw new Error(`Failed to fetch VAPID key: ${response.status} ${response.statusText}`);
@@ -131,7 +134,7 @@ class PushNotificationsManager {
 
             // Save subscription to server
             console.log('Saving subscription to server...');
-            const response = await fetch('/api/save-subscription.php', {
+            const response = await fetch(this.baseUrl + 'api/save-subscription.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -188,7 +191,7 @@ class PushNotificationsManager {
             await subscription.unsubscribe();
 
             // Delete subscription from server
-            const response = await fetch('/api/delete-subscription.php', {
+            const response = await fetch(this.baseUrl + 'api/delete-subscription.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

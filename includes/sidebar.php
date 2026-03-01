@@ -149,6 +149,22 @@ $currentUri = $_SERVER['REQUEST_URI'];
                 </a>
             </li>
             <li class="sidebar-item">
+                <a href="<?php echo BASE_URL; ?>notifications/index.php"
+                   class="sidebar-link <?php echo str_contains($currentUri, '/notifications') ? 'active' : ''; ?>">
+                    <span class="sidebar-icon"><i class="fas fa-bell"></i></span>
+                    Notifications
+                    <?php
+                    $db = Database::getInstance();
+                    $unreadCount = (int)($db->fetchOne(
+                        "SELECT COUNT(*) AS n FROM notifications WHERE user_id = ? AND is_read = 0",
+                        [(int)$_SESSION['user_id']]
+                    )['n'] ?? 0);
+                    if ($unreadCount > 0): ?>
+                    <span class="badge badge-danger ms-auto" style="font-size:10px;padding:2px 6px"><?php echo $unreadCount > 9 ? '9+' : $unreadCount; ?></span>
+                    <?php endif; ?>
+                </a>
+            </li>
+            <li class="sidebar-item">
                 <a href="<?php echo BASE_URL; ?>payments/my-payments.php"
                    class="sidebar-link <?php echo str_contains($currentUri, '/payments') ? 'active' : ''; ?>">
                     <span class="sidebar-icon"><i class="fas fa-receipt"></i></span>
