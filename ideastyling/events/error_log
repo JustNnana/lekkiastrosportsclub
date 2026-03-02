@@ -1,0 +1,30 @@
+[12-Feb-2026 07:43:13 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[12-Feb-2026 07:43:13 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[17-Feb-2026 13:17:08 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[17-Feb-2026 13:17:08 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[18-Feb-2026 09:54:11 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[18-Feb-2026 09:54:11 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[18-Feb-2026 09:54:17 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[18-Feb-2026 09:54:17 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[18-Feb-2026 09:54:26 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[18-Feb-2026 09:54:26 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[18-Feb-2026 09:55:20 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[18-Feb-2026 09:55:20 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[18-Feb-2026 09:55:33 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[18-Feb-2026 09:55:33 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[18-Feb-2026 13:57:05 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'u.first_name' in 'field list' in query: SELECT e.*, u.first_name, u.last_name,
+            (SELECT COUNT(*) FROM event_rsvps er WHERE er.event_id = e.id AND er.status = 'attending') as attending_count,
+            (SELECT er2.status FROM event_rsvps er2 WHERE er2.event_id = e.id AND er2.user_id = ?) as user_rsvp_status
+     FROM events e
+     LEFT JOIN users u ON e.created_by = u.id
+     WHERE e.clan_id = ? AND e.visibility != 'admins_only' AND (e.status IN ('upcoming','ongoing','completed') OR (e.status = 'pending' AND e.created_by = ?))
+     ORDER BY
+        CASE e.status WHEN 'ongoing' THEN 0 WHEN 'upcoming' THEN 1 WHEN 'pending' THEN 2 WHEN 'completed' THEN 3 ELSE 4 END,
+        e.start_datetime ASC
+     LIMIT 200
+[18-Feb-2026 13:57:05 UTC] PHP Fatal error:  Uncaught Exception: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'u.first_name' in 'field list' in /home2/gateweyc/public_html/includes/db.php:67
+Stack trace:
+#0 /home2/gateweyc/public_html/includes/db.php(91): Database->query()
+#1 /home2/gateweyc/public_html/user/events/browse-events.php(127): Database->fetchAll()
+#2 {main}
+  thrown in /home2/gateweyc/public_html/includes/db.php on line 67
