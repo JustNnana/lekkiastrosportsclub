@@ -97,29 +97,6 @@ window.LASC_BASE_URL  = '<?php echo BASE_URL; ?>';
 </script>
 
 <!-- ===== FLASH NOTIFICATION SYSTEM ===== -->
-<style>
-    .site-footer {
-        margin-left: var(--sidebar-width);
-        padding: var(--spacing-3) var(--spacing-8);
-        border-top: 1px solid var(--border-color);
-        background: var(--bg-primary);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: var(--font-size-xs);
-        color: var(--text-muted);
-        transition: var(--theme-transition);
-    }
-    .site-footer .footer-links a {
-        color: var(--text-muted);
-        text-decoration: none;
-        margin-left: var(--spacing-4);
-        transition: var(--transition-fast);
-    }
-    .site-footer .footer-links a:hover { color: var(--primary); }
-    @media (max-width: 768px) { .site-footer { margin-left: 0; } }
-</style>
-
 <script>
 window.showFlashNotification = function (message, type, duration) {
     duration = duration || 4000;
