@@ -1,0 +1,144 @@
+[02-Feb-2026 09:29:39 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[02-Feb-2026 09:29:39 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[02-Feb-2026 09:32:39 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[02-Feb-2026 09:32:39 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[02-Feb-2026 09:32:45 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[02-Feb-2026 09:32:45 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[02-Feb-2026 10:08:48 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[02-Feb-2026 10:08:48 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[02-Feb-2026 10:08:59 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[02-Feb-2026 10:08:59 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[05-Feb-2026 20:06:35 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[05-Feb-2026 20:06:35 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[05-Feb-2026 20:06:56 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[05-Feb-2026 20:06:56 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 10:33:47 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 10:33:47 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 10:34:07 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 10:34:07 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 10:34:28 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 10:34:28 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 10:34:35 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 10:34:35 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 10:40:16 UTC] Query Error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared in query: DELETE FROM access_codes WHERE created_by = ?
+[06-Feb-2026 10:40:16 UTC] Error deleting user: Database error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared
+[06-Feb-2026 10:40:33 UTC] Query Error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared in query: DELETE FROM access_codes WHERE created_by = ?
+[06-Feb-2026 10:40:33 UTC] Error deleting user: Database error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared
+[06-Feb-2026 13:14:42 UTC] Query Error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared in query: DELETE FROM users WHERE id = ?
+[06-Feb-2026 13:14:42 UTC] User deletion error: Database error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared
+[06-Feb-2026 13:24:24 UTC] Query Error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared in query: DELETE FROM access_codes WHERE created_by = ?
+[06-Feb-2026 13:24:24 UTC] Error deleting user: Database error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared
+[06-Feb-2026 13:25:06 UTC] Query Error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared in query: DELETE FROM access_codes WHERE created_by = ?
+[06-Feb-2026 13:25:06 UTC] Error deleting user: Database error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared
+[06-Feb-2026 13:25:22 UTC] Query Error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared in query: DELETE FROM access_codes WHERE created_by = ?
+[06-Feb-2026 13:25:22 UTC] Error deleting user: Database error: SQLSTATE[HY000]: General error: 1615 Prepared statement needs to be re-prepared
+[06-Feb-2026 13:36:03 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 13:36:03 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 13:37:39 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 13:37:39 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 13:40:36 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 13:40:36 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 13:40:42 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 13:40:42 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 15:55:13 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 15:55:13 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 15:55:21 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 15:55:21 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 15:55:34 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 15:55:34 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 15:56:07 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 15:56:07 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 16:05:01 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 16:05:01 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 16:05:29 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 16:05:29 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 16:05:48 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 16:05:48 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:08:02 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:08:02 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:08:21 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:08:21 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:08:25 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:08:25 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:09:57 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:09:57 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:10:10 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:10:10 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:10:12 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:10:12 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:10:30 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:10:30 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:12:08 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:12:08 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:12:48 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:12:48 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:12:55 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:12:55 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:13:00 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:13:00 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[06-Feb-2026 18:13:33 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[06-Feb-2026 18:13:33 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[07-Feb-2026 08:04:40 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[07-Feb-2026 08:04:40 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[07-Feb-2026 08:06:19 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[07-Feb-2026 08:06:19 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[07-Feb-2026 08:06:36 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[07-Feb-2026 08:06:36 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[07-Feb-2026 08:07:01 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[07-Feb-2026 08:07:01 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[07-Feb-2026 08:12:44 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[07-Feb-2026 08:12:44 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[07-Feb-2026 08:56:46 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 3
+[07-Feb-2026 08:56:46 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[07-Feb-2026 09:16:39 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 3
+[07-Feb-2026 09:16:39 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[07-Feb-2026 09:16:57 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 3
+[07-Feb-2026 09:16:57 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[07-Feb-2026 12:56:51 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[07-Feb-2026 12:56:51 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[07-Feb-2026 12:57:23 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[07-Feb-2026 12:57:23 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[10-Feb-2026 08:37:47 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 3
+[10-Feb-2026 08:37:47 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[10-Feb-2026 09:33:10 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[10-Feb-2026 09:33:10 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[10-Feb-2026 09:33:18 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[10-Feb-2026 09:33:18 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[10-Feb-2026 09:36:57 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[10-Feb-2026 09:36:57 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[10-Feb-2026 13:46:51 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[10-Feb-2026 13:46:51 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[10-Feb-2026 13:48:14 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[10-Feb-2026 13:48:14 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[12-Feb-2026 07:41:57 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[12-Feb-2026 07:41:57 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[15-Feb-2026 20:53:03 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[15-Feb-2026 20:53:03 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[15-Feb-2026 20:53:48 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[15-Feb-2026 20:53:48 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[17-Feb-2026 12:56:16 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[17-Feb-2026 12:56:16 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[18-Feb-2026 21:03:47 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[18-Feb-2026 21:03:47 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[18-Feb-2026 21:03:54 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[18-Feb-2026 21:03:54 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[18-Feb-2026 21:05:20 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[18-Feb-2026 21:05:20 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[19-Feb-2026 11:43:35 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[19-Feb-2026 11:43:35 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[19-Feb-2026 12:22:14 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[19-Feb-2026 12:22:14 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[19-Feb-2026 12:22:29 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[19-Feb-2026 12:22:29 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[19-Feb-2026 16:28:27 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[19-Feb-2026 16:28:27 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[19-Feb-2026 16:28:59 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[19-Feb-2026 16:28:59 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[19-Feb-2026 16:31:47 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[19-Feb-2026 16:31:47 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[19-Feb-2026 16:34:11 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[19-Feb-2026 16:34:11 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[19-Feb-2026 16:34:59 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[19-Feb-2026 16:34:59 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
+[19-Feb-2026 16:35:06 UTC] Query Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause' in query: SELECT COUNT(*) as count FROM support_tickets WHERE status NOT IN ('closed', 'resolved') AND clan_id = 1
+[19-Feb-2026 16:35:06 UTC] Error getting admin ticket counts: Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clan_id' in 'where clause'
