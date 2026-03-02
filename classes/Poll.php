@@ -25,13 +25,12 @@ class Poll
 
         return $this->db->fetchAll(
             "SELECT p.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS creator_name,
+                    u.full_name AS creator_name,
                     u.email AS creator_email,
                     (SELECT COUNT(*) FROM poll_votes pv WHERE pv.poll_id = p.id)    AS total_votes,
                     (SELECT COUNT(*) FROM poll_options po WHERE po.poll_id = p.id)  AS option_count
              FROM   polls p
              JOIN   users u ON u.id = p.created_by
-             LEFT JOIN members m ON m.user_id = u.id
              $where
              ORDER BY p.created_at DESC
              LIMIT ? OFFSET ?",
@@ -55,11 +54,10 @@ class Poll
         $offset = ($page - 1) * $perPage;
         return $this->db->fetchAll(
             "SELECT p.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS creator_name,
+                    u.full_name AS creator_name,
                     (SELECT COUNT(*) FROM poll_votes pv WHERE pv.poll_id = p.id) AS total_votes
              FROM   polls p
              JOIN   users u ON u.id = p.created_by
-             LEFT JOIN members m ON m.user_id = u.id
              WHERE  p.status = 'active' AND p.deadline >= NOW()
              ORDER BY p.deadline ASC
              LIMIT ? OFFSET ?",
@@ -80,11 +78,10 @@ class Poll
         $offset = ($page - 1) * $perPage;
         return $this->db->fetchAll(
             "SELECT p.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS creator_name,
+                    u.full_name AS creator_name,
                     (SELECT COUNT(*) FROM poll_votes pv WHERE pv.poll_id = p.id) AS total_votes
              FROM   polls p
              JOIN   users u ON u.id = p.created_by
-             LEFT JOIN members m ON m.user_id = u.id
              WHERE  p.status = 'closed' OR p.deadline < NOW()
              ORDER BY p.deadline DESC
              LIMIT ? OFFSET ?",
@@ -104,12 +101,11 @@ class Poll
     {
         return $this->db->fetchOne(
             "SELECT p.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS creator_name,
+                    u.full_name AS creator_name,
                     u.email AS creator_email,
                     (SELECT COUNT(*) FROM poll_votes pv WHERE pv.poll_id = p.id) AS total_votes
              FROM   polls p
              JOIN   users u ON u.id = p.created_by
-             LEFT JOIN members m ON m.user_id = u.id
              WHERE  p.id = ?",
             [$id]
         ) ?: null;

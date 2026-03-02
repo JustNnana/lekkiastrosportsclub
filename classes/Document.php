@@ -38,10 +38,9 @@ class Document
         $params[] = $offset;
 
         return $this->db->fetchAll(
-            "SELECT d.*, CONCAT(m.first_name,' ',m.last_name) AS uploader_name, u.email AS uploader_email
+            "SELECT d.*, u.full_name AS uploader_name, u.email AS uploader_email
              FROM   documents d
              JOIN   users u ON u.id = d.uploaded_by
-             LEFT JOIN members m ON m.user_id = u.id
              $where
              ORDER BY d.created_at DESC
              LIMIT ? OFFSET ?",
@@ -59,10 +58,9 @@ class Document
     public function getById(int $id): ?array
     {
         return $this->db->fetchOne(
-            "SELECT d.*, CONCAT(m.first_name,' ',m.last_name) AS uploader_name
+            "SELECT d.*, u.full_name AS uploader_name
              FROM documents d
              JOIN users u ON u.id=d.uploaded_by
-             LEFT JOIN members m ON m.user_id=u.id
              WHERE d.id=?",
             [$id]
         ) ?: null;

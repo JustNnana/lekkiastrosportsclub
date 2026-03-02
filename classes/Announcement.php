@@ -24,12 +24,11 @@ class Announcement
         $offset = ($page - 1) * $perPage;
         $sql = "SELECT a.*,
                        u.email AS author_email,
-                       CONCAT(m.first_name,' ',m.last_name) AS author_name,
+                       u.full_name AS author_name,
                        (SELECT COUNT(*) FROM announcement_comments ac WHERE ac.announcement_id = a.id) AS comment_count,
                        (SELECT COUNT(*) FROM announcement_reactions ar WHERE ar.announcement_id = a.id) AS reaction_count
                 FROM   announcements a
                 JOIN   users u ON u.id = a.published_by
-                LEFT JOIN members m ON m.user_id = u.id
                 $where
                 ORDER BY a.is_pinned DESC, a.created_at DESC
                 LIMIT ? OFFSET ?";
@@ -54,12 +53,11 @@ class Announcement
         $offset = ($page - 1) * $perPage;
         return $this->db->fetchAll(
             "SELECT a.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS author_name,
+                    u.full_name AS author_name,
                     (SELECT COUNT(*) FROM announcement_comments ac WHERE ac.announcement_id = a.id) AS comment_count,
                     (SELECT COUNT(*) FROM announcement_reactions ar WHERE ar.announcement_id = a.id) AS reaction_count
              FROM   announcements a
              JOIN   users u ON u.id = a.published_by
-             LEFT JOIN members m ON m.user_id = u.id
              WHERE  a.is_published = 1
                AND  (a.scheduled_at IS NULL OR a.scheduled_at <= NOW())
              ORDER BY a.is_pinned DESC, a.created_at DESC
@@ -81,11 +79,10 @@ class Announcement
     {
         return $this->db->fetchOne(
             "SELECT a.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS author_name,
+                    u.full_name AS author_name,
                     u.email AS author_email
              FROM   announcements a
              JOIN   users u ON u.id = a.published_by
-             LEFT JOIN members m ON m.user_id = u.id
              WHERE  a.id = ?",
             [$id]
         ) ?: null;
@@ -178,11 +175,10 @@ class Announcement
     {
         return $this->db->fetchAll(
             "SELECT ac.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS author_name,
+                    u.full_name AS author_name,
                     u.email AS author_email
              FROM   announcement_comments ac
              JOIN   users u ON u.id = ac.user_id
-             LEFT JOIN members m ON m.user_id = u.id
              WHERE  ac.announcement_id = ?
              ORDER BY ac.created_at ASC",
             [$announcementId]

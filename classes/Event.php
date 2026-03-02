@@ -23,13 +23,12 @@ class Event
 
         return $this->db->fetchAll(
             "SELECT e.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS creator_name,
+                    u.full_name AS creator_name,
                     (SELECT COUNT(*) FROM event_rsvps er WHERE er.event_id=e.id AND er.response='attending')     AS attending_count,
                     (SELECT COUNT(*) FROM event_rsvps er WHERE er.event_id=e.id AND er.response='not_attending') AS not_attending_count,
                     (SELECT COUNT(*) FROM event_rsvps er WHERE er.event_id=e.id AND er.response='maybe')         AS maybe_count
              FROM   events e
              JOIN   users u ON u.id=e.created_by
-             LEFT JOIN members m ON m.user_id=u.id
              $where
              ORDER BY e.start_date ASC
              LIMIT ? OFFSET ?",
@@ -51,11 +50,10 @@ class Event
     {
         return $this->db->fetchAll(
             "SELECT e.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS creator_name,
+                    u.full_name AS creator_name,
                     (SELECT COUNT(*) FROM event_rsvps er WHERE er.event_id=e.id AND er.response='attending') AS attending_count
              FROM   events e
              JOIN   users u ON u.id=e.created_by
-             LEFT JOIN members m ON m.user_id=u.id
              WHERE  e.status='active' AND (e.end_date IS NULL OR e.end_date >= NOW())
                     OR (e.status='active' AND e.start_date >= NOW())
              ORDER BY e.start_date ASC
@@ -86,13 +84,12 @@ class Event
     {
         return $this->db->fetchOne(
             "SELECT e.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS creator_name,
+                    u.full_name AS creator_name,
                     (SELECT COUNT(*) FROM event_rsvps er WHERE er.event_id=e.id AND er.response='attending')     AS attending_count,
                     (SELECT COUNT(*) FROM event_rsvps er WHERE er.event_id=e.id AND er.response='not_attending') AS not_attending_count,
                     (SELECT COUNT(*) FROM event_rsvps er WHERE er.event_id=e.id AND er.response='maybe')         AS maybe_count
              FROM   events e
              JOIN   users u ON u.id=e.created_by
-             LEFT JOIN members m ON m.user_id=u.id
              WHERE  e.id=?",
             [$id]
         ) ?: null;
@@ -126,13 +123,13 @@ class Event
     {
         return $this->db->fetchAll(
             "SELECT er.response, er.created_at,
-                    CONCAT(m.first_name,' ',m.last_name) AS member_name,
+                    u.full_name AS member_name,
                     m.member_id AS member_code
              FROM   event_rsvps er
              JOIN   users u ON u.id=er.user_id
              LEFT JOIN members m ON m.user_id=u.id
              WHERE  er.event_id=?
-             ORDER BY er.response ASC, m.first_name ASC",
+             ORDER BY er.response ASC, u.full_name ASC",
             [$eventId]
         );
     }

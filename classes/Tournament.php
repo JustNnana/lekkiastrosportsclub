@@ -23,7 +23,7 @@ class Tournament
 
         return $this->db->fetchAll(
             "SELECT t.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS creator_name,
+                    u.full_name AS creator_name,
                     (SELECT COUNT(*) FROM tournament_groups tg WHERE tg.tournament_id=t.id)  AS group_count,
                     (SELECT COUNT(*) FROM tournament_teams tt
                      JOIN tournament_groups tg2 ON tg2.id=tt.group_id
@@ -31,7 +31,6 @@ class Tournament
                     (SELECT COUNT(*) FROM fixtures f WHERE f.tournament_id=t.id)             AS fixture_count
              FROM   tournaments t
              JOIN   users u ON u.id=t.created_by
-             LEFT JOIN members m ON m.user_id=u.id
              $where
              ORDER BY t.created_at DESC
              LIMIT ? OFFSET ?",
@@ -51,12 +50,11 @@ class Tournament
     {
         return $this->db->fetchOne(
             "SELECT t.*,
-                    CONCAT(m.first_name,' ',m.last_name) AS creator_name,
+                    u.full_name AS creator_name,
                     (SELECT COUNT(*) FROM fixtures f WHERE f.tournament_id=t.id AND f.status='completed') AS completed_fixtures,
                     (SELECT COUNT(*) FROM fixtures f WHERE f.tournament_id=t.id)                          AS total_fixtures
              FROM   tournaments t
              JOIN   users u ON u.id=t.created_by
-             LEFT JOIN members m ON m.user_id=u.id
              WHERE  t.id=?",
             [$id]
         ) ?: null;
@@ -168,11 +166,12 @@ class Tournament
     public function getTeamMembers(int $teamId): array
     {
         return $this->db->fetchAll(
-            "SELECT m.id, m.member_id AS member_code, CONCAT(m.first_name,' ',m.last_name) AS full_name
+            "SELECT m.id, m.member_id AS member_code, u.full_name
              FROM team_members tm
              JOIN members m ON m.id=tm.member_id
+             JOIN users u ON u.id=m.user_id
              WHERE tm.team_id=?
-             ORDER BY m.first_name",
+             ORDER BY u.full_name",
             [$teamId]
         );
     }
@@ -273,9 +272,10 @@ class Tournament
     public function getFixtureStats(int $fixtureId): array
     {
         return $this->db->fetchAll(
-            "SELECT ps.*, CONCAT(m.first_name,' ',m.last_name) AS player_name, m.member_id AS member_code
+            "SELECT ps.*, u.full_name AS player_name, m.member_id AS member_code
              FROM player_stats ps
              JOIN members m ON m.id=ps.member_id
+             JOIN users u ON u.id=m.user_id
              WHERE ps.fixture_id=?
              ORDER BY ps.goals DESC, ps.assists DESC",
             [$fixtureId]
@@ -295,18 +295,19 @@ class Tournament
     public function getTournamentTopScorers(int $tournamentId, int $limit = 10): array
     {
         return $this->db->fetchAll(
-            "SELECT CONCAT(m.first_name,' ',m.last_name) AS player_name, m.member_id AS member_code,
+            "SELECT u.full_name AS player_name, m.member_id AS member_code,
                     tt.team_name,
                     SUM(ps.goals) AS total_goals, SUM(ps.assists) AS total_assists,
                     SUM(ps.yellow_cards) AS yellow_cards, SUM(ps.red_cards) AS red_cards
              FROM player_stats ps
              JOIN members m ON m.id=ps.member_id
+             JOIN users u ON u.id=m.user_id
              JOIN fixtures f ON f.id=ps.fixture_id
              JOIN team_members tm ON tm.member_id=ps.member_id
              JOIN tournament_teams tt ON tt.id=tm.team_id
              JOIN tournament_groups tg ON tg.id=tt.group_id
              WHERE f.tournament_id=? AND tg.tournament_id=?
-             GROUP BY ps.member_id
+             GROUP BY ps.member_id, u.full_name, m.member_id, tt.team_name
              ORDER BY total_goals DESC, total_assists DESC
              LIMIT ?",
             [$tournamentId, $tournamentId, $limit]
