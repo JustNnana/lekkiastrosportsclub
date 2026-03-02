@@ -40,17 +40,19 @@
 }
 .navbar-brand:hover { color: var(--primary); }
 
-/* CSS-only brand icon — replaces old logo.png */
-.brand-icon {
-    width: 36px; height: 36px; flex-shrink: 0;
-    border-radius: 10px;
-    background: var(--primary);
-    color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 9px; font-weight: var(--font-weight-bold);
-    letter-spacing: 0.5px;
-    box-shadow: 0 2px 8px rgba(0, 167, 111, 0.35);
+/* Navbar logo image — light/dark variants */
+.logo-light,
+.logo-dark {
+    width: 120px;
+    height: auto;
+    transition: var(--transition-normal);
 }
+
+.logo-light { display: block; }
+.logo-dark  { display: none;  }
+
+[data-theme="dark"] .logo-light { display: none;  }
+[data-theme="dark"] .logo-dark  { display: block; }
 
 .navbar-nav {
     display: flex;
@@ -78,6 +80,15 @@
 @media (max-width: 768px) {
     .sidebar-toggle-btn { display: flex; align-items: center; }
     .navbar { padding: 0 var(--spacing-4); }
+    .logo-light, .logo-dark { width: 100px; }
+}
+
+@media (max-width: 576px) {
+    .logo-light, .logo-dark { width: 90px; }
+}
+
+@media (max-width: 390px) {
+    .logo-light, .logo-dark { width: 70px; }
 }
 
 /* Nav icon buttons */

@@ -122,9 +122,12 @@ try {
 
     <!-- Brand -->
     <a class="navbar-brand" href="<?php echo BASE_URL; ?>dashboard/">
-        <div class="brand-icon"><?php echo e(SITE_ABBR); ?></div>
-        <span class="d-none d-md-inline"><?php echo e(SITE_NAME); ?></span>
-        <span class="d-md-none d-sm-inline"><?php echo e(SITE_ABBR); ?></span>
+        <img src="<?php echo BASE_URL; ?>assets/images/icons/logo.png"
+             alt="<?php echo e(SITE_NAME); ?>"
+             class="logo-light">
+        <img src="<?php echo BASE_URL; ?>assets/images/icons/logo-dark.png"
+             alt="<?php echo e(SITE_NAME); ?>"
+             class="logo-dark">
     </a>
 
     <!-- Right-side actions -->
