@@ -35,16 +35,19 @@ $activePolls = (int)($db->fetchOne(
 
 // Recent members
 $recentMembers = $db->fetchAll(
-    "SELECT member_id, full_name, email, status, created_at
-     FROM members ORDER BY created_at DESC LIMIT 5"
+    "SELECT m.member_id, u.full_name, u.email, m.status, m.created_at
+     FROM members m
+     JOIN users u ON u.id = m.user_id
+     ORDER BY m.created_at DESC LIMIT 5"
 );
 
 // Recent payments
 $recentPayments = $db->fetchAll(
-    "SELECT p.*, m.full_name, d.title AS due_title
+    "SELECT p.amount, p.status, p.created_at, u.full_name, d.title AS due_title
      FROM payments p
-     JOIN members m ON p.member_id = m.id
-     JOIN dues d ON p.due_id = d.id
+     JOIN members m ON m.id = p.member_id
+     JOIN users u ON u.id = m.user_id
+     JOIN dues d ON d.id = p.due_id
      ORDER BY p.created_at DESC LIMIT 5"
 );
 
@@ -152,7 +155,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
         <div class="card h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="card-title">Revenue Trend (Last 6 Months)</h6>
-                <a href="<?php echo BASE_URL; ?>reports/" class="btn btn-sm btn-outline-primary">View Report</a>
+                <a href="<?php echo BASE_URL; ?>reports/index.php" class="btn btn-sm btn-outline-primary">View Report</a>
             </div>
             <div class="card-body">
                 <canvas id="revenueChart" height="260"></canvas>
@@ -182,7 +185,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                     <a href="<?php echo BASE_URL; ?>tournaments/create.php" class="btn btn-secondary text-start">
                         <i class="fas fa-trophy fa-fw me-2 text-danger"></i> Create Tournament
                     </a>
-                    <a href="<?php echo BASE_URL; ?>reports/" class="btn btn-secondary text-start">
+                    <a href="<?php echo BASE_URL; ?>reports/index.php" class="btn btn-secondary text-start">
                         <i class="fas fa-chart-bar fa-fw me-2 text-secondary"></i> Reports & Analytics
                     </a>
                 </div>

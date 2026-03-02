@@ -261,6 +261,7 @@ $currentUri = $_SERVER['REQUEST_URI'];
         top: var(--navbar-height); left: 0; bottom: 0;
         overflow-y: auto; overflow-x: hidden;
         z-index: 1026;
+        padding: 0;
         transition: transform var(--transition-normal), var(--theme-transition);
         display: flex; flex-direction: column;
         scrollbar-width: thin;
@@ -337,6 +338,7 @@ $currentUri = $_SERVER['REQUEST_URI'];
         background: var(--primary-light);
         color: var(--primary);
         font-weight: var(--font-weight-semibold);
+        border-right: 3px solid var(--primary);
     }
     .sidebar-icon {
         width: 22px; height: 22px;

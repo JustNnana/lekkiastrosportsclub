@@ -11,21 +11,20 @@ $db = Database::getInstance();
 $userId = $_SESSION['user_id'];
 
 // Load member record
-$member = $db->fetchOne(
-    "SELECT * FROM members WHERE user_id = ?", [$userId]
-);
+$member   = $db->fetchOne("SELECT * FROM members WHERE user_id = ?", [$userId]);
+$memberId = $member['id'] ?? 0; // members.id (not users.id)
 
-// Payment summary
+// Payment summary — use members.id, not users.id
 $paidCount = (int)($db->fetchOne(
-    "SELECT COUNT(*) AS c FROM payments WHERE member_id = ? AND status = 'paid'", [$userId]
+    "SELECT COUNT(*) AS c FROM payments WHERE member_id = ? AND status = 'paid'", [$memberId]
 )['c'] ?? 0);
 
 $pendingCount = (int)($db->fetchOne(
-    "SELECT COUNT(*) AS c FROM payments WHERE member_id = ? AND status IN ('pending','overdue')", [$userId]
+    "SELECT COUNT(*) AS c FROM payments WHERE member_id = ? AND status IN ('pending','overdue')", [$memberId]
 )['c'] ?? 0);
 
 $overdueCount = (int)($db->fetchOne(
-    "SELECT COUNT(*) AS c FROM payments WHERE member_id = ? AND status = 'overdue'", [$userId]
+    "SELECT COUNT(*) AS c FROM payments WHERE member_id = ? AND status = 'overdue'", [$memberId]
 )['c'] ?? 0);
 
 // Upcoming events
@@ -45,13 +44,13 @@ $recentAnnouncements = $db->fetchAll(
     "SELECT * FROM announcements WHERE is_published = 1 ORDER BY created_at DESC LIMIT 3"
 );
 
-// My pending payments
+// My pending payments — use members.id
 $myDues = $db->fetchAll(
     "SELECT p.*, d.title AS due_title, d.amount AS due_amount, d.due_date
      FROM payments p JOIN dues d ON p.due_id = d.id
      WHERE p.member_id = ? AND p.status IN ('pending','overdue')
      ORDER BY d.due_date ASC LIMIT 5",
-    [$userId]
+    [$memberId]
 );
 
 include dirname(__DIR__) . '/includes/header.php';
@@ -118,7 +117,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="card-title">My Pending Dues</h6>
-                <a href="<?php echo BASE_URL; ?>payments/my-dues.php" class="btn btn-sm btn-outline-primary">View All</a>
+                <a href="<?php echo BASE_URL; ?>payments/my-payments.php" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <div class="card-body p-0">
                 <?php if (empty($myDues)): ?>
@@ -152,7 +151,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="card-title">Upcoming Events</h6>
-                <a href="<?php echo BASE_URL; ?>events/" class="btn btn-sm btn-outline-primary">View All</a>
+                <a href="<?php echo BASE_URL; ?>events/index.php" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <div class="card-body p-0">
                 <?php if (empty($upcomingEvents)): ?>
@@ -186,7 +185,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="card-title">Active Polls</h6>
-                <a href="<?php echo BASE_URL; ?>polls/" class="btn btn-sm btn-outline-primary">View All</a>
+                <a href="<?php echo BASE_URL; ?>polls/index.php" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <div class="card-body">
                 <?php if (empty($activePolls)): ?>

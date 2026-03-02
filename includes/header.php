@@ -136,8 +136,16 @@ try {
             color: var(--text-primary);
             transition: var(--transition-fast);
         }
-        .navbar-brand img { height: 32px; width: auto; }
         .navbar-brand:hover { color: var(--primary); }
+        .brand-icon {
+            width: 34px; height: 34px; flex-shrink: 0;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, var(--primary), #007867);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: var(--font-weight-bold);
+            letter-spacing: 0.5px;
+        }
 
         .navbar-nav {
             display: flex;
@@ -325,11 +333,9 @@ try {
 
     <!-- Brand -->
     <a class="navbar-brand" href="<?php echo BASE_URL; ?>dashboard/">
-        <img src="<?php echo BASE_URL; ?>assets/images/icons/logo.png"
-             alt="<?php echo e(SITE_ABBR); ?>"
-             onerror="this.style.display='none'">
-        <span class="d-none d-sm-inline"><?php echo e(SITE_NAME); ?></span>
-        <span class="d-sm-none"><?php echo e(SITE_ABBR); ?></span>
+        <div class="brand-icon"><?php echo e(SITE_ABBR); ?></div>
+        <span class="d-none d-md-inline"><?php echo e(SITE_NAME); ?></span>
+        <span class="d-md-none d-sm-inline"><?php echo e(SITE_ABBR); ?></span>
     </a>
 
     <!-- Right-side actions -->
