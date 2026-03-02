@@ -98,7 +98,7 @@ try {
 
     <!-- Dasher UI Design System -->
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/dasher-variables.css?v=1.0">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/dasher-core-styles.css?v=1.0">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/dasher-core-styles.css?v=1.1">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/dasher-table-chart-styles.css?v=1.0">
 
     <!-- Layout (navbar, sidebar, content) — overrides core styles -->

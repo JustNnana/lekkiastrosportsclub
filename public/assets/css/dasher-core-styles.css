@@ -93,7 +93,7 @@ a:hover {
 
 /* ===== LAYOUT ===== */
 .main-wrapper {
-  display: flex;
+  display: block;
   min-height: 100vh;
 }
 
@@ -123,6 +123,8 @@ a:hover {
 
 .navbar-nav {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--spacing-4);
   margin-left: auto;
