@@ -7,6 +7,11 @@
 require_once dirname(__DIR__) . '/app/config.php';
 require_once dirname(__DIR__) . '/classes/User.php';
 
+// Prevent browser from caching the login page (stale CSRF tokens)
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 // Already logged in — go to dashboard
 if (isLoggedIn()) {
     redirect('dashboard/');
