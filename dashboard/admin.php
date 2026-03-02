@@ -79,7 +79,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
         <a href="<?php echo BASE_URL; ?>members/create.php" class="btn btn-primary btn-sm">
             <i class="fas fa-user-plus"></i> Add Member
         </a>
-        <a href="<?php echo BASE_URL; ?>payments/create-due.php" class="btn btn-outline-primary btn-sm">
+        <a href="<?php echo BASE_URL; ?>payments/due-form.php" class="btn btn-outline-primary btn-sm">
             <i class="fas fa-plus"></i> Create Due
         </a>
     </div>
