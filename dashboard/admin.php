@@ -241,7 +241,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     </a>
 </div>
 
-<!-- ===== MOBILE QUICK ACTIONS (icon grid, mobile only) ===== -->
+<!-- ===== MOBILE QUICK ACTIONS (icon grid + link list, mobile only) ===== -->
 <div class="ios-mobile-actions">
     <p class="ios-mobile-actions-title">Quick Actions</p>
     <div class="ios-mobile-actions-grid">
@@ -249,17 +249,62 @@ include dirname(__DIR__) . '/includes/sidebar.php';
             <div class="ios-mobile-action-icon" style="background:#007aff"><i class="fas fa-user-plus"></i></div>
             <span class="ios-mobile-action-label">Add Member</span>
         </a>
-        <a href="<?php echo BASE_URL; ?>payments/" class="ios-mobile-action-btn">
-            <div class="ios-mobile-action-icon" style="background:#34c759"><i class="fas fa-wallet"></i></div>
-            <span class="ios-mobile-action-label">Payments</span>
+        <a href="<?php echo BASE_URL; ?>payments/due-form.php" class="ios-mobile-action-btn">
+            <div class="ios-mobile-action-icon" style="background:#34c759"><i class="fas fa-plus"></i></div>
+            <span class="ios-mobile-action-label">Create Due</span>
         </a>
         <a href="<?php echo BASE_URL; ?>announcements/create.php" class="ios-mobile-action-btn">
             <div class="ios-mobile-action-icon" style="background:#ff9500"><i class="fas fa-bullhorn"></i></div>
             <span class="ios-mobile-action-label">Announce</span>
         </a>
-        <a href="<?php echo BASE_URL; ?>reports/index.php" class="ios-mobile-action-btn">
-            <div class="ios-mobile-action-icon" style="background:#af52de"><i class="fas fa-chart-bar"></i></div>
-            <span class="ios-mobile-action-label">Reports</span>
+        <a href="<?php echo BASE_URL; ?>events/form.php" class="ios-mobile-action-btn">
+            <div class="ios-mobile-action-icon" style="background:#34c759"><i class="fas fa-calendar-plus"></i></div>
+            <span class="ios-mobile-action-label">New Event</span>
+        </a>
+    </div>
+
+    <!-- Quick Links list -->
+    <div class="ios-mobile-links">
+        <p class="ios-mobile-links-title">All Sections</p>
+        <a href="<?php echo BASE_URL; ?>members/" class="ios-admin-link">
+            <div class="ios-admin-link-icon" style="background:rgba(0,122,255,.12);color:#007aff"><i class="fas fa-users"></i></div>
+            <span class="ios-admin-link-label">View All Members</span>
+            <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+        </a>
+        <a href="<?php echo BASE_URL; ?>payments/" class="ios-admin-link">
+            <div class="ios-admin-link-icon" style="background:rgba(52,199,89,.12);color:#34c759"><i class="fas fa-wallet"></i></div>
+            <span class="ios-admin-link-label">Payment Management</span>
+            <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+        </a>
+        <a href="<?php echo BASE_URL; ?>announcements/manage.php" class="ios-admin-link">
+            <div class="ios-admin-link-icon" style="background:rgba(255,149,0,.12);color:#ff9500"><i class="fas fa-bullhorn"></i></div>
+            <span class="ios-admin-link-label">Announcements</span>
+            <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+        </a>
+        <a href="<?php echo BASE_URL; ?>events/manage.php" class="ios-admin-link">
+            <div class="ios-admin-link-icon" style="background:rgba(52,199,89,.12);color:#34c759"><i class="fas fa-calendar-alt"></i></div>
+            <span class="ios-admin-link-label">Events & Calendar</span>
+            <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+        </a>
+        <a href="<?php echo BASE_URL; ?>tournaments/manage.php" class="ios-admin-link">
+            <div class="ios-admin-link-icon" style="background:rgba(255,59,48,.12);color:#ff3b30"><i class="fas fa-trophy"></i></div>
+            <span class="ios-admin-link-label">Tournaments</span>
+            <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+        </a>
+        <a href="<?php echo BASE_URL; ?>polls/manage.php" class="ios-admin-link">
+            <div class="ios-admin-link-icon" style="background:rgba(88,86,214,.12);color:#5856d6"><i class="fas fa-poll"></i></div>
+            <span class="ios-admin-link-label">Polls & Voting</span>
+            <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+        </a>
+        <a href="<?php echo BASE_URL; ?>documents/manage.php" class="ios-admin-link">
+            <div class="ios-admin-link-icon" style="background:rgba(142,142,147,.12);color:#8e8e93"><i class="fas fa-folder-open"></i></div>
+            <span class="ios-admin-link-label">Documents</span>
+            <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+        </a>
+        <a href="<?php echo BASE_URL; ?>reports/index.php" class="ios-admin-link" style="border-bottom:none">
+            <div class="ios-admin-link-icon" style="background:rgba(175,82,222,.12);color:#af52de"><i class="fas fa-chart-bar"></i></div>
+            <span class="ios-admin-link-label">Reports & Analytics</span>
+            <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
         </a>
     </div>
 </div>
@@ -534,6 +579,20 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 }
 .ios-mobile-action-label { font-size: 11px; font-weight: 500; color: var(--text-primary); text-align: center; line-height: 1.3; }
 
+/* Mobile links list (inside mobile actions card) */
+.ios-mobile-links {
+    margin-top: 16px; margin-bottom: -16px; /* cancel card bottom padding */
+    border-top: 1px solid var(--border-color);
+    margin-left: -16px; margin-right: -16px; /* bleed to card edges */
+}
+.ios-mobile-links-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .6px; color: var(--text-muted);
+    padding: 12px 16px 6px; margin: 0;
+}
+.ios-mobile-links .ios-admin-link { padding: 13px 16px; }
+.ios-mobile-links .ios-admin-link:last-child { border-bottom: none; }
+
 /* ── Mobile greeting (hidden by default) ── */
 .ios-mobile-greeting { display: none; margin-bottom: 20px; }
 .ios-mobile-greeting-card {
@@ -757,9 +816,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     .stat-value  { font-size: 22px !important; }
     .stat-progress { display: none; }
 
-    /* Hide chart card only, keep Quick Links visible */
-    .ios-charts-grid { grid-template-columns: 1fr; }
-    .ios-charts-grid > .ios-section-card:first-child { display: none; }
+    .ios-charts-grid { display: none; }
 
     .ios-section-header { padding: 14px 16px; }
     .ios-section-icon   { width: 34px; height: 34px; font-size: 14px; }

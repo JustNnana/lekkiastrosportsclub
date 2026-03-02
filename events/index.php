@@ -120,7 +120,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 }
 
 /* Calendar */
-.ios-cal-card { }
+
 
 .ios-cal-nav {
     display: flex; align-items: center; justify-content: space-between;
@@ -228,19 +228,37 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 }
 @media (max-width: 992px) {
     .ios-events-layout { grid-template-columns: 1fr; }
-    .ios-type-stats    { grid-template-columns: repeat(5,1fr); }
 }
 @media (max-width: 768px) {
     .content-header { display: none !important; }
-    .ios-cal-card   { display: none; }            /* hide calendar on mobile */
-    .ios-type-stats { grid-template-columns: repeat(3,1fr); }
-    .cal-cell       { min-height: 60px; }
+
+    /* Calendar — smaller cells, keep visible */
+    .cal-cell       { min-height: 52px; padding: 3px; }
+    .cal-header     { padding: 6px 2px; font-size: 9px; }
+    .cal-day-num    { font-size: 11px; margin-bottom: 2px; }
+    .cal-today .cal-day-num { width: 20px; height: 20px; font-size: 10px; }
+    .cal-event      { font-size: 9px; padding: 1px 3px; border-left-width: 2px !important; }
+    .cal-more       { font-size: 9px; }
+
+    .ios-type-stats { grid-template-columns: repeat(5,1fr); gap: 6px; padding: 12px; }
+    .ios-type-stat-value { font-size: 15px; }
+    .ios-section-header  { padding: 14px 16px; gap: 12px; }
 }
 @media (max-width: 480px) {
-    .ios-type-stats   { grid-template-columns: repeat(3,1fr); gap: 6px; padding: 12px; }
-    .ios-type-stat-value { font-size: 16px; }
-    .ios-event-list-item { padding: 12px 16px; }
-    .ios-section-header  { padding: 14px 16px; gap: 12px; }
+    .cal-cell       { min-height: 44px; padding: 2px; }
+    .cal-header     { font-size: 8px; padding: 5px 1px; }
+    .cal-day-num    { font-size: 10px; }
+    .cal-today .cal-day-num { width: 18px; height: 18px; font-size: 9px; }
+    .cal-event      { display: none; } /* too small — just show dots */
+    .cal-has-events::after {
+        content: ''; display: block;
+        width: 5px; height: 5px; border-radius: 50%;
+        background: var(--primary); margin: 2px auto 0;
+    }
+    .ios-type-stats { grid-template-columns: repeat(5,1fr); gap: 4px; padding: 10px; }
+    .ios-type-stat-value { font-size: 14px; }
+    .ios-type-stat-label { font-size: 9px; }
+    .ios-event-list-item { padding: 11px 14px; }
 }
 </style>
 
@@ -278,7 +296,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 
     <!-- ───── Calendar ───── -->
     <div>
-        <div class="ios-section-card ios-cal-card">
+        <div class="ios-section-card">
 
             <!-- Nav bar -->
             <div class="ios-cal-nav">
@@ -300,7 +318,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                 <?php for ($d = 1; $d <= $daysInMonth; $d++):
                     $isToday = $d === (int)date('j') && $month === (int)date('n') && $year === (int)date('Y');
                 ?>
-                <div class="cal-cell <?php echo $isToday ? 'cal-today' : ''; ?>">
+                <div class="cal-cell <?php echo $isToday ? 'cal-today' : ''; ?> <?php echo !empty($byDay[$d]) ? 'cal-has-events' : ''; ?>">
                     <div class="cal-day-num"><?php echo $d; ?></div>
                     <?php if (!empty($byDay[$d])): ?>
                     <?php foreach (array_slice($byDay[$d], 0, 2) as $ev):
