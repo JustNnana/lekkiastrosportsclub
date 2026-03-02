@@ -97,7 +97,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
             <p>Admin <span>·</span> <?php echo date('d M Y'); ?></p>
         </div>
         <button class="ios-mobile-greeting-dots"
-                onclick="window.iosHeaderMenu && window.iosHeaderMenu.open()"
+                id="adminMenuBtn"
                 aria-label="Open menu">
             <i class="fas fa-ellipsis-v"></i>
         </button>
@@ -318,11 +318,25 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                 <span class="ios-admin-link-label">Payment Management</span>
                 <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
             </a>
+            <a href="<?php echo BASE_URL; ?>announcements/manage.php" class="ios-admin-link">
+                <div class="ios-admin-link-icon" style="background:rgba(255,149,0,.12);color:#ff9500">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <span class="ios-admin-link-label">Announcements</span>
+                <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+            </a>
             <a href="<?php echo BASE_URL; ?>events/manage.php" class="ios-admin-link">
                 <div class="ios-admin-link-icon" style="background:rgba(52,199,89,.12);color:#34c759">
                     <i class="fas fa-calendar-alt"></i>
                 </div>
                 <span class="ios-admin-link-label">Manage Events</span>
+                <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>tournaments/manage.php" class="ios-admin-link">
+                <div class="ios-admin-link-icon" style="background:rgba(255,59,48,.12);color:#ff3b30">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <span class="ios-admin-link-label">Tournaments</span>
                 <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
             </a>
             <a href="<?php echo BASE_URL; ?>polls/manage.php" class="ios-admin-link">
@@ -660,6 +674,61 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 }
 .ios-empty-btn:hover { opacity: .85; color: #fff; }
 
+/* ── Admin Mobile Menu modal ── */
+.ios-menu-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
+    z-index: 9998; opacity: 0; visibility: hidden; transition: .3s;
+}
+.ios-menu-backdrop.active { opacity: 1; visibility: visible; }
+.ios-menu-modal {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg-primary); border-radius: 16px 16px 0 0;
+    z-index: 9999; transform: translateY(100%);
+    transition: transform .3s cubic-bezier(.32,.72,0,1);
+    max-height: 88vh; overflow: hidden;
+    display: flex; flex-direction: column;
+}
+.ios-menu-modal.active { transform: translateY(0); }
+.ios-menu-handle { width: 36px; height: 5px; background: var(--border-color); border-radius: 3px; margin: 10px auto 4px; flex-shrink: 0; }
+.ios-menu-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px 14px; border-bottom: 1px solid var(--border-color); flex-shrink: 0;
+}
+.ios-menu-title { font-size: 17px; font-weight: 600; color: var(--text-primary); margin: 0; }
+.ios-menu-close {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--bg-secondary); border: none;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); cursor: pointer;
+}
+.ios-menu-content { padding: 16px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+.ios-menu-section { margin-bottom: 16px; }
+.ios-menu-section-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; padding-left: 4px; }
+.ios-menu-card { background: var(--bg-secondary); border-radius: 12px; overflow: hidden; }
+.ios-menu-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-color); }
+.ios-menu-stat-row:last-child { border-bottom: none; }
+.ios-menu-stat-label { font-size: 14px; color: var(--text-secondary); }
+.ios-menu-stat-value { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.ios-menu-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 16px; border-bottom: 1px solid var(--border-color);
+    text-decoration: none; color: var(--text-primary); transition: background .15s; cursor: pointer;
+}
+.ios-menu-item:last-child { border-bottom: none; }
+.ios-menu-item:active { background: var(--bg-subtle); }
+.ios-menu-item:hover { text-decoration: none; color: var(--text-primary); }
+.ios-menu-item-left { display: flex; align-items: center; gap: 12px; }
+.ios-menu-item-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff; }
+.ios-menu-item-icon.blue   { background: #007aff; }
+.ios-menu-item-icon.green  { background: #34c759; }
+.ios-menu-item-icon.orange { background: #ff9500; }
+.ios-menu-item-icon.purple { background: #af52de; }
+.ios-menu-item-icon.red    { background: #ff3b30; }
+.ios-menu-item-icon.gray   { background: #8e8e93; }
+.ios-menu-item-label { font-size: 14px; font-weight: 500; }
+.ios-menu-item-chevron { color: var(--text-muted); font-size: 11px; }
+
 /* ── Responsive ── */
 @media (max-width: 1200px) {
     .ios-quick-actions { grid-template-columns: repeat(3, 1fr); }
@@ -688,7 +757,9 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     .stat-value  { font-size: 22px !important; }
     .stat-progress { display: none; }
 
-    .ios-charts-grid { display: none; }
+    /* Hide chart card only, keep Quick Links visible */
+    .ios-charts-grid { grid-template-columns: 1fr; }
+    .ios-charts-grid > .ios-section-card:first-child { display: none; }
 
     .ios-section-header { padding: 14px 16px; }
     .ios-section-icon   { width: 34px; height: 34px; font-size: 14px; }
@@ -707,6 +778,133 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     .ios-mobile-action-icon { width: 44px; height: 44px; font-size: 18px; }
 }
 </style>
+
+<!-- ===== ADMIN MOBILE MENU ===== -->
+<div class="ios-menu-backdrop" id="adminMenuBackdrop"></div>
+<div class="ios-menu-modal" id="adminMenuModal">
+    <div class="ios-menu-handle"></div>
+    <div class="ios-menu-header">
+        <h3 class="ios-menu-title">Admin Dashboard</h3>
+        <button class="ios-menu-close" id="adminMenuClose"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="ios-menu-content">
+
+        <!-- Stats summary -->
+        <div class="ios-menu-section">
+            <div class="ios-menu-section-title">Overview</div>
+            <div class="ios-menu-card">
+                <div class="ios-menu-stat-row">
+                    <span class="ios-menu-stat-label">Total Members</span>
+                    <span class="ios-menu-stat-value"><?php echo number_format($totalMembers); ?></span>
+                </div>
+                <div class="ios-menu-stat-row">
+                    <span class="ios-menu-stat-label">Active Members</span>
+                    <span class="ios-menu-stat-value" style="color:#34c759"><?php echo number_format($activeMembers); ?></span>
+                </div>
+                <div class="ios-menu-stat-row">
+                    <span class="ios-menu-stat-label">Pending Dues</span>
+                    <span class="ios-menu-stat-value" style="color:#ff9500"><?php echo $pendingDues; ?></span>
+                </div>
+                <div class="ios-menu-stat-row">
+                    <span class="ios-menu-stat-label">Upcoming Events</span>
+                    <span class="ios-menu-stat-value"><?php echo $upcomingEvents; ?></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Member actions -->
+        <div class="ios-menu-section">
+            <div class="ios-menu-section-title">Members</div>
+            <div class="ios-menu-card">
+                <a href="<?php echo BASE_URL; ?>members/" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon blue"><i class="fas fa-users"></i></div>
+                        <span class="ios-menu-item-label">All Members</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+                <a href="<?php echo BASE_URL; ?>members/create.php" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon blue"><i class="fas fa-user-plus"></i></div>
+                        <span class="ios-menu-item-label">Add Member</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Payments actions -->
+        <div class="ios-menu-section">
+            <div class="ios-menu-section-title">Payments</div>
+            <div class="ios-menu-card">
+                <a href="<?php echo BASE_URL; ?>payments/" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon green"><i class="fas fa-wallet"></i></div>
+                        <span class="ios-menu-item-label">Payment Management</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+                <a href="<?php echo BASE_URL; ?>payments/due-form.php" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon green"><i class="fas fa-plus"></i></div>
+                        <span class="ios-menu-item-label">Create Due</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Club actions -->
+        <div class="ios-menu-section">
+            <div class="ios-menu-section-title">Club</div>
+            <div class="ios-menu-card">
+                <a href="<?php echo BASE_URL; ?>announcements/manage.php" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon orange"><i class="fas fa-bullhorn"></i></div>
+                        <span class="ios-menu-item-label">Announcements</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+                <a href="<?php echo BASE_URL; ?>events/manage.php" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon green"><i class="fas fa-calendar-alt"></i></div>
+                        <span class="ios-menu-item-label">Events & Calendar</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+                <a href="<?php echo BASE_URL; ?>tournaments/manage.php" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon red"><i class="fas fa-trophy"></i></div>
+                        <span class="ios-menu-item-label">Tournaments</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+                <a href="<?php echo BASE_URL; ?>polls/manage.php" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon purple"><i class="fas fa-poll"></i></div>
+                        <span class="ios-menu-item-label">Polls & Voting</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+                <a href="<?php echo BASE_URL; ?>documents/manage.php" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon gray"><i class="fas fa-folder-open"></i></div>
+                        <span class="ios-menu-item-label">Documents</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+                <a href="<?php echo BASE_URL; ?>reports/index.php" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon purple"><i class="fas fa-chart-bar"></i></div>
+                        <span class="ios-menu-item-label">Reports & Analytics</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <?php if ($includeCharts): ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -769,5 +967,28 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 })();
 </script>
 <?php endif; ?>
+
+<script>
+(function () {
+    var backdrop = document.getElementById('adminMenuBackdrop');
+    var modal    = document.getElementById('adminMenuModal');
+    var openBtn  = document.getElementById('adminMenuBtn');
+    var closeBtn = document.getElementById('adminMenuClose');
+
+    function openMenu()  { backdrop.classList.add('active'); modal.classList.add('active'); }
+    function closeMenu() { backdrop.classList.remove('active'); modal.classList.remove('active'); }
+
+    if (openBtn)  openBtn.addEventListener('click', openMenu);
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    if (backdrop) backdrop.addEventListener('click', closeMenu);
+
+    // Swipe down to close
+    var startY = 0;
+    if (modal) {
+        modal.addEventListener('touchstart', function (e) { startY = e.touches[0].clientY; }, {passive:true});
+        modal.addEventListener('touchend',   function (e) { if (e.changedTouches[0].clientY - startY > 60) closeMenu(); }, {passive:true});
+    }
+})();
+</script>
 
 <?php include dirname(__DIR__) . '/includes/footer.php'; ?>

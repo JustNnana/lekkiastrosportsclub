@@ -14,12 +14,12 @@ $eventObj  = new Event();
 // Current month for calendar
 $year  = (int)($_GET['year']  ?? date('Y'));
 $month = (int)($_GET['month'] ?? date('n'));
-if ($month < 1) { $month = 12; $year--; }
-if ($month > 12) { $month = 1; $year++; }
+if ($month < 1)  { $month = 12; $year--; }
+if ($month > 12) { $month = 1;  $year++; }
 
-$monthEvents   = $eventObj->getByMonth($year, $month);
-$upcomingList  = $eventObj->getUpcoming(20);
-$userId        = (int)$_SESSION['user_id'];
+$monthEvents  = $eventObj->getByMonth($year, $month);
+$upcomingList = $eventObj->getUpcoming(20);
+$userId       = (int)$_SESSION['user_id'];
 
 // Group calendar events by day
 $byDay = [];
@@ -29,128 +29,113 @@ foreach ($monthEvents as $ev) {
 }
 
 $typeColors = [
-    'training' => '#3b82f6',
-    'match'    => '#ef4444',
-    'meeting'  => '#f59e0b',
-    'social'   => '#8b5cf6',
-    'other'    => '#6b7280',
+    'training' => ['bg' => 'rgba(59,130,246,.12)',  'hex' => '#3b82f6'],
+    'match'    => ['bg' => 'rgba(239,68,68,.12)',   'hex' => '#ef4444'],
+    'meeting'  => ['bg' => 'rgba(245,158,11,.12)',  'hex' => '#f59e0b'],
+    'social'   => ['bg' => 'rgba(139,92,246,.12)',  'hex' => '#8b5cf6'],
+    'other'    => ['bg' => 'rgba(107,114,128,.12)', 'hex' => '#6b7280'],
 ];
+$typeLabels = ['training'=>'Training','match'=>'Match','meeting'=>'Meeting','social'=>'Social','other'=>'Other'];
 
-$monthName  = date('F Y', mktime(0,0,0,$month,1,$year));
-$firstDay   = (int)date('w', mktime(0,0,0,$month,1,$year)); // 0=Sun
-$daysInMonth= (int)date('t', mktime(0,0,0,$month,1,$year));
-$prevMonth  = $month === 1 ? ['year'=>$year-1,'month'=>12] : ['year'=>$year,'month'=>$month-1];
-$nextMonth  = $month === 12 ? ['year'=>$year+1,'month'=>1] : ['year'=>$year,'month'=>$month+1];
+$monthName   = date('F Y', mktime(0,0,0,$month,1,$year));
+$firstDay    = (int)date('w', mktime(0,0,0,$month,1,$year)); // 0=Sun
+$daysInMonth = (int)date('t', mktime(0,0,0,$month,1,$year));
+$prevMonth   = $month === 1  ? ['year'=>$year-1,'month'=>12] : ['year'=>$year,'month'=>$month-1];
+$nextMonth   = $month === 12 ? ['year'=>$year+1,'month'=>1]  : ['year'=>$year,'month'=>$month+1];
+
+// Count upcoming per type for stats
+$typeCounts = array_fill_keys(array_keys($typeColors), 0);
+foreach ($upcomingList as $ev) {
+    $t = $ev['event_type'] ?? 'other';
+    if (isset($typeCounts[$t])) $typeCounts[$t]++;
+}
 
 include dirname(__DIR__) . '/includes/header.php';
 include dirname(__DIR__) . '/includes/sidebar.php';
 ?>
 
-<div class="content-header">
-    <div>
-        <h1 class="content-title">Events & Calendar</h1>
-        <p class="content-subtitle">View upcoming club activities.</p>
-    </div>
-    <?php if (isAdmin()): ?>
-    <div class="d-flex gap-2">
-        <a href="<?php echo BASE_URL; ?>events/manage.php" class="btn btn-secondary"><i class="fas fa-list me-2"></i>Manage</a>
-        <a href="<?php echo BASE_URL; ?>events/form.php" class="btn btn-primary"><i class="fas fa-plus me-2"></i>New Event</a>
-    </div>
-    <?php endif; ?>
-</div>
-
-<!-- Event Type Legend -->
-<div class="d-flex flex-wrap gap-3 mb-4">
-    <?php foreach (['training'=>'Training','match'=>'Match','meeting'=>'Meeting','social'=>'Social','other'=>'Other'] as $k=>$lbl): ?>
-    <span class="d-flex align-items-center gap-1 small">
-        <span style="width:10px;height:10px;border-radius:50%;background:<?php echo $typeColors[$k]; ?>;display:inline-block"></span>
-        <?php echo $lbl; ?>
-    </span>
-    <?php endforeach; ?>
-</div>
-
-<div class="row g-4">
-    <!-- Calendar -->
-    <div class="col-12 col-lg-8">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <a href="?year=<?php echo $prevMonth['year']; ?>&month=<?php echo $prevMonth['month']; ?>" class="btn btn-secondary btn-sm">‹</a>
-                <h6 class="card-title mb-0"><?php echo $monthName; ?></h6>
-                <a href="?year=<?php echo $nextMonth['year']; ?>&month=<?php echo $nextMonth['month']; ?>" class="btn btn-secondary btn-sm">›</a>
-            </div>
-            <div class="card-body p-0">
-                <div class="cal-grid">
-                    <!-- Day headers -->
-                    <?php foreach (['Sun','Mon','Tue','Wed','Thu','Fri','Sat'] as $dh): ?>
-                    <div class="cal-header"><?php echo $dh; ?></div>
-                    <?php endforeach; ?>
-                    <!-- Empty cells before month starts -->
-                    <?php for ($i = 0; $i < $firstDay; $i++): ?>
-                    <div class="cal-cell cal-empty"></div>
-                    <?php endfor; ?>
-                    <!-- Days -->
-                    <?php for ($d = 1; $d <= $daysInMonth; $d++):
-                        $isToday = ($d === (int)date('j') && $month === (int)date('n') && $year === (int)date('Y'));
-                    ?>
-                    <div class="cal-cell <?php echo $isToday ? 'cal-today' : ''; ?>">
-                        <div class="cal-day-num"><?php echo $d; ?></div>
-                        <?php if (!empty($byDay[$d])): ?>
-                        <?php foreach (array_slice($byDay[$d], 0, 3) as $ev): ?>
-                        <a href="<?php echo BASE_URL; ?>events/view.php?id=<?php echo $ev['id']; ?>"
-                           class="cal-event" style="background:<?php echo $typeColors[$ev['event_type']]; ?>20;color:<?php echo $typeColors[$ev['event_type']]; ?>;border-left:3px solid <?php echo $typeColors[$ev['event_type']]; ?>"
-                           title="<?php echo e($ev['title']); ?>">
-                            <?php echo e(mb_substr($ev['title'], 0, 18)); ?>
-                        </a>
-                        <?php endforeach; ?>
-                        <?php if (count($byDay[$d]) > 3): ?>
-                        <span class="cal-more">+<?php echo count($byDay[$d])-3; ?> more</span>
-                        <?php endif; ?>
-                        <?php endif; ?>
-                    </div>
-                    <?php endfor; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Upcoming list -->
-    <div class="col-12 col-lg-4">
-        <div class="card">
-            <div class="card-header"><h6 class="card-title mb-0"><i class="fas fa-list-ul me-2"></i>Upcoming Events</h6></div>
-            <div class="card-body p-0">
-                <?php if (empty($upcomingList)): ?>
-                <div class="text-center text-muted py-5">No upcoming events.</div>
-                <?php else: ?>
-                <?php foreach ($upcomingList as $ev):
-                    $userRsvp = $eventObj->getUserRsvp($ev['id'], $userId);
-                ?>
-                <div class="event-list-item">
-                    <div class="event-dot" style="background:<?php echo $typeColors[$ev['event_type']]; ?>"></div>
-                    <div class="flex-fill">
-                        <div class="fw-semibold small">
-                            <a href="<?php echo BASE_URL; ?>events/view.php?id=<?php echo $ev['id']; ?>"
-                               class="text-body text-decoration-none"><?php echo e($ev['title']); ?></a>
-                        </div>
-                        <div class="text-muted" style="font-size:11px">
-                            <?php echo formatDate($ev['start_date'], 'd M, g:i A'); ?>
-                            <?php if ($ev['location']): ?> · <?php echo e($ev['location']); ?><?php endif; ?>
-                        </div>
-                        <?php if ($userRsvp): ?>
-                        <span class="badge mt-1" style="font-size:9px;background:<?php echo $userRsvp==='attending'?'#16a34a20':'#f59e0b20'; ?>;color:<?php echo $userRsvp==='attending'?'#16a34a':'#ca8a04'; ?>">
-                            <?php echo ucfirst(str_replace('_',' ',$userRsvp)); ?>
-                        </span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</div>
-
 <style>
-/* Calendar grid */
+/* ── iOS Events Page ──────────────────────────────── */
+:root {
+    --ios-red:    #FF453A;
+    --ios-orange: #FF9F0A;
+    --ios-green:  #30D158;
+    --ios-blue:   #0A84FF;
+    --ios-purple: #BF5AF2;
+}
+
+/* Section card (consistent with other pages) */
+.ios-section-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.ios-section-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 20px;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border-color);
+}
+.ios-section-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+}
+.ios-section-icon.green  { background: rgba(48,209,88,.15);  color: var(--ios-green); }
+.ios-section-icon.blue   { background: rgba(10,132,255,.15); color: var(--ios-blue); }
+.ios-section-icon.orange { background: rgba(255,159,10,.15); color: var(--ios-orange); }
+.ios-section-icon.purple { background: rgba(191,90,242,.15); color: var(--ios-purple); }
+
+.ios-section-title-wrap { flex: 1; min-width: 0; }
+.ios-section-title-wrap h5 { font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0; }
+.ios-section-title-wrap p  { font-size: 12px; color: var(--text-secondary); margin: 0; }
+
+.ios-link-btn {
+    font-size: 13px; font-weight: 600; color: var(--primary);
+    text-decoration: none; flex-shrink: 0;
+    display: flex; align-items: center; gap: 4px;
+}
+.ios-link-btn:hover { text-decoration: underline; }
+
+/* Events grid layout */
+.ios-events-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    align-items: start;
+}
+
+/* Type legend */
+.ios-type-legend {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 16px;
+}
+.ios-type-pill {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+    border: 1px solid transparent;
+}
+
+/* Calendar */
+.ios-cal-card { }
+
+.ios-cal-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; border-bottom: 1px solid var(--border-color);
+}
+.ios-cal-month { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.ios-cal-nav-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--bg-secondary); border: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); text-decoration: none; font-size: 14px;
+    transition: background .2s;
+}
+.ios-cal-nav-btn:hover { background: var(--border-color); }
+
 .cal-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -159,65 +144,248 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 }
 .cal-header {
     text-align: center;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    color: var(--text-muted);
-    padding: 8px 4px;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .5px;
+    color: var(--text-muted); padding: 8px 2px;
     border-right: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
     background: var(--surface-2);
 }
 .cal-cell {
-    min-height: 90px;
-    padding: 6px;
+    min-height: 80px; padding: 5px;
     border-right: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
     vertical-align: top;
 }
-.cal-empty { background: var(--surface-2); }
-.cal-today { background: rgba(var(--primary-rgb),.05); }
+.cal-empty  { background: var(--surface-2); }
+.cal-today  { background: rgba(var(--primary-rgb),.04); }
 .cal-day-num {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 4px;
+    font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    margin-bottom: 3px; display: inline-block;
 }
 .cal-today .cal-day-num {
-    color: var(--primary);
-    background: var(--primary);
-    color: #fff;
-    width: 22px; height: 22px;
-    border-radius: 50%;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--primary); color: #fff;
     display: flex; align-items: center; justify-content: center;
     font-size: 11px;
 }
 .cal-event {
-    display: block;
-    font-size: 10px;
-    padding: 2px 4px;
-    border-radius: 3px;
-    margin-bottom: 2px;
-    text-decoration: none;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-weight: 500;
+    display: block; font-size: 10px; font-weight: 500;
+    padding: 2px 5px; border-radius: 4px;
+    margin-bottom: 2px; text-decoration: none;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .cal-more { font-size: 10px; color: var(--text-muted); }
 
 /* Upcoming list */
-.event-list-item {
+.ios-event-list-item {
     display: flex; align-items: flex-start; gap: 12px;
-    padding: 12px 16px;
+    padding: 14px 20px;
     border-bottom: 1px solid var(--border-color);
+    transition: background .15s;
 }
-.event-list-item:last-child { border-bottom: none; }
-.event-dot {
-    width: 8px; height: 8px; border-radius: 50%;
+.ios-event-list-item:last-child { border-bottom: none; }
+.ios-event-list-item:hover { background: var(--bg-subtle); }
+
+.ios-event-dot {
+    width: 10px; height: 10px; border-radius: 50%;
     flex-shrink: 0; margin-top: 5px;
 }
+.ios-event-content { flex: 1; min-width: 0; }
+.ios-event-title {
+    font-size: 14px; font-weight: 600; color: var(--text-primary);
+    text-decoration: none; display: block; margin-bottom: 2px;
+}
+.ios-event-title:hover { color: var(--primary); }
+.ios-event-meta { font-size: 11px; color: var(--text-muted); }
+
+.ios-event-rsvp {
+    font-size: 10px; font-weight: 600; padding: 2px 8px;
+    border-radius: 20px; flex-shrink: 0; align-self: center;
+}
+.rsvp-attending    { background: rgba(48,209,88,.12);  color: #16a34a; }
+.rsvp-not_attending { background: rgba(255,69,58,.12);  color: #ef4444; }
+.rsvp-maybe        { background: rgba(245,158,11,.12); color: #ca8a04; }
+
+/* Stats row */
+.ios-type-stats {
+    display: grid; grid-template-columns: repeat(5,1fr); gap: 8px;
+    padding: 16px 20px; border-bottom: 1px solid var(--border-color);
+}
+.ios-type-stat { text-align: center; }
+.ios-type-stat-value { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+.ios-type-stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+
+.ios-empty-state {
+    text-align: center; padding: 40px 20px; color: var(--text-secondary);
+}
+.ios-empty-state i { font-size: 40px; opacity: .4; display: block; margin-bottom: 12px; }
+.ios-empty-state p { font-size: 14px; margin: 0; }
+
+/* ── Responsive ─────────────────────── */
+@media (max-width: 1100px) {
+    .ios-events-layout { grid-template-columns: 1fr 300px; }
+}
+@media (max-width: 992px) {
+    .ios-events-layout { grid-template-columns: 1fr; }
+    .ios-type-stats    { grid-template-columns: repeat(5,1fr); }
+}
+@media (max-width: 768px) {
+    .content-header { display: none !important; }
+    .ios-cal-card   { display: none; }            /* hide calendar on mobile */
+    .ios-type-stats { grid-template-columns: repeat(3,1fr); }
+    .cal-cell       { min-height: 60px; }
+}
+@media (max-width: 480px) {
+    .ios-type-stats   { grid-template-columns: repeat(3,1fr); gap: 6px; padding: 12px; }
+    .ios-type-stat-value { font-size: 16px; }
+    .ios-event-list-item { padding: 12px 16px; }
+    .ios-section-header  { padding: 14px 16px; gap: 12px; }
+}
 </style>
+
+<!-- Desktop Page Header -->
+<div class="content-header d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div>
+        <h1 class="content-title">Events & Calendar</h1>
+        <p class="content-subtitle">View upcoming club activities and schedule.</p>
+    </div>
+    <?php if (isAdmin()): ?>
+    <div class="d-flex gap-2">
+        <a href="<?php echo BASE_URL; ?>events/manage.php" class="btn btn-secondary btn-sm">
+            <i class="fas fa-list me-1"></i>Manage
+        </a>
+        <a href="<?php echo BASE_URL; ?>events/form.php" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-1"></i>New Event
+        </a>
+    </div>
+    <?php endif; ?>
+</div>
+
+<!-- Event Type Legend -->
+<div class="ios-type-legend mb-3">
+    <?php foreach ($typeColors as $key => $clr): ?>
+    <span class="ios-type-pill"
+          style="background:<?php echo $clr['bg']; ?>;color:<?php echo $clr['hex']; ?>;border-color:<?php echo $clr['hex']; ?>20">
+        <span style="width:8px;height:8px;border-radius:50%;background:<?php echo $clr['hex']; ?>;display:inline-block;flex-shrink:0"></span>
+        <?php echo $typeLabels[$key]; ?>
+    </span>
+    <?php endforeach; ?>
+</div>
+
+<!-- Main Layout -->
+<div class="ios-events-layout">
+
+    <!-- ───── Calendar ───── -->
+    <div>
+        <div class="ios-section-card ios-cal-card">
+
+            <!-- Nav bar -->
+            <div class="ios-cal-nav">
+                <a href="?year=<?php echo $prevMonth['year']; ?>&month=<?php echo $prevMonth['month']; ?>" class="ios-cal-nav-btn">‹</a>
+                <span class="ios-cal-month"><?php echo $monthName; ?></span>
+                <a href="?year=<?php echo $nextMonth['year']; ?>&month=<?php echo $nextMonth['month']; ?>" class="ios-cal-nav-btn">›</a>
+            </div>
+
+            <!-- Grid -->
+            <div class="cal-grid">
+                <?php foreach (['Sun','Mon','Tue','Wed','Thu','Fri','Sat'] as $dh): ?>
+                <div class="cal-header"><?php echo $dh; ?></div>
+                <?php endforeach; ?>
+
+                <?php for ($i = 0; $i < $firstDay; $i++): ?>
+                <div class="cal-cell cal-empty"></div>
+                <?php endfor; ?>
+
+                <?php for ($d = 1; $d <= $daysInMonth; $d++):
+                    $isToday = $d === (int)date('j') && $month === (int)date('n') && $year === (int)date('Y');
+                ?>
+                <div class="cal-cell <?php echo $isToday ? 'cal-today' : ''; ?>">
+                    <div class="cal-day-num"><?php echo $d; ?></div>
+                    <?php if (!empty($byDay[$d])): ?>
+                    <?php foreach (array_slice($byDay[$d], 0, 2) as $ev):
+                        $clr = $typeColors[$ev['event_type'] ?? 'other'] ?? $typeColors['other'];
+                    ?>
+                    <a href="<?php echo BASE_URL; ?>events/view.php?id=<?php echo $ev['id']; ?>"
+                       class="cal-event"
+                       style="background:<?php echo $clr['bg']; ?>;color:<?php echo $clr['hex']; ?>;border-left:3px solid <?php echo $clr['hex']; ?>"
+                       title="<?php echo e($ev['title']); ?>">
+                        <?php echo e(mb_substr($ev['title'], 0, 16)); ?>
+                    </a>
+                    <?php endforeach; ?>
+                    <?php if (count($byDay[$d]) > 2): ?>
+                    <span class="cal-more">+<?php echo count($byDay[$d])-2; ?> more</span>
+                    <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+                <?php endfor; ?>
+            </div>
+
+        </div><!-- /ios-section-card -->
+    </div>
+
+    <!-- ───── Upcoming List ───── -->
+    <div>
+        <div class="ios-section-card">
+
+            <!-- Header -->
+            <div class="ios-section-header">
+                <div class="ios-section-icon green"><i class="fas fa-calendar-alt"></i></div>
+                <div class="ios-section-title-wrap">
+                    <h5>Upcoming Events</h5>
+                    <p><?php echo count($upcomingList); ?> event<?php echo count($upcomingList) !== 1 ? 's' : ''; ?> ahead</p>
+                </div>
+            </div>
+
+            <!-- Type counts -->
+            <?php $totalUpcoming = array_sum($typeCounts); ?>
+            <?php if ($totalUpcoming > 0): ?>
+            <div class="ios-type-stats">
+                <?php foreach ($typeColors as $key => $clr): ?>
+                <div class="ios-type-stat">
+                    <div class="ios-type-stat-value" style="color:<?php echo $clr['hex']; ?>"><?php echo $typeCounts[$key]; ?></div>
+                    <div class="ios-type-stat-label"><?php echo $typeLabels[$key]; ?></div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+
+            <!-- List -->
+            <?php if (empty($upcomingList)): ?>
+            <div class="ios-empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <p>No upcoming events scheduled.</p>
+            </div>
+            <?php else: ?>
+            <?php foreach ($upcomingList as $ev):
+                $clr     = $typeColors[$ev['event_type'] ?? 'other'] ?? $typeColors['other'];
+                $userRsvp = $eventObj->getUserRsvp($ev['id'], $userId);
+            ?>
+            <div class="ios-event-list-item">
+                <div class="ios-event-dot" style="background:<?php echo $clr['hex']; ?>"></div>
+                <div class="ios-event-content">
+                    <a href="<?php echo BASE_URL; ?>events/view.php?id=<?php echo $ev['id']; ?>" class="ios-event-title">
+                        <?php echo e($ev['title']); ?>
+                    </a>
+                    <div class="ios-event-meta">
+                        <i class="fas fa-clock" style="margin-right:3px"></i><?php echo formatDate($ev['start_date'], 'd M, g:i A'); ?>
+                        <?php if ($ev['location']): ?>
+                        &nbsp;·&nbsp;<i class="fas fa-map-marker-alt" style="margin-right:3px"></i><?php echo e($ev['location']); ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php if ($userRsvp): ?>
+                <span class="ios-event-rsvp rsvp-<?php echo e($userRsvp); ?>">
+                    <?php echo ucfirst(str_replace('_',' ',$userRsvp)); ?>
+                </span>
+                <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
+            <?php endif; ?>
+
+        </div><!-- /ios-section-card -->
+    </div>
+
+</div><!-- /ios-events-layout -->
 
 <?php include dirname(__DIR__) . '/includes/footer.php'; ?>
