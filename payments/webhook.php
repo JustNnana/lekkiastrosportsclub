@@ -24,7 +24,7 @@ if (!$body) {
 
 // Verify Paystack signature (HMAC-SHA512)
 $signature = $_SERVER['HTTP_X_PAYSTACK_SIGNATURE'] ?? '';
-$expected  = hash_hmac('sha512', $body, PAYSTACK_SECRET_KEY);
+$expected  = hash_hmac('sha512', $body, paystackSecretKey());
 
 if (!hash_equals($expected, $signature)) {
     error_log('Paystack webhook: invalid signature.');

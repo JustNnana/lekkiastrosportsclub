@@ -20,7 +20,12 @@ if (isLoggedIn()) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    verifyCsrf();
+    // On the login page, a stale service-worker-cached form causes CSRF mismatch.
+    // Redirect to a fresh page instead of dying so the user can try again immediately.
+    $submitted = $_POST['csrf_token'] ?? '';
+    if (!hash_equals(csrfToken(), $submitted)) {
+        redirect('');
+    }
 
     $identifier = sanitize($_POST['identifier'] ?? '');
     $password   = $_POST['password'] ?? '';
@@ -356,6 +361,15 @@ document.getElementById('login-form').addEventListener('submit', function () {
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing in...';
 });
+
+// If a new service worker takes over while the user is on this page (e.g., the old
+// SW had the login page cached with a stale CSRF token), reload immediately to get
+// a fresh page with a valid token.
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+        window.location.reload();
+    });
+}
 </script>
 
 </body>

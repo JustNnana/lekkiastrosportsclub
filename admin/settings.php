@@ -19,6 +19,17 @@ $db->execute(
      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
 );
 
+// Load stored Paystack keys
+$storedPublicKey = '';
+$storedSecretKey = '';
+foreach ($db->fetchAll("SELECT `key`, `value` FROM settings WHERE `key` IN ('paystack_public_key','paystack_secret_key')") as $r) {
+    if ($r['key'] === 'paystack_public_key') $storedPublicKey = $r['value'] ?? '';
+    if ($r['key'] === 'paystack_secret_key') $storedSecretKey = $r['value'] ?? '';
+}
+// Fall back to .env constants if nothing saved in DB yet
+if (empty($storedPublicKey))  $storedPublicKey  = PAYSTACK_PUBLIC_KEY;
+if (empty($storedSecretKey))  $storedSecretKey  = PAYSTACK_SECRET_KEY;
+
 // Default values (fallback to constants)
 $defaults = [
     'club_name'         => SITE_NAME,
@@ -41,7 +52,7 @@ $phpVersion    = PHP_VERSION;
 $appEnv        = APP_ENV;
 $mailHost      = MAIL_HOST;
 $mailUser      = MAIL_USERNAME ? substr(MAIL_USERNAME, 0, 3) . str_repeat('*', max(0, strlen(MAIL_USERNAME) - 6)) . substr(MAIL_USERNAME, -3) : '— not configured';
-$paystackOk    = !empty(PAYSTACK_PUBLIC_KEY) && !empty(PAYSTACK_SECRET_KEY);
+$paystackOk    = !empty($storedPublicKey) && !empty($storedSecretKey);
 $vapidOk       = !empty(VAPID_PUBLIC_KEY) && !empty(VAPID_PRIVATE_KEY);
 $maxUploadMb   = round(MAX_FILE_SIZE / (1024 * 1024), 1);
 
@@ -127,6 +138,50 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                     <div class="mt-4 text-end">
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-1"></i> Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Paystack API Keys -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-credit-card me-2 text-primary"></i>Paystack API Keys</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="<?php echo BASE_URL; ?>admin/settings-actions.php">
+                    <?php echo csrfField(); ?>
+                    <input type="hidden" name="action" value="save_paystack_keys">
+
+                    <div class="alert alert-warning py-2 mb-4" style="font-size:var(--font-size-sm)">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Keep your <strong>Secret Key</strong> private. Never share it or commit it to source control.
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">Public Key <small class="text-muted">(starts with pk_live_ or pk_test_)</small></label>
+                            <input type="text" name="paystack_public_key" class="form-control font-monospace"
+                                   value="<?php echo e($storedPublicKey); ?>"
+                                   placeholder="pk_live_xxxxxxxxxxxxxxxxxxxx" maxlength="100" autocomplete="off">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Secret Key <small class="text-muted">(starts with sk_live_ or sk_test_)</small></label>
+                            <div class="input-group">
+                                <input type="password" name="paystack_secret_key" class="form-control font-monospace"
+                                       id="sk-input" value="<?php echo e($storedSecretKey); ?>"
+                                       placeholder="sk_live_xxxxxxxxxxxxxxxxxxxx" maxlength="100" autocomplete="new-password">
+                                <button type="button" class="btn btn-secondary" id="sk-toggle" tabindex="-1">
+                                    <i class="fas fa-eye" id="sk-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Save Keys
                         </button>
                     </div>
                 </form>
@@ -220,5 +275,19 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     </div><!-- /col-lg-4 -->
 
 </div><!-- /row -->
+
+<script>
+document.getElementById('sk-toggle').addEventListener('click', function () {
+    var inp = document.getElementById('sk-input');
+    var ico = document.getElementById('sk-eye');
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        ico.className = 'fas fa-eye-slash';
+    } else {
+        inp.type = 'password';
+        ico.className = 'fas fa-eye';
+    }
+});
+</script>
 
 <?php include dirname(__DIR__) . '/includes/footer.php'; ?>

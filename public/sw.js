@@ -3,10 +3,10 @@
  * Caches key assets for offline support (Week 5 of plan will expand this)
  */
 
-const CACHE_NAME = 'lasc-v1';
+const CACHE_NAME = 'lasc-v2';
 
+// Only pre-cache true static assets — never PHP pages or dynamic routes
 const STATIC_ASSETS = [
-    '/',
     '/assets/css/dasher-variables.css',
     '/assets/css/dasher-core-styles.css',
     '/assets/css/dasher-table-chart-styles.css',
@@ -34,18 +34,19 @@ self.addEventListener('activate', (e) => {
     self.clients.claim();
 });
 
-// Fetch: network-first for API/PHP, cache-first for static assets
+// Fetch: cache-first for static file assets only, network for everything else
+const STATIC_EXT = /\.(css|js|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|ico|json)$/i;
+
 self.addEventListener('fetch', (e) => {
     const url = new URL(e.request.url);
 
     // Skip non-GET and cross-origin requests
     if (e.request.method !== 'GET' || url.origin !== location.origin) return;
 
-    // API / PHP — network only
-    if (url.pathname.endsWith('.php') || url.pathname.startsWith('/api/')) {
-        e.respondWith(fetch(e.request));
-        return;
-    }
+    // Only cache requests for known static file extensions.
+    // Everything else (PHP pages, directory routes like /, /dashboard/, etc.)
+    // goes straight to the network so dynamic content is never served stale.
+    if (!STATIC_EXT.test(url.pathname)) return;
 
     // Static assets — cache first, fallback to network
     e.respondWith(

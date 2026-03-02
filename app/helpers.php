@@ -104,6 +104,39 @@ function currentUrl(): string
     return $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 }
 
+// ===== PAYSTACK KEY HELPERS =====
+// Read from settings table first (UI-configured), fall back to .env constants.
+
+function paystackPublicKey(): string
+{
+    static $v = null;
+    if ($v !== null) return $v;
+    try {
+        $row = Database::getInstance()->fetchOne(
+            "SELECT `value` FROM settings WHERE `key` = 'paystack_public_key'", []
+        );
+        $v = (!empty($row['value'])) ? $row['value'] : PAYSTACK_PUBLIC_KEY;
+    } catch (\Throwable $e) {
+        $v = PAYSTACK_PUBLIC_KEY;
+    }
+    return $v;
+}
+
+function paystackSecretKey(): string
+{
+    static $v = null;
+    if ($v !== null) return $v;
+    try {
+        $row = Database::getInstance()->fetchOne(
+            "SELECT `value` FROM settings WHERE `key` = 'paystack_secret_key'", []
+        );
+        $v = (!empty($row['value'])) ? $row['value'] : PAYSTACK_SECRET_KEY;
+    } catch (\Throwable $e) {
+        $v = PAYSTACK_SECRET_KEY;
+    }
+    return $v;
+}
+
 // ===== ACTIVE NAV HELPER =====
 
 function isActive(string $path): string

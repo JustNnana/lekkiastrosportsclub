@@ -32,4 +32,16 @@ if ($action === 'save_settings') {
     flashSuccess('Settings saved successfully.');
 }
 
+if ($action === 'save_paystack_keys') {
+    foreach (['paystack_public_key', 'paystack_secret_key'] as $key) {
+        $value = sanitize($_POST[$key] ?? '');
+        $db->execute(
+            "INSERT INTO settings (`key`, `value`) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE `value` = ?",
+            [$key, $value, $value]
+        );
+    }
+    flashSuccess('Paystack keys saved successfully.');
+}
+
 redirect('admin/settings.php');

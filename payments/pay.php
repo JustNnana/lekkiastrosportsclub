@@ -38,7 +38,7 @@ if (!in_array($payment['status'], ['pending', 'overdue'])) {
     redirect('payments/my-payments.php');
 }
 
-if (empty(PAYSTACK_SECRET_KEY)) {
+if (empty(paystackSecretKey())) {
     flashError('Payment gateway is not configured. Please contact an administrator.');
     redirect('payments/my-payments.php');
 }

@@ -249,7 +249,7 @@ class Payment
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $body,
             CURLOPT_HTTPHEADER     => [
-                'Authorization: Bearer ' . PAYSTACK_SECRET_KEY,
+                'Authorization: Bearer ' . paystackSecretKey(),
                 'Content-Type: application/json',
             ],
             CURLOPT_SSL_VERIFYPEER => true,
@@ -283,7 +283,7 @@ class Payment
         $ch = curl_init('https://api.paystack.co/transaction/verify/' . urlencode($ref));
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER     => ['Authorization: Bearer ' . PAYSTACK_SECRET_KEY],
+            CURLOPT_HTTPHEADER     => ['Authorization: Bearer ' . paystackSecretKey()],
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TIMEOUT        => 30,
         ]);
