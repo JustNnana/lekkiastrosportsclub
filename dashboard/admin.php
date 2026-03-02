@@ -1,7 +1,7 @@
 <?php
 /**
  * Lekki Astro Sports Club
- * Admin Dashboard
+ * Admin Dashboard — iOS Styled
  */
 
 requireAdmin();
@@ -9,7 +9,6 @@ requireAdmin();
 $pageTitle    = 'Admin Dashboard';
 $includeCharts = true;
 
-// Stats
 $db = Database::getInstance();
 
 $totalMembers  = (int)($db->fetchOne("SELECT COUNT(*) AS c FROM members")['c'] ?? 0);
@@ -62,11 +61,13 @@ $monthlyRevenue = $db->fetchAll(
      ORDER BY payment_date ASC"
 );
 
+$activeRate = $totalMembers > 0 ? round(($activeMembers / $totalMembers) * 100) : 0;
+
 include dirname(__DIR__) . '/includes/header.php';
 include dirname(__DIR__) . '/includes/sidebar.php';
 ?>
 
-<!-- ===== PAGE HEADER ===== -->
+<!-- ===== PAGE HEADER (desktop only) ===== -->
 <div class="content-header d-flex align-items-start justify-content-between flex-wrap gap-3">
     <div>
         <h1 class="content-title">Dashboard</h1>
@@ -77,231 +78,633 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     </div>
     <div class="d-flex gap-2 flex-wrap">
         <a href="<?php echo BASE_URL; ?>members/create.php" class="btn btn-primary btn-sm">
-            <i class="fas fa-user-plus"></i> Add Member
+            <i class="fas fa-user-plus me-1"></i> Add Member
         </a>
         <a href="<?php echo BASE_URL; ?>payments/due-form.php" class="btn btn-outline-primary btn-sm">
-            <i class="fas fa-plus"></i> Create Due
+            <i class="fas fa-plus me-1"></i> Create Due
         </a>
+    </div>
+</div>
+
+<!-- ===== MOBILE GREETING CARD (mobile only) ===== -->
+<div class="ios-mobile-greeting">
+    <div class="ios-mobile-greeting-card">
+        <div class="ios-mobile-greeting-icon">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="ios-mobile-greeting-text">
+            <h2><?php echo timeGreeting(); ?>, <?php echo e(explode(' ', $currentUser->getFullName())[0]); ?>!</h2>
+            <p>Admin <span>·</span> <?php echo date('d M Y'); ?></p>
+        </div>
+        <button class="ios-mobile-greeting-dots"
+                onclick="window.iosHeaderMenu && window.iosHeaderMenu.open()"
+                aria-label="Open menu">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
     </div>
 </div>
 
 <!-- ===== STAT CARDS ===== -->
-<div class="row g-4 mb-6">
+<div class="stats-overview-grid mb-4">
 
-    <div class="col-6 col-lg-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <div class="stat-icon stat-icon-primary">
-                    <i class="fas fa-users"></i>
-                </div>
-                <p class="stat-label">Total Members</p>
-                <h3 class="stat-value"><?php echo number_format($totalMembers); ?></h3>
-                <p class="stat-sub">
-                    <span class="text-success"><i class="fas fa-arrow-up"></i> <?php echo $newThisMonth; ?> this month</span>
-                </p>
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+            <span class="stat-label">Total Members</span>
+        </div>
+        <p class="stat-value"><?php echo number_format($totalMembers); ?></p>
+        <div class="stat-progress">
+            <div class="stat-progress-bar">
+                <div class="stat-progress-fill blue" style="width:100%"></div>
+            </div>
+            <div class="stat-progress-label">
+                <span>New this month</span>
+                <span style="color:#007aff;font-weight:600">+<?php echo $newThisMonth; ?></span>
             </div>
         </div>
     </div>
 
-    <div class="col-6 col-lg-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <div class="stat-icon stat-icon-success">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <p class="stat-label">Active Members</p>
-                <h3 class="stat-value"><?php echo number_format($activeMembers); ?></h3>
-                <p class="stat-sub text-muted">
-                    <?php echo $totalMembers > 0 ? round(($activeMembers / $totalMembers) * 100) : 0; ?>% of total
-                </p>
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
+            <span class="stat-label">Active Members</span>
+        </div>
+        <p class="stat-value"><?php echo number_format($activeMembers); ?></p>
+        <div class="stat-progress">
+            <div class="stat-progress-bar">
+                <div class="stat-progress-fill green" style="width:<?php echo $activeRate; ?>%"></div>
+            </div>
+            <div class="stat-progress-label">
+                <span>Active rate</span>
+                <span><?php echo $activeRate; ?>%</span>
             </div>
         </div>
     </div>
 
-    <div class="col-6 col-lg-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <div class="stat-icon stat-icon-info">
-                    <i class="fas fa-naira-sign"></i>
-                </div>
-                <p class="stat-label">Revenue Collected</p>
-                <h3 class="stat-value"><?php echo formatCurrency($totalCollected); ?></h3>
-                <p class="stat-sub">
-                    <span class="text-warning"><?php echo $pendingDues; ?> pending</span>
-                </p>
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon orange"><i class="fas fa-naira-sign"></i></div>
+            <span class="stat-label">Revenue Collected</span>
+        </div>
+        <p class="stat-value" style="font-size:22px!important"><?php echo formatCurrency($totalCollected); ?></p>
+        <div class="stat-progress">
+            <div class="stat-progress-bar">
+                <div class="stat-progress-fill orange" style="width:100%"></div>
+            </div>
+            <div class="stat-progress-label">
+                <span>Pending dues</span>
+                <span style="color:#ff9500;font-weight:600"><?php echo $pendingDues; ?></span>
             </div>
         </div>
     </div>
 
-    <div class="col-6 col-lg-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <div class="stat-icon stat-icon-warning">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <p class="stat-label">Upcoming Events</p>
-                <h3 class="stat-value"><?php echo $upcomingEvents; ?></h3>
-                <p class="stat-sub">
-                    <span class="text-primary"><?php echo $activePolls; ?> active polls</span>
-                </p>
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon purple"><i class="fas fa-calendar-check"></i></div>
+            <span class="stat-label">Upcoming Events</span>
+        </div>
+        <p class="stat-value"><?php echo $upcomingEvents; ?></p>
+        <div class="stat-progress">
+            <div class="stat-progress-bar">
+                <div class="stat-progress-fill purple" style="width:100%"></div>
+            </div>
+            <div class="stat-progress-label">
+                <span>Active polls</span>
+                <span style="color:#af52de;font-weight:600"><?php echo $activePolls; ?></span>
             </div>
         </div>
+    </div>
+
+</div>
+
+<!-- ===== QUICK ACTIONS (desktop 3-column) ===== -->
+<div class="ios-quick-actions">
+    <a href="<?php echo BASE_URL; ?>members/create.php" class="ios-quick-action">
+        <div class="ios-quick-action-icon" style="background:rgba(0,122,255,.15);color:#007aff">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        <div class="ios-quick-action-text">
+            <p class="ios-quick-action-title">Add Member</p>
+            <p class="ios-quick-action-desc">Register a new club member</p>
+        </div>
+        <i class="fas fa-chevron-right ios-quick-action-arrow"></i>
+    </a>
+    <a href="<?php echo BASE_URL; ?>payments/" class="ios-quick-action">
+        <div class="ios-quick-action-icon" style="background:rgba(52,199,89,.15);color:#34c759">
+            <i class="fas fa-wallet"></i>
+        </div>
+        <div class="ios-quick-action-text">
+            <p class="ios-quick-action-title">Payment Management</p>
+            <p class="ios-quick-action-desc">Dues, payments & overdue</p>
+        </div>
+        <i class="fas fa-chevron-right ios-quick-action-arrow"></i>
+    </a>
+    <a href="<?php echo BASE_URL; ?>announcements/create.php" class="ios-quick-action">
+        <div class="ios-quick-action-icon" style="background:rgba(255,149,0,.15);color:#ff9500">
+            <i class="fas fa-bullhorn"></i>
+        </div>
+        <div class="ios-quick-action-text">
+            <p class="ios-quick-action-title">Post Announcement</p>
+            <p class="ios-quick-action-desc">Broadcast to all members</p>
+        </div>
+        <i class="fas fa-chevron-right ios-quick-action-arrow"></i>
+    </a>
+    <a href="<?php echo BASE_URL; ?>events/form.php" class="ios-quick-action">
+        <div class="ios-quick-action-icon" style="background:rgba(52,199,89,.15);color:#34c759">
+            <i class="fas fa-calendar-plus"></i>
+        </div>
+        <div class="ios-quick-action-text">
+            <p class="ios-quick-action-title">Schedule Event</p>
+            <p class="ios-quick-action-desc">Add a new club event</p>
+        </div>
+        <i class="fas fa-chevron-right ios-quick-action-arrow"></i>
+    </a>
+    <a href="<?php echo BASE_URL; ?>tournaments/manage.php" class="ios-quick-action">
+        <div class="ios-quick-action-icon" style="background:rgba(255,59,48,.15);color:#ff3b30">
+            <i class="fas fa-trophy"></i>
+        </div>
+        <div class="ios-quick-action-text">
+            <p class="ios-quick-action-title">Tournaments</p>
+            <p class="ios-quick-action-desc">Manage competitions</p>
+        </div>
+        <i class="fas fa-chevron-right ios-quick-action-arrow"></i>
+    </a>
+    <a href="<?php echo BASE_URL; ?>reports/index.php" class="ios-quick-action">
+        <div class="ios-quick-action-icon" style="background:rgba(175,82,222,.15);color:#af52de">
+            <i class="fas fa-chart-bar"></i>
+        </div>
+        <div class="ios-quick-action-text">
+            <p class="ios-quick-action-title">Reports & Analytics</p>
+            <p class="ios-quick-action-desc">Insights & exports</p>
+        </div>
+        <i class="fas fa-chevron-right ios-quick-action-arrow"></i>
+    </a>
+</div>
+
+<!-- ===== MOBILE QUICK ACTIONS (icon grid, mobile only) ===== -->
+<div class="ios-mobile-actions">
+    <p class="ios-mobile-actions-title">Quick Actions</p>
+    <div class="ios-mobile-actions-grid">
+        <a href="<?php echo BASE_URL; ?>members/create.php" class="ios-mobile-action-btn">
+            <div class="ios-mobile-action-icon" style="background:#007aff"><i class="fas fa-user-plus"></i></div>
+            <span class="ios-mobile-action-label">Add Member</span>
+        </a>
+        <a href="<?php echo BASE_URL; ?>payments/" class="ios-mobile-action-btn">
+            <div class="ios-mobile-action-icon" style="background:#34c759"><i class="fas fa-wallet"></i></div>
+            <span class="ios-mobile-action-label">Payments</span>
+        </a>
+        <a href="<?php echo BASE_URL; ?>announcements/create.php" class="ios-mobile-action-btn">
+            <div class="ios-mobile-action-icon" style="background:#ff9500"><i class="fas fa-bullhorn"></i></div>
+            <span class="ios-mobile-action-label">Announce</span>
+        </a>
+        <a href="<?php echo BASE_URL; ?>reports/index.php" class="ios-mobile-action-btn">
+            <div class="ios-mobile-action-icon" style="background:#af52de"><i class="fas fa-chart-bar"></i></div>
+            <span class="ios-mobile-action-label">Reports</span>
+        </a>
     </div>
 </div>
 
-<!-- ===== REVENUE CHART + QUICK LINKS ===== -->
-<div class="row g-4 mb-6">
-    <div class="col-12 col-lg-8">
-        <div class="card h-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="card-title">Revenue Trend (Last 6 Months)</h6>
-                <a href="<?php echo BASE_URL; ?>reports/index.php" class="btn btn-sm btn-outline-primary">View Report</a>
-            </div>
-            <div class="card-body">
-                <div style="position:relative; height:260px;">
-                    <canvas id="revenueChart"></canvas>
+<!-- ===== CHART + ADMIN LINKS ===== -->
+<div class="ios-charts-grid">
+
+    <!-- Revenue Chart -->
+    <div class="ios-section-card" style="margin-bottom:0">
+        <div class="ios-section-header">
+            <div class="ios-section-header-left">
+                <div class="ios-section-icon" style="background:rgba(52,199,89,.15);color:#34c759">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="ios-section-title">
+                    <h5>Revenue Trend</h5>
+                    <p>Last 6 months</p>
                 </div>
             </div>
+            <a href="<?php echo BASE_URL; ?>reports/index.php" class="ios-link-btn">View Report</a>
+        </div>
+        <div class="ios-chart-body">
+            <?php if (empty($monthlyRevenue)): ?>
+            <div class="ios-chart-empty">
+                <i class="fas fa-chart-line"></i>
+                <p>No payment data yet. Revenue will appear here once dues are collected.</p>
+            </div>
+            <?php else: ?>
+            <canvas id="revenueChart" class="ios-chart-canvas"></canvas>
+            <?php endif; ?>
         </div>
     </div>
 
-    <div class="col-12 col-lg-4">
-        <div class="card h-100">
-            <div class="card-header">
-                <h6 class="card-title">Quick Actions</h6>
-            </div>
-            <div class="card-body p-3">
-                <div class="d-flex flex-column gap-2">
-                    <a href="<?php echo BASE_URL; ?>members/" class="btn btn-secondary text-start">
-                        <i class="fas fa-users fa-fw me-2 text-primary"></i> View All Members
-                    </a>
-                    <a href="<?php echo BASE_URL; ?>payments/" class="btn btn-secondary text-start">
-                        <i class="fas fa-wallet fa-fw me-2 text-success"></i> Payment Management
-                    </a>
-                    <a href="<?php echo BASE_URL; ?>announcements/create.php" class="btn btn-secondary text-start">
-                        <i class="fas fa-bullhorn fa-fw me-2 text-info"></i> Post Announcement
-                    </a>
-                    <a href="<?php echo BASE_URL; ?>events/create.php" class="btn btn-secondary text-start">
-                        <i class="fas fa-calendar-plus fa-fw me-2 text-warning"></i> Schedule Event
-                    </a>
-                    <a href="<?php echo BASE_URL; ?>tournaments/create.php" class="btn btn-secondary text-start">
-                        <i class="fas fa-trophy fa-fw me-2 text-danger"></i> Create Tournament
-                    </a>
-                    <a href="<?php echo BASE_URL; ?>reports/index.php" class="btn btn-secondary text-start">
-                        <i class="fas fa-chart-bar fa-fw me-2 text-secondary"></i> Reports & Analytics
-                    </a>
+    <!-- Admin Quick Links -->
+    <div class="ios-section-card" style="margin-bottom:0">
+        <div class="ios-section-header">
+            <div class="ios-section-header-left">
+                <div class="ios-section-icon" style="background:rgba(0,122,255,.15);color:#007aff">
+                    <i class="fas fa-bolt"></i>
                 </div>
+                <div class="ios-section-title"><h5>Quick Links</h5></div>
             </div>
         </div>
+        <div class="ios-section-body">
+            <a href="<?php echo BASE_URL; ?>members/" class="ios-admin-link">
+                <div class="ios-admin-link-icon" style="background:rgba(0,122,255,.12);color:#007aff">
+                    <i class="fas fa-users"></i>
+                </div>
+                <span class="ios-admin-link-label">View All Members</span>
+                <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>payments/" class="ios-admin-link">
+                <div class="ios-admin-link-icon" style="background:rgba(52,199,89,.12);color:#34c759">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <span class="ios-admin-link-label">Payment Management</span>
+                <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>events/manage.php" class="ios-admin-link">
+                <div class="ios-admin-link-icon" style="background:rgba(52,199,89,.12);color:#34c759">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <span class="ios-admin-link-label">Manage Events</span>
+                <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>polls/manage.php" class="ios-admin-link">
+                <div class="ios-admin-link-icon" style="background:rgba(88,86,214,.12);color:#5856d6">
+                    <i class="fas fa-poll"></i>
+                </div>
+                <span class="ios-admin-link-label">Polls & Voting</span>
+                <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>documents/manage.php" class="ios-admin-link">
+                <div class="ios-admin-link-icon" style="background:rgba(142,142,147,.12);color:#8e8e93">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <span class="ios-admin-link-label">Documents</span>
+                <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>reports/index.php" class="ios-admin-link" style="border-bottom:none">
+                <div class="ios-admin-link-icon" style="background:rgba(175,82,222,.12);color:#af52de">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <span class="ios-admin-link-label">Reports & Analytics</span>
+                <i class="fas fa-chevron-right ios-admin-link-chevron"></i>
+            </a>
+        </div>
     </div>
+
 </div>
 
 <!-- ===== RECENT MEMBERS + RECENT PAYMENTS ===== -->
-<div class="row g-4">
-    <div class="col-12 col-lg-6">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="card-title">Recent Members</h6>
-                <a href="<?php echo BASE_URL; ?>members/" class="btn btn-sm btn-outline-primary">View All</a>
+<div class="ios-tables-grid">
+
+    <!-- Recent Members -->
+    <div class="ios-section-card" style="margin-bottom:0">
+        <div class="ios-section-header">
+            <div class="ios-section-header-left">
+                <div class="ios-section-icon" style="background:rgba(0,122,255,.15);color:#007aff">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="ios-section-title"><h5>Recent Members</h5></div>
             </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Member</th>
-                            <th>ID</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($recentMembers)): ?>
-                        <tr><td colspan="3" class="text-center text-muted py-4">No members yet.</td></tr>
-                        <?php else: ?>
-                        <?php foreach ($recentMembers as $m): ?>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="mini-avatar"><?php echo e(getInitials($m['full_name'])); ?></div>
-                                    <div>
-                                        <div class="fw-medium"><?php echo e($m['full_name']); ?></div>
-                                        <small class="text-muted"><?php echo e($m['email']); ?></small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><code><?php echo e($m['member_id']); ?></code></td>
-                            <td><?php echo statusBadge($m['status']); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+            <a href="<?php echo BASE_URL; ?>members/" class="ios-link-btn">View All</a>
+        </div>
+        <div class="ios-section-body">
+            <?php if (empty($recentMembers)): ?>
+            <div class="ios-empty-state">
+                <i class="fas fa-users"></i>
+                <p>No members yet.</p>
+                <a href="<?php echo BASE_URL; ?>members/create.php" class="ios-empty-btn">
+                    <i class="fas fa-user-plus"></i> Add First Member
+                </a>
             </div>
+            <?php else: ?>
+            <?php foreach ($recentMembers as $m): ?>
+            <div class="ios-list-item">
+                <div class="ios-mini-avatar"><?php echo e(getInitials($m['full_name'])); ?></div>
+                <div class="ios-list-content">
+                    <p class="ios-list-primary"><?php echo e($m['full_name']); ?></p>
+                    <p class="ios-list-secondary"><?php echo e($m['email']); ?></p>
+                </div>
+                <div class="ios-list-meta">
+                    <?php echo statusBadge($m['status']); ?>
+                    <span class="ios-list-date"><?php echo e($m['member_id']); ?></span>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 
-    <div class="col-12 col-lg-6">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="card-title">Recent Payments</h6>
-                <a href="<?php echo BASE_URL; ?>payments/" class="btn btn-sm btn-outline-primary">View All</a>
+    <!-- Recent Payments -->
+    <div class="ios-section-card" style="margin-bottom:0">
+        <div class="ios-section-header">
+            <div class="ios-section-header-left">
+                <div class="ios-section-icon" style="background:rgba(52,199,89,.15);color:#34c759">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="ios-section-title"><h5>Recent Payments</h5></div>
             </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Member</th>
-                            <th>Due</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($recentPayments)): ?>
-                        <tr><td colspan="4" class="text-center text-muted py-4">No payments yet.</td></tr>
-                        <?php else: ?>
-                        <?php foreach ($recentPayments as $p): ?>
-                        <tr>
-                            <td class="fw-medium"><?php echo e($p['full_name']); ?></td>
-                            <td class="text-muted"><?php echo e($p['due_title']); ?></td>
-                            <td class="fw-semibold"><?php echo formatCurrency($p['amount']); ?></td>
-                            <td><?php echo statusBadge($p['status']); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+            <a href="<?php echo BASE_URL; ?>payments/" class="ios-link-btn">View All</a>
+        </div>
+        <div class="ios-section-body">
+            <?php if (empty($recentPayments)): ?>
+            <div class="ios-empty-state">
+                <i class="fas fa-receipt"></i>
+                <p>No payments recorded yet.</p>
             </div>
+            <?php else: ?>
+            <?php foreach ($recentPayments as $p):
+                $dotClass = match($p['status']) {
+                    'paid'    => 'paid',
+                    'overdue' => 'expired',
+                    default   => 'pending',
+                };
+                $badgeClass = match($p['status']) {
+                    'paid'    => 'green',
+                    'overdue' => 'red',
+                    default   => 'orange',
+                };
+            ?>
+            <div class="ios-list-item">
+                <div class="ios-list-dot <?php echo $dotClass; ?>"></div>
+                <div class="ios-list-content">
+                    <p class="ios-list-primary"><?php echo e($p['full_name']); ?></p>
+                    <p class="ios-list-secondary"><?php echo e($p['due_title']); ?></p>
+                </div>
+                <div class="ios-list-meta">
+                    <span class="ios-list-badge <?php echo $badgeClass; ?>"><?php echo formatCurrency($p['amount']); ?></span>
+                    <span class="ios-list-date"><?php echo formatDate($p['created_at'], 'd M'); ?></span>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
+
 </div>
 
 <style>
-/* ===== STAT CARDS ===== */
-.stat-card .card-body { padding: var(--spacing-5); }
-.stat-icon {
-    width: 48px; height: 48px;
-    border-radius: var(--border-radius-lg);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.25rem;
-    margin-bottom: var(--spacing-4);
+/* ── Stat cards — iOS horizontal layout ── */
+.stat-card {
+    text-align: left !important;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 20px;
+    transition: all 0.2s ease;
 }
-.stat-icon-primary { background: var(--primary-light); color: var(--primary); }
-.stat-icon-success { background: var(--success-light); color: var(--success); }
-.stat-icon-info    { background: var(--info-light);    color: var(--info); }
-.stat-icon-warning { background: var(--warning-light); color: var(--warning-700); }
+.stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.stat-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.stat-icon { margin: 0 !important; flex-shrink: 0; }
+.stat-icon.blue   { background: rgba(0,122,255,.15);  color: #007aff; }
+.stat-icon.green  { background: rgba(52,199,89,.15);  color: #34c759; }
+.stat-icon.orange { background: rgba(255,149,0,.15);  color: #ff9500; }
+.stat-icon.purple { background: rgba(175,82,222,.15); color: #af52de; }
+.stat-label { font-size: 13px; color: var(--text-muted); margin: 0; font-weight: 500; }
+.stat-value { font-size: 28px !important; font-weight: 700 !important; color: var(--text-primary) !important; margin: 0 !important; line-height: 1; }
+.stat-progress { margin-top: 12px; }
+.stat-progress-bar { height: 4px; background: var(--bg-secondary); border-radius: 2px; overflow: hidden; }
+.stat-progress-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+.stat-progress-fill.blue   { background: #007aff; }
+.stat-progress-fill.green  { background: #34c759; }
+.stat-progress-fill.orange { background: #ff9500; }
+.stat-progress-fill.purple { background: #af52de; }
+.stat-progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-muted); margin-top: 6px;
+}
 
-.stat-label { font-size: var(--font-size-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin: 0 0 var(--spacing-1); }
-.stat-value { font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold); color: var(--text-primary); margin: 0 0 var(--spacing-2); }
-.stat-sub   { font-size: var(--font-size-xs); margin: 0; }
+/* ── Stat grid ── */
+.stats-overview-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+}
 
-/* Mini avatar in table */
-.mini-avatar {
-    width: 32px; height: 32px; flex-shrink: 0;
-    border-radius: var(--border-radius-full);
+/* ── Quick Actions (desktop 3-column) ── */
+.ios-quick-actions {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px;
+}
+.ios-quick-action {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 18px;
+    text-decoration: none; transition: all 0.2s ease;
+}
+.ios-quick-action:hover {
+    border-color: var(--primary); box-shadow: 0 4px 16px rgba(0,0,0,.08);
+    transform: translateY(-1px); text-decoration: none;
+}
+.ios-quick-action-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+}
+.ios-quick-action-text { flex: 1; min-width: 0; }
+.ios-quick-action-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0 0 2px; }
+.ios-quick-action-desc  { font-size: 11px; color: var(--text-muted); margin: 0; }
+.ios-quick-action-arrow { color: var(--text-muted); font-size: 12px; opacity: .5; transition: all .2s ease; flex-shrink: 0; }
+.ios-quick-action:hover .ios-quick-action-arrow { opacity: 1; transform: translateX(3px); }
+
+/* ── Mobile quick actions ── */
+.ios-mobile-actions {
+    display: none; margin-bottom: 20px;
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 16px;
+}
+.ios-mobile-actions-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 0 0 14px; }
+.ios-mobile-actions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.ios-mobile-action-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    text-decoration: none; padding: 4px;
+}
+.ios-mobile-action-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; color: #fff;
+}
+.ios-mobile-action-label { font-size: 11px; font-weight: 500; color: var(--text-primary); text-align: center; line-height: 1.3; }
+
+/* ── Mobile greeting (hidden by default) ── */
+.ios-mobile-greeting { display: none; margin-bottom: 20px; }
+.ios-mobile-greeting-card {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 16px 18px;
+}
+.ios-mobile-greeting-icon {
+    width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    background: rgba(0,122,255,.12); color: #007aff;
+}
+.ios-mobile-greeting-text { flex: 1; min-width: 0; }
+.ios-mobile-greeting-text h2 { font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0 0 2px; }
+.ios-mobile-greeting-text p { font-size: 13px; color: var(--text-muted); margin: 0; }
+.ios-mobile-greeting-text p span { margin: 0 3px; opacity: .4; }
+.ios-mobile-greeting-dots {
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); font-size: 16px;
+    background: var(--bg-secondary); border: 1px solid var(--border-color);
+    cursor: pointer; transition: all .2s ease;
+}
+.ios-mobile-greeting-dots:hover { background: var(--bg-hover); }
+
+/* ── iOS Section cards ── */
+.ios-section-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+.ios-section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid var(--border-color);
+}
+.ios-section-header-left { display: flex; align-items: center; gap: 12px; }
+.ios-section-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+}
+.ios-section-title h5 { font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0; }
+.ios-section-title p  { font-size: 12px; color: var(--text-muted); margin: 2px 0 0; }
+.ios-link-btn {
+    font-size: 13px; font-weight: 500; color: #007aff;
+    text-decoration: none; transition: opacity .2s ease; white-space: nowrap;
+}
+.ios-link-btn:hover { opacity: .7; color: #007aff; text-decoration: none; }
+
+/* ── Chart ── */
+.ios-charts-grid {
+    display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px;
+}
+.ios-chart-body { padding: 20px; }
+.ios-chart-canvas { height: 260px !important; }
+.ios-chart-empty {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 48px 20px; color: var(--text-muted); text-align: center;
+}
+.ios-chart-empty i { font-size: 40px; margin-bottom: 12px; opacity: .4; }
+.ios-chart-empty p { font-size: 13px; margin: 0; max-width: 260px; }
+
+/* ── Admin quick links ── */
+.ios-admin-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 20px; border-bottom: 1px solid var(--border-color);
+    text-decoration: none; color: var(--text-primary);
+    transition: background .15s ease;
+}
+.ios-admin-link:hover { background: var(--bg-hover); text-decoration: none; }
+.ios-admin-link-icon {
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.ios-admin-link-label { flex: 1; font-size: 14px; font-weight: 500; }
+.ios-admin-link-chevron { font-size: 10px; color: var(--text-muted); opacity: .5; }
+
+/* ── Tables grid ── */
+.ios-tables-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px;
+}
+
+/* ── iOS List items ── */
+.ios-list-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 20px; border-bottom: 1px solid var(--border-color);
+    transition: background .15s ease;
+}
+.ios-list-item:last-child { border-bottom: none; }
+.ios-list-item:hover { background: var(--bg-hover); }
+.ios-list-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.ios-list-dot.paid    { background: #34c759; }
+.ios-list-dot.expired { background: #ff3b30; }
+.ios-list-dot.pending { background: #ff9500; }
+.ios-list-content { flex: 1; min-width: 0; }
+.ios-list-primary {
+    font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ios-list-secondary { font-size: 12px; color: var(--text-muted); margin: 2px 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ios-list-meta { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; gap: 3px; }
+.ios-list-badge {
+    display: inline-flex; align-items: center;
+    padding: 3px 8px; border-radius: 6px;
+    font-size: 11px; font-weight: 600;
+}
+.ios-list-badge.green  { background: rgba(52,199,89,.15);  color: #34c759; }
+.ios-list-badge.orange { background: rgba(255,149,0,.15);  color: #ff9500; }
+.ios-list-badge.red    { background: rgba(255,59,48,.15);  color: #ff3b30; }
+.ios-list-date { font-size: 10px; color: var(--text-muted); }
+
+/* ── Mini avatar ── */
+.ios-mini-avatar {
+    width: 34px; height: 34px; flex-shrink: 0;
+    border-radius: 50%;
     background: linear-gradient(135deg, var(--primary), var(--primary-700));
     color: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: var(--font-weight-semibold);
+    font-size: 11px; font-weight: 700;
+}
+
+/* ── Empty state ── */
+.ios-empty-state {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 36px 20px; text-align: center; color: var(--text-muted);
+}
+.ios-empty-state i { font-size: 32px; margin-bottom: 10px; opacity: .4; }
+.ios-empty-state p { font-size: 13px; margin: 0 0 12px; }
+.ios-empty-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 10px;
+    background: #007aff; color: #fff;
+    font-size: 13px; font-weight: 600;
+    text-decoration: none; transition: opacity .2s ease;
+}
+.ios-empty-btn:hover { opacity: .85; color: #fff; }
+
+/* ── Responsive ── */
+@media (max-width: 1200px) {
+    .ios-quick-actions { grid-template-columns: repeat(3, 1fr); }
+    .ios-quick-action-desc { display: none; }
+}
+@media (max-width: 992px) {
+    .stats-overview-grid { grid-template-columns: repeat(2, 1fr); }
+    .ios-quick-actions   { grid-template-columns: repeat(2, 1fr); }
+    .ios-charts-grid     { grid-template-columns: 1fr; }
+    .ios-tables-grid     { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .content-header      { display: none !important; }
+    .ios-mobile-greeting { display: block; }
+    .ios-quick-actions   { display: none; }
+    .ios-mobile-actions  { display: block; }
+
+    .stats-overview-grid {
+        display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch;
+        gap: 12px; padding-bottom: 4px; scrollbar-width: none;
+    }
+    .stats-overview-grid::-webkit-scrollbar { display: none; }
+    .stat-card { min-width: 150px; flex: 0 0 auto; padding: 14px; }
+    .stat-header { margin-bottom: 8px; }
+    .stat-icon   { width: 32px !important; height: 32px !important; font-size: 14px !important; border-radius: 9px !important; }
+    .stat-value  { font-size: 22px !important; }
+    .stat-progress { display: none; }
+
+    .ios-charts-grid { display: none; }
+
+    .ios-section-header { padding: 14px 16px; }
+    .ios-section-icon   { width: 34px; height: 34px; font-size: 14px; }
+    .ios-section-title h5 { font-size: 15px; }
+    .ios-list-item      { padding: 12px 16px; }
+}
+@media (max-width: 480px) {
+    .stat-card  { min-width: 130px; padding: 12px; }
+    .stat-value { font-size: 20px !important; }
+    .ios-mobile-actions     { border-radius: 12px; }
+    .ios-mobile-action-icon { width: 48px; height: 48px; border-radius: 12px; font-size: 20px; }
+}
+@media (max-width: 390px) {
+    .stat-card  { min-width: 120px; padding: 10px; }
+    .stat-value { font-size: 18px !important; }
+    .ios-mobile-action-icon { width: 44px; height: 44px; font-size: 18px; }
 }
 </style>
 
@@ -313,7 +716,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     var data   = <?php echo json_encode(array_map('floatval', array_column($monthlyRevenue, 'total'))); ?>;
 
     var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    var gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)';
+    var gridColor  = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)';
     var labelColor = isDark ? '#919eab' : '#637381';
 
     var ctx = document.getElementById('revenueChart');
@@ -348,19 +751,20 @@ include dirname(__DIR__) . '/includes/sidebar.php';
         }
     });
 
-    // Update chart colors on theme change
-    document.getElementById('theme-toggle-btn') &&
-    document.getElementById('theme-toggle-btn').addEventListener('click', function () {
-        setTimeout(function () {
-            var dark = document.documentElement.getAttribute('data-theme') === 'dark';
-            var gc = dark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)';
-            var lc = dark ? '#919eab' : '#637381';
-            chart.options.scales.x.grid.color = gc;
-            chart.options.scales.x.ticks.color = lc;
-            chart.options.scales.y.grid.color = gc;
-            chart.options.scales.y.ticks.color = lc;
-            chart.update();
-        }, 50);
+    // Update chart colors on theme toggle
+    document.querySelectorAll('.theme-toggle-trigger').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            setTimeout(function () {
+                var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+                var gc = dark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)';
+                var lc = dark ? '#919eab' : '#637381';
+                chart.options.scales.x.grid.color = gc;
+                chart.options.scales.x.ticks.color = lc;
+                chart.options.scales.y.grid.color = gc;
+                chart.options.scales.y.ticks.color = lc;
+                chart.update();
+            }, 50);
+        });
     });
 })();
 </script>
