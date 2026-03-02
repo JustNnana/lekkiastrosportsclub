@@ -634,3 +634,183 @@
 @media (max-width: 991px) {
     .content { padding-bottom: 90px; }
 }
+
+/* =====================================================================
+   iOS SIDEBAR NAV OVERRIDES
+   Override the flat Dasher sidebar with iOS-style grouped nav cards.
+   These rules come after the earlier .sidebar-link / .sidebar-icon
+   definitions and therefore win via cascade.
+   ===================================================================== */
+
+/* Grouped card containers */
+.sidebar-nav-card {
+    margin: 0 12px 8px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+/* iOS-style nav link row */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border-radius: 0;
+    border-right: none;                         /* remove old active indicator */
+    border-bottom: 1px solid var(--border-color);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    width: 100%;
+}
+.sidebar-nav-card .sidebar-link:last-child { border-bottom: none; }
+
+.sidebar-link:hover { background: var(--bg-hover); color: var(--text-primary); text-decoration: none; }
+
+.sidebar-link.active {
+    background: rgba(0, 167, 111, 0.08);
+    border-right: none;
+}
+.sidebar-link.active .sidebar-link-label { color: var(--primary); font-weight: var(--font-weight-semibold); }
+.sidebar-link.active .sidebar-link-chevron { color: var(--primary); }
+
+/* Label — flex:1 so badges push to right */
+.sidebar-link-label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: inherit;
+    min-width: 0;
+}
+
+/* Chevron */
+.sidebar-link-chevron {
+    font-size: 10px;
+    color: var(--border-color);
+    flex-shrink: 0;
+    opacity: 0.6;
+}
+
+/* Unread badge inside label */
+.sidebar-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--danger);
+    color: #fff;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+    margin-left: auto;
+}
+
+/* Colored icon chips */
+.sidebar-icon-chip {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: #fff;
+    flex-shrink: 0;
+}
+.sidebar-icon-chip.primary { background: var(--primary); }
+.sidebar-icon-chip.blue    { background: #007aff; }
+.sidebar-icon-chip.orange  { background: #ff9500; }
+.sidebar-icon-chip.purple  { background: #af52de; }
+.sidebar-icon-chip.indigo  { background: #5856d6; }
+.sidebar-icon-chip.red     { background: #ff3b30; }
+.sidebar-icon-chip.green   { background: #34c759; }
+.sidebar-icon-chip.gray    { background: #8e8e93; }
+.sidebar-icon-chip.cyan    { background: #32ade6; }
+
+/* Section labels — tighter top padding to work with card groups */
+.sidebar-section-label {
+    padding: 16px 16px 6px;
+    font-size: 10px;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
+
+/* =====================================================================
+   iOS COMPONENT OVERRIDES — Cards, Buttons, Forms, Lists, Badges, Alerts
+   These override both Bootstrap and dasher-core-styles.css via cascade.
+   ===================================================================== */
+
+/* ── Cards ─────────────────────────────────────────────────────────── */
+.card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+[data-theme="dark"] .card {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25), 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+.card:hover { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.06); }
+[data-theme="dark"] .card:hover { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25); }
+.card-header { border-radius: 16px 16px 0 0 !important; padding: 14px 18px; }
+.card-body   { padding: 18px; }
+.card-footer { border-radius: 0 0 16px 16px !important; padding: 14px 18px; }
+
+/* ── Buttons ────────────────────────────────────────────────────────── */
+.btn    { border-radius: 10px; }
+.btn-sm { border-radius: 8px;  }
+.btn-lg { border-radius: 12px; }
+
+/* ── Form controls ──────────────────────────────────────────────────── */
+.form-control,
+.form-select {
+    background: var(--bg-secondary);
+    border-radius: 10px;
+    border-color: var(--border-color);
+}
+.form-control:focus,
+.form-select:focus {
+    background: var(--bg-card);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 167, 111, 0.12);
+}
+
+/* ── List groups ────────────────────────────────────────────────────── */
+.list-group { border-radius: 12px; overflow: hidden; border: none; }
+.list-group-item {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+}
+/* Undo Bootstrap's top/bottom radius on first/last items */
+.list-group-item:first-child,
+.list-group-item:last-child { border-radius: 0 !important; }
+
+/* ── Badges ─────────────────────────────────────────────────────────── */
+.badge { border-radius: 9999px; }
+
+/* ── Alerts ─────────────────────────────────────────────────────────── */
+.alert { border-radius: 12px; }
+
+/* ── Stat cards ──────────────────────────────────────────────────────── */
+.stat-card { text-align: center; }
+.stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin: 0 auto 10px;
+}
+.stat-icon-primary  { background: var(--primary-light);  color: var(--primary); }
+.stat-icon-success  { background: var(--success-light);  color: var(--success); }
+.stat-icon-warning  { background: var(--warning-light);  color: var(--warning); }
+.stat-icon-danger   { background: var(--danger-light);   color: var(--danger);  }
+.stat-icon-info     { background: var(--info-light);     color: var(--info);    }
+.stat-label { font-size: var(--font-size-xs); color: var(--text-muted); margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--text-primary); margin: 4px 0 0; }

@@ -1,8 +1,7 @@
 <?php
 /**
  * Lekki Astro Sports Club
- * Sidebar Navigation Component
- * Automatically shows the correct nav items based on user role.
+ * Sidebar Navigation — iOS-style grouped nav cards with icon chips + chevrons.
  */
 
 $role       = $_SESSION['role'] ?? 'user';
@@ -16,7 +15,7 @@ $currentUri = $_SERVER['REQUEST_URI'];
 <!-- ===== SIDEBAR ===== -->
 <aside class="sidebar" id="sidebar">
 
-    <!-- User profile card inside sidebar -->
+    <!-- User profile area -->
     <div class="sidebar-profile">
         <div class="sidebar-avatar">
             <?php echo e(getInitials($currentUser->getFullName())); ?>
@@ -29,221 +28,205 @@ $currentUri = $_SERVER['REQUEST_URI'];
 
     <nav class="sidebar-nav-wrapper">
 
-        <!-- ===== MAIN SECTION ===== -->
+        <!-- ===== MAIN ===== -->
         <div class="sidebar-section-label">Main</div>
-        <ul class="sidebar-nav">
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>dashboard/"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/dashboard') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-th-large"></i></span>
-                    Dashboard
-                </a>
-            </li>
-        </ul>
+        <div class="sidebar-nav-card">
+            <a href="<?php echo BASE_URL; ?>dashboard/"
+               class="sidebar-link <?php echo str_contains($currentUri, '/dashboard') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip primary"><i class="fas fa-th-large"></i></span>
+                <span class="sidebar-link-label">Dashboard</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+        </div>
 
         <?php if ($isAdmin): ?>
-        <!-- ===== ADMIN SECTIONS ===== -->
-
+        <!-- ===== MANAGEMENT ===== -->
         <div class="sidebar-section-label">Management</div>
-        <ul class="sidebar-nav">
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>members/"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/members') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-users"></i></span>
-                    Members
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>payments/"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/payments') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-wallet"></i></span>
-                    Payments & Dues
-                </a>
-            </li>
-        </ul>
+        <div class="sidebar-nav-card">
+            <a href="<?php echo BASE_URL; ?>members/"
+               class="sidebar-link <?php echo str_contains($currentUri, '/members') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip blue"><i class="fas fa-users"></i></span>
+                <span class="sidebar-link-label">Members</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>payments/"
+               class="sidebar-link <?php echo str_contains($currentUri, '/payments') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip orange"><i class="fas fa-wallet"></i></span>
+                <span class="sidebar-link-label">Payments & Dues</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+        </div>
 
+        <!-- ===== COMMUNICATION ===== -->
         <div class="sidebar-section-label">Communication</div>
-        <ul class="sidebar-nav">
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>announcements/manage.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/announcements') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-bullhorn"></i></span>
-                    Announcements
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>polls/manage.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/polls') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-poll"></i></span>
-                    Polls & Voting
-                </a>
-            </li>
-        </ul>
+        <div class="sidebar-nav-card">
+            <a href="<?php echo BASE_URL; ?>announcements/manage.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/announcements') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip purple"><i class="fas fa-bullhorn"></i></span>
+                <span class="sidebar-link-label">Announcements</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>polls/manage.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/polls') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip indigo"><i class="fas fa-poll"></i></span>
+                <span class="sidebar-link-label">Polls & Voting</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+        </div>
 
+        <!-- ===== CLUB ACTIVITIES ===== -->
         <div class="sidebar-section-label">Club Activities</div>
-        <ul class="sidebar-nav">
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>events/manage.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/events') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-calendar-alt"></i></span>
-                    Events & Calendar
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>tournaments/manage.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/tournaments') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-trophy"></i></span>
-                    Tournaments
-                </a>
-            </li>
-        </ul>
+        <div class="sidebar-nav-card">
+            <a href="<?php echo BASE_URL; ?>events/manage.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/events') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip green"><i class="fas fa-calendar-alt"></i></span>
+                <span class="sidebar-link-label">Events & Calendar</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>tournaments/manage.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/tournaments') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip orange"><i class="fas fa-trophy"></i></span>
+                <span class="sidebar-link-label">Tournaments</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+        </div>
 
+        <!-- ===== RESOURCES ===== -->
         <div class="sidebar-section-label">Resources</div>
-        <ul class="sidebar-nav">
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>documents/manage.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/documents') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-folder-open"></i></span>
-                    Documents
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>reports/index.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/reports') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-chart-bar"></i></span>
-                    Reports & Analytics
-                </a>
-            </li>
-        </ul>
+        <div class="sidebar-nav-card">
+            <a href="<?php echo BASE_URL; ?>documents/manage.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/documents') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip gray"><i class="fas fa-folder-open"></i></span>
+                <span class="sidebar-link-label">Documents</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>reports/index.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/reports') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip cyan"><i class="fas fa-chart-bar"></i></span>
+                <span class="sidebar-link-label">Reports & Analytics</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+        </div>
 
         <?php if (isSuperAdmin()): ?>
+        <!-- ===== SYSTEM ===== -->
         <div class="sidebar-section-label">System</div>
-        <ul class="sidebar-nav">
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>admin/admins.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/admin/') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-user-shield"></i></span>
-                    Admin Accounts
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>admin/settings.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/settings') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-sliders-h"></i></span>
-                    Settings
-                </a>
-            </li>
-        </ul>
+        <div class="sidebar-nav-card">
+            <a href="<?php echo BASE_URL; ?>admin/admins.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/admin/') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip red"><i class="fas fa-user-shield"></i></span>
+                <span class="sidebar-link-label">Admin Accounts</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>admin/settings.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/settings') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip gray"><i class="fas fa-sliders-h"></i></span>
+                <span class="sidebar-link-label">Settings</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+        </div>
         <?php endif; ?>
 
         <?php else: ?>
-        <!-- ===== MEMBER SECTIONS ===== -->
-
-        <div class="sidebar-section-label">My Account</div>
-        <ul class="sidebar-nav">
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>profile/"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/profile') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-user"></i></span>
-                    My Profile
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>notifications/index.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/notifications') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-bell"></i></span>
-                    Notifications
-                    <?php
-                    $db = Database::getInstance();
-                    $unreadCount = (int)($db->fetchOne(
-                        "SELECT COUNT(*) AS n FROM notifications WHERE user_id = ? AND is_read = 0",
-                        [(int)$_SESSION['user_id']]
-                    )['n'] ?? 0);
-                    if ($unreadCount > 0): ?>
-                    <span class="badge badge-danger ms-auto" style="font-size:10px;padding:2px 6px"><?php echo $unreadCount > 9 ? '9+' : $unreadCount; ?></span>
-                    <?php endif; ?>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>payments/my-payments.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/payments') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-receipt"></i></span>
-                    My Payments
-                </a>
-            </li>
-        </ul>
-
+        <!-- ===== MY ACCOUNT (MEMBER) ===== -->
         <?php
+        $db = Database::getInstance();
+        $unreadCount = (int)($db->fetchOne(
+            "SELECT COUNT(*) AS n FROM notifications WHERE user_id = ? AND is_read = 0",
+            [(int)$_SESSION['user_id']]
+        )['n'] ?? 0);
         $annUnread = 0;
         if (class_exists('Announcement')) {
             $annUnread = (new Announcement())->getUnreadCount((int)$_SESSION['user_id']);
         }
         ?>
+        <div class="sidebar-section-label">My Account</div>
+        <div class="sidebar-nav-card">
+            <a href="<?php echo BASE_URL; ?>profile/"
+               class="sidebar-link <?php echo str_contains($currentUri, '/profile') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip purple"><i class="fas fa-user"></i></span>
+                <span class="sidebar-link-label">My Profile</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>notifications/index.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/notifications') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip gray"><i class="fas fa-bell"></i></span>
+                <span class="sidebar-link-label">
+                    Notifications
+                    <?php if ($unreadCount > 0): ?>
+                    <span class="sidebar-badge"><?php echo $unreadCount > 9 ? '9+' : $unreadCount; ?></span>
+                    <?php endif; ?>
+                </span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>payments/my-payments.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/payments') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip orange"><i class="fas fa-receipt"></i></span>
+                <span class="sidebar-link-label">My Payments</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+        </div>
+
+        <!-- ===== CLUB (MEMBER) ===== -->
         <div class="sidebar-section-label">Club</div>
-        <ul class="sidebar-nav">
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>announcements/index.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/announcements') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-bullhorn"></i></span>
+        <div class="sidebar-nav-card">
+            <a href="<?php echo BASE_URL; ?>announcements/index.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/announcements') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip blue"><i class="fas fa-bullhorn"></i></span>
+                <span class="sidebar-link-label">
                     Announcements
                     <?php if ($annUnread > 0): ?>
-                    <span class="badge badge-danger ms-auto" style="font-size:10px;padding:2px 6px"><?php echo $annUnread; ?></span>
+                    <span class="sidebar-badge"><?php echo $annUnread; ?></span>
                     <?php endif; ?>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>polls/index.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/polls') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-poll"></i></span>
-                    Polls
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>events/index.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/events') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-calendar-alt"></i></span>
-                    Events
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>tournaments/index.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/tournaments') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-trophy"></i></span>
-                    Tournaments
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a href="<?php echo BASE_URL; ?>documents/index.php"
-                   class="sidebar-link <?php echo str_contains($currentUri, '/documents') ? 'active' : ''; ?>">
-                    <span class="sidebar-icon"><i class="fas fa-folder-open"></i></span>
-                    Documents
-                </a>
-            </li>
-        </ul>
+                </span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>polls/index.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/polls') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip indigo"><i class="fas fa-poll"></i></span>
+                <span class="sidebar-link-label">Polls</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>events/index.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/events') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip green"><i class="fas fa-calendar-alt"></i></span>
+                <span class="sidebar-link-label">Events</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>tournaments/index.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/tournaments') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip orange"><i class="fas fa-trophy"></i></span>
+                <span class="sidebar-link-label">Tournaments</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+            <a href="<?php echo BASE_URL; ?>documents/index.php"
+               class="sidebar-link <?php echo str_contains($currentUri, '/documents') ? 'active' : ''; ?>">
+                <span class="sidebar-icon-chip gray"><i class="fas fa-folder-open"></i></span>
+                <span class="sidebar-link-label">Documents</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </a>
+        </div>
 
         <?php endif; ?>
 
-        <!-- PWA install button (shown by JS when installable) -->
-        <div class="sidebar-section-label">App</div>
-        <ul class="sidebar-nav">
-            <li class="sidebar-item">
-                <button class="sidebar-link w-100 border-0 bg-transparent text-start"
-                        id="pwa-install-btn" style="display:none">
-                    <span class="sidebar-icon"><i class="fas fa-download"></i></span>
-                    Install App
-                </button>
-            </li>
-        </ul>
+        <!-- ===== APP (PWA install) ===== -->
+        <div class="sidebar-nav-card" style="margin-top: 4px;">
+            <button class="sidebar-link w-100 text-start"
+                    id="pwa-install-btn" style="display:none">
+                <span class="sidebar-icon-chip primary"><i class="fas fa-download"></i></span>
+                <span class="sidebar-link-label">Install App</span>
+                <i class="fas fa-chevron-right sidebar-link-chevron"></i>
+            </button>
+        </div>
 
-    </nav><!-- /sidebar-nav-wrapper -->
+    </nav>
 </aside>
 <!-- ===== END SIDEBAR ===== -->
 
-<!-- Content area starts here -->
+<!-- Content area -->
 <div class="content" id="main-content">
 
 <script>
-// Sidebar toggle for mobile
 (function () {
     var toggleBtn = document.getElementById('sidebar-toggle');
     var sidebar   = document.getElementById('sidebar');
