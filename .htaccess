@@ -1,21 +1,23 @@
-# ─── ROOT HTACCESS — deny direct access to all backend directories ────────────
-# Only the public/ folder should be web-accessible.
-# If your DocumentRoot is already set to public/, this file is a safety net.
-
 Options -Indexes
 
-# Deny direct access to backend directories
-<IfModule mod_rewrite.c>
-    RewriteEngine On
+# ─── HTTPS redirect (uncomment when live TLS is confirmed) ───────────────────
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # Block access to sensitive directories
-    RewriteRule ^(app|classes|includes|cron|database|vendor)(/|$) - [F,L]
+RewriteEngine On
 
-    # Block access to sensitive files
-    RewriteRule ^(composer\.(json|lock)|\.env|\.gitignore)$ - [F,L]
-</IfModule>
+# ─── BLOCK BACKEND DIRECTORIES (403) ─────────────────────────────────────────
+RewriteRule ^(app|classes|includes|cron|database|vendor)(/|$) - [F,L]
+RewriteRule ^(composer\.json|composer\.lock|\.env|\.gitignore)$ - [F,L]
 
-# Deny access to sensitive file types
+# ─── FORWARD PUBLIC STATIC FILES TO public/ ──────────────────────────────────
+# Requests for /assets/*, /sw.js, /manifest.json are served from public/
+# Only fires when the file doesn't exist at the project root (it won't).
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(assets/.+|sw\.js|manifest\.json|favicon\.ico)$ public/$1 [L,QSA]
+
+# ─── SENSITIVE FILE TYPES ────────────────────────────────────────────────────
 <FilesMatch "\.(env|sql|log|md|lock|bak|sh|bash|cfg|ini)$">
     Require all denied
 </FilesMatch>

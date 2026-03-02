@@ -73,12 +73,15 @@ self.addEventListener('push', (e) => {
         }
     }
 
+    // Derive base URL from SW scope so it works on any domain/path
+    const base = self.registration.scope;
+
     const options = {
         body:    data.body    || '',
-        icon:    data.icon    || '/lekkiastrosportsclub/assets/images/icons/icon-192x192.png',
-        badge:   data.badge   || '/lekkiastrosportsclub/assets/images/icons/badge-96x96.png',
+        icon:    data.icon    || (base + 'assets/images/icons/icon-192x192.png'),
+        badge:   data.badge   || (base + 'assets/images/icons/badge-96x96.png'),
         tag:     data.tag     || 'lasc-notification',
-        data:    { url: data.url || '/lekkiastrosportsclub/notifications/' },
+        data:    { url: data.url || (base + 'notifications/index.php') },
         vibrate: [100, 50, 100],
         requireInteraction: false,
     };

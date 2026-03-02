@@ -64,5 +64,6 @@ RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>
 
 # ─── CUSTOM ERROR PAGES ──────────────────────────────────────────────────────
-ErrorDocument 404 /lekkiastrosportsclub/404.php
-ErrorDocument 500 /lekkiastrosportsclub/500.php
+# Leading slash = relative to document root (works on any domain/subdomain)
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.php
