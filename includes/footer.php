@@ -60,31 +60,22 @@ window.LASC_BASE_URL  = '<?php echo BASE_URL; ?>';
 <script>
 (function () {
     var KEY    = 'lasc-theme';
-    var btn    = document.getElementById('theme-toggle-btn');
-    var iconL  = document.getElementById('theme-icon-light');
-    var iconD  = document.getElementById('theme-icon-dark');
     var metaTC = document.getElementById('meta-theme-color');
-
-    function applyIcons(theme) {
-        if (!iconL || !iconD) return;
-        if (theme === 'dark') {
-            iconL.style.display = 'none';
-            iconD.style.display = '';
-        } else {
-            iconL.style.display = '';
-            iconD.style.display = 'none';
-        }
-        if (metaTC) metaTC.content = theme === 'dark' ? '#1c252e' : '#00a76f';
-    }
 
     function getCurrentTheme() {
         return document.documentElement.getAttribute('data-theme') || 'light';
     }
 
-    // Set icons on load
+    function applyIcons(theme) {
+        document.querySelectorAll('.theme-toggle-trigger i').forEach(function (icon) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+        if (metaTC) metaTC.content = theme === 'dark' ? '#1c252e' : '#00a76f';
+    }
+
     applyIcons(getCurrentTheme());
 
-    if (btn) {
+    document.querySelectorAll('.theme-toggle-trigger').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var next = getCurrentTheme() === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
@@ -92,7 +83,93 @@ window.LASC_BASE_URL  = '<?php echo BASE_URL; ?>';
             try { localStorage.setItem(KEY, next); } catch (e) {}
             applyIcons(next);
         });
+    });
+})();
+</script>
+
+<!-- ===== DESKTOP USER DROPDOWN ===== -->
+<script>
+(function () {
+    var dropdown = document.getElementById('desktopUserDropdown');
+    var btn      = document.getElementById('desktopDropdownBtn');
+    var menu     = document.getElementById('desktopDropdownMenu');
+    if (!dropdown || !btn || !menu) return;
+
+    btn.addEventListener('click', function (e) {
+        e.preventDefault(); e.stopPropagation();
+        dropdown.classList.toggle('open');
+        btn.setAttribute('aria-expanded', dropdown.classList.contains('open'));
+    });
+    document.addEventListener('click', function (e) {
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && dropdown.classList.contains('open')) {
+            dropdown.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    });
+    window.addEventListener('resize', function () {
+        if (window.innerWidth < 992) {
+            dropdown.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    });
+})();
+</script>
+
+<!-- ===== iOS HEADER MENU ===== -->
+<script>
+(function () {
+    var menuBtn        = document.getElementById('iosHeaderMenuBtn');
+    var menuBtnDesktop = document.getElementById('iosHeaderMenuBtnDesktop');
+    var backdrop       = document.getElementById('iosHeaderMenuBackdrop');
+    var modal          = document.getElementById('iosHeaderMenuModal');
+    if (!backdrop || !modal) return;
+
+    var startY = 0, currentY = 0, isDragging = false;
+
+    function openMenu() {
+        backdrop.classList.add('active');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
+    function closeMenu() {
+        backdrop.classList.remove('active');
+        modal.classList.remove('active');
+        modal.style.transform = '';
+        backdrop.style.opacity = '';
+        document.body.style.overflow = '';
+    }
+
+    if (menuBtn)        menuBtn.addEventListener('click',        function (e) { e.preventDefault(); e.stopPropagation(); openMenu(); });
+    if (menuBtnDesktop) menuBtnDesktop.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); openMenu(); });
+    backdrop.addEventListener('click', closeMenu);
+
+    // Swipe-to-close
+    modal.addEventListener('touchstart', function (e) { startY = e.touches[0].clientY; isDragging = true; modal.style.transition = 'none'; }, { passive: true });
+    modal.addEventListener('touchmove', function (e) {
+        if (!isDragging) return;
+        currentY = e.touches[0].clientY;
+        var diff = currentY - startY;
+        if (diff > 0) { modal.style.transform = 'translateY(' + diff + 'px)'; backdrop.style.opacity = Math.max(0, 1 - diff / 300); }
+    }, { passive: true });
+    modal.addEventListener('touchend', function () {
+        if (!isDragging) return;
+        isDragging = false;
+        modal.style.transition = 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
+        backdrop.style.transition = 'opacity 0.3s ease';
+        if ((currentY - startY) > 100) { closeMenu(); } else { modal.style.transform = 'translateY(0)'; backdrop.style.opacity = '1'; }
+        startY = 0; currentY = 0;
+    }, { passive: true });
+
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 992) closeMenu(); });
+
+    window.iosHeaderMenu = { open: openMenu, close: closeMenu };
 })();
 </script>
 
