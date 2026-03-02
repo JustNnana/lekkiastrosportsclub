@@ -38,38 +38,35 @@ function csvStream(string $filename, array $headers, array $rows): void
 // ─── MEMBERS EXPORT ──────────────────────────────────────────────────────────
 if ($type === 'members') {
     $rows = $db->fetchAll(
-        "SELECT m.member_code,
-                m.first_name, m.last_name,
+        "SELECT m.member_id,
+                u.full_name,
                 u.email,
                 m.phone,
-                m.membership_type,
                 m.status,
-                m.gender,
+                m.position,
                 m.date_of_birth,
                 m.address,
-                m.emergency_contact_name,
-                m.emergency_contact_phone,
-                DATE_FORMAT(m.joined_date,'%d/%m/%Y') AS joined
+                m.emergency_contact,
+                DATE_FORMAT(m.joined_at,'%d/%m/%Y') AS joined
          FROM members m
          JOIN users u ON u.id = m.user_id
-         ORDER BY m.member_code ASC"
+         ORDER BY m.member_id ASC"
     );
 
     $headers = [
-        'Member ID', 'First Name', 'Last Name', 'Email', 'Phone',
-        'Membership Type', 'Status', 'Gender', 'Date of Birth',
-        'Address', 'Emergency Contact', 'Emergency Phone', 'Date Joined',
+        'Member ID', 'Full Name', 'Email', 'Phone',
+        'Status', 'Position', 'Date of Birth',
+        'Address', 'Emergency Contact', 'Date Joined',
     ];
 
     $data = [];
     foreach ($rows as $r) {
         $data[] = [
-            $r['member_code'], $r['first_name'], $r['last_name'],
-            $r['email'], $r['phone'],
-            ucwords(str_replace('_', ' ', $r['membership_type'])),
-            ucfirst($r['status']), ucfirst($r['gender'] ?? ''),
+            $r['member_id'], $r['full_name'],
+            $r['email'], $r['phone'] ?? '',
+            ucfirst($r['status']), $r['position'] ?? '',
             $r['date_of_birth'] ?? '', $r['address'] ?? '',
-            $r['emergency_contact_name'] ?? '', $r['emergency_contact_phone'] ?? '',
+            $r['emergency_contact'] ?? '',
             $r['joined'],
         ];
     }
@@ -81,27 +78,27 @@ if ($type === 'members') {
 if ($type === 'payments') {
     $rows = $db->fetchAll(
         "SELECT p.id AS payment_id,
-                m.member_code,
-                CONCAT(m.first_name,' ',m.last_name) AS member_name,
-                d.name AS due_name,
+                m.member_id AS member_code,
+                u.full_name AS member_name,
+                d.title AS due_name,
                 d.amount AS due_amount,
                 p.amount AS paid_amount,
                 p.status,
-                p.method,
-                p.reference,
-                DATE_FORMAT(p.paid_at,'%d/%m/%Y %H:%i') AS paid_at,
-                DATE_FORMAT(md.created_at,'%d/%m/%Y') AS due_assigned
+                p.payment_method,
+                p.paystack_ref,
+                DATE_FORMAT(p.payment_date,'%d/%m/%Y %H:%i') AS payment_date,
+                DATE_FORMAT(p.created_at,'%d/%m/%Y') AS created_at
          FROM payments p
-         JOIN member_dues md ON md.id = p.member_due_id
-         JOIN members m ON m.id = md.member_id
-         JOIN dues d ON d.id = md.due_id
-         ORDER BY p.paid_at DESC"
+         JOIN members m ON m.id = p.member_id
+         JOIN users u ON u.id = m.user_id
+         JOIN dues d ON d.id = p.due_id
+         ORDER BY p.payment_date DESC"
     );
 
     $headers = [
         'Payment ID', 'Member ID', 'Member Name', 'Due Name',
         'Due Amount (₦)', 'Paid Amount (₦)', 'Status',
-        'Method', 'Reference', 'Paid At', 'Due Assigned',
+        'Method', 'Reference', 'Paid At', 'Created At',
     ];
 
     $data = [];
@@ -109,8 +106,9 @@ if ($type === 'payments') {
         $data[] = [
             $r['payment_id'], $r['member_code'], $r['member_name'],
             $r['due_name'], $r['due_amount'], $r['paid_amount'],
-            ucfirst($r['status']), ucfirst($r['method'] ?? ''),
-            $r['reference'] ?? '', $r['paid_at'] ?? '', $r['due_assigned'],
+            ucfirst($r['status']),
+            ucwords(str_replace('_', ' ', $r['payment_method'] ?? '')),
+            $r['paystack_ref'] ?? '', $r['payment_date'] ?? '', $r['created_at'],
         ];
     }
 
@@ -121,7 +119,7 @@ if ($type === 'payments') {
 if ($type === 'financial') {
     // Monthly revenue for all time
     $monthly = $db->fetchAll(
-        "SELECT DATE_FORMAT(paid_at,'%Y-%m') AS period,
+        "SELECT DATE_FORMAT(payment_date,'%Y-%m') AS period,
                 COUNT(*) AS transactions,
                 SUM(amount) AS total_revenue
          FROM payments
@@ -131,17 +129,17 @@ if ($type === 'financial') {
 
     // Per-due summary
     $perDue = $db->fetchAll(
-        "SELECT d.name,
-                COUNT(md.id) AS assigned,
-                SUM(CASE WHEN md.status='paid' THEN 1 ELSE 0 END) AS paid_count,
-                SUM(CASE WHEN md.status='overdue' THEN 1 ELSE 0 END) AS overdue_count,
-                SUM(CASE WHEN md.status='pending' THEN 1 ELSE 0 END) AS pending_count,
+        "SELECT d.title AS name,
+                COUNT(p.id) AS assigned,
+                SUM(CASE WHEN p.status='paid'    THEN 1 ELSE 0 END) AS paid_count,
+                SUM(CASE WHEN p.status='overdue' THEN 1 ELSE 0 END) AS overdue_count,
+                SUM(CASE WHEN p.status='pending' THEN 1 ELSE 0 END) AS pending_count,
                 d.amount AS unit_amount,
-                SUM(p.amount) AS total_collected
+                SUM(CASE WHEN p.status='paid' THEN p.amount ELSE 0 END) AS total_collected
          FROM dues d
-         LEFT JOIN member_dues md ON md.due_id = d.id
-         LEFT JOIN payments p ON p.member_due_id = md.id AND p.status = 'paid'
-         GROUP BY d.id ORDER BY d.name ASC"
+         LEFT JOIN payments p ON p.due_id = d.id
+         GROUP BY d.id, d.title, d.amount
+         ORDER BY d.title ASC"
     );
 
     // Combined into one file: two sections separated by a blank row

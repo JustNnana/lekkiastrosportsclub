@@ -21,27 +21,26 @@ $activeMembers = (int)($db->fetchOne("SELECT COUNT(*) AS n FROM members WHERE st
 
 // Revenue this month
 $revenueMonth = (float)($db->fetchOne(
-    "SELECT COALESCE(SUM(amount),0) AS s FROM payments WHERE status='paid' AND YEAR(paid_at)=? AND MONTH(paid_at)=?",
+    "SELECT COALESCE(SUM(amount),0) AS s FROM payments WHERE status='paid' AND YEAR(payment_date)=? AND MONTH(payment_date)=?",
     [$year, $month]
 )['s'] ?? 0);
 
 // Revenue this year
 $revenueYear = (float)($db->fetchOne(
-    "SELECT COALESCE(SUM(amount),0) AS s FROM payments WHERE status='paid' AND YEAR(paid_at)=?",
+    "SELECT COALESCE(SUM(amount),0) AS s FROM payments WHERE status='paid' AND YEAR(payment_date)=?",
     [$year]
 )['s'] ?? 0);
 
-// Payment compliance (members who paid at least one due this cycle)
-$totalDues = (int)($db->fetchOne("SELECT COUNT(*) AS n FROM dues WHERE is_mandatory=1")['n'] ?? 0);
-$paidDues  = (int)($db->fetchOne(
-    "SELECT COUNT(DISTINCT member_dues.member_id) AS n FROM member_dues WHERE status='paid'"
+// Payment compliance (members who have paid at least one due)
+$paidMembers = (int)($db->fetchOne(
+    "SELECT COUNT(DISTINCT member_id) AS n FROM payments WHERE status='paid'"
 )['n'] ?? 0);
-$compliance = $totalMembers > 0 ? round(($paidDues / $totalMembers) * 100) : 0;
+$compliance = $totalMembers > 0 ? round(($paidMembers / $totalMembers) * 100) : 0;
 
 // ─── MONTHLY REVENUE — last 12 months ────────────────────────────────────────
 $monthlyRevenue = $db->fetchAll(
-    "SELECT DATE_FORMAT(paid_at,'%Y-%m') AS ym, COALESCE(SUM(amount),0) AS total
-     FROM payments WHERE status='paid' AND paid_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+    "SELECT DATE_FORMAT(payment_date,'%Y-%m') AS ym, COALESCE(SUM(amount),0) AS total
+     FROM payments WHERE status='paid' AND payment_date >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
      GROUP BY ym ORDER BY ym ASC"
 );
 
@@ -71,7 +70,7 @@ for ($i = 11; $i >= 0; $i--) {
 
 // ─── PAYMENT STATUS DISTRIBUTION ─────────────────────────────────────────────
 $paymentStatus = $db->fetchAll(
-    "SELECT status, COUNT(*) AS cnt FROM member_dues GROUP BY status"
+    "SELECT status, COUNT(*) AS cnt FROM payments GROUP BY status"
 );
 $statusLabels = [];
 $statusData   = [];
@@ -83,31 +82,32 @@ foreach ($paymentStatus as $row) {
 
 // ─── MEMBERSHIP TYPE BREAKDOWN ────────────────────────────────────────────────
 $memberTypes = $db->fetchAll(
-    "SELECT membership_type, COUNT(*) AS cnt FROM members GROUP BY membership_type ORDER BY cnt DESC"
+    "SELECT status AS membership_type, COUNT(*) AS cnt FROM members GROUP BY status ORDER BY cnt DESC"
 );
 
 // ─── RECENT PAYMENTS ─────────────────────────────────────────────────────────
 $recentPayments = $db->fetchAll(
-    "SELECT p.amount, p.paid_at, p.method,
-            CONCAT(m.first_name,' ',m.last_name) AS member_name,
-            d.name AS due_name
+    "SELECT p.amount, p.payment_date, p.payment_method,
+            u.full_name AS member_name,
+            d.title AS due_name
      FROM payments p
-     JOIN member_dues md ON md.id = p.member_due_id
-     JOIN members m ON m.id = md.member_id
-     JOIN dues d ON d.id = md.due_id
+     JOIN members m ON m.id = p.member_id
+     JOIN users u ON u.id = m.user_id
+     JOIN dues d ON d.id = p.due_id
      WHERE p.status = 'paid'
-     ORDER BY p.paid_at DESC LIMIT 10"
+     ORDER BY p.payment_date DESC LIMIT 10"
 );
 
 // ─── TOP CONTRIBUTORS ────────────────────────────────────────────────────────
 $topContributors = $db->fetchAll(
-    "SELECT CONCAT(m.first_name,' ',m.last_name) AS member_name,
-            m.member_code, SUM(p.amount) AS total_paid
+    "SELECT u.full_name AS member_name,
+            m.member_id AS member_code, SUM(p.amount) AS total_paid
      FROM payments p
-     JOIN member_dues md ON md.id = p.member_due_id
-     JOIN members m ON m.id = md.member_id
+     JOIN members m ON m.id = p.member_id
+     JOIN users u ON u.id = m.user_id
      WHERE p.status = 'paid'
-     GROUP BY m.id ORDER BY total_paid DESC LIMIT 5"
+     GROUP BY m.id, u.full_name, m.member_id
+     ORDER BY total_paid DESC LIMIT 5"
 );
 
 include dirname(__DIR__) . '/includes/header.php';
@@ -296,8 +296,8 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                             <td class="fw-semibold small"><?php echo e($p['member_name']); ?></td>
                             <td class="text-muted small"><?php echo e($p['due_name']); ?></td>
                             <td class="text-end fw-semibold text-success">₦<?php echo number_format((float)$p['amount']); ?></td>
-                            <td><span class="badge badge-info"><?php echo e(ucfirst($p['method'])); ?></span></td>
-                            <td class="text-muted small"><?php echo formatDate($p['paid_at'],'d M Y'); ?></td>
+                            <td><span class="badge badge-info"><?php echo e(ucfirst(str_replace('_',' ',$p['payment_method']))); ?></span></td>
+                            <td class="text-muted small"><?php echo formatDate($p['payment_date'],'d M Y'); ?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
