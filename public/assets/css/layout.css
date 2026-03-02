@@ -4,6 +4,12 @@
  * Loaded in <head> after dasher-core-styles.css to properly override it.
  */
 
+/* ===== MAIN WRAPPER — override core's display:flex which breaks Bootstrap grid ===== */
+.main-wrapper {
+    display: block !important;   /* sidebar is position:fixed so flex is not needed */
+    min-height: 100vh;
+}
+
 /* ===== NAVBAR ===== */
 .navbar {
     background-color: var(--bg-navbar);
@@ -17,6 +23,7 @@
     display: flex;
     align-items: center;
     transition: var(--theme-transition);
+    flex-wrap: nowrap;        /* override Bootstrap's flex-wrap: wrap */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 }
@@ -46,6 +53,8 @@
 
 .navbar-nav {
     display: flex;
+    flex-direction: row;      /* override Bootstrap's flex-direction: column */
+    flex-wrap: nowrap;        /* prevent icons from wrapping to next line */
     align-items: center;
     gap: var(--spacing-3);
     margin-left: auto;

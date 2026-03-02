@@ -158,7 +158,9 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                 <a href="<?php echo BASE_URL; ?>reports/index.php" class="btn btn-sm btn-outline-primary">View Report</a>
             </div>
             <div class="card-body">
-                <canvas id="revenueChart" height="260"></canvas>
+                <div style="position:relative; height:260px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
             </div>
         </div>
     </div>

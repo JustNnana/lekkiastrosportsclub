@@ -102,7 +102,7 @@ try {
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/dasher-table-chart-styles.css?v=1.0">
 
     <!-- Layout (navbar, sidebar, content) — overrides core styles -->
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/layout.css?v=1.0">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/layout.css?v=1.2">
 
     <!-- Page-specific CSS -->
     <?php if (isset($pageCSS)): ?>
