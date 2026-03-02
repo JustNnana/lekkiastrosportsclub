@@ -20,8 +20,9 @@ $db      = Database::getInstance();
 
 // All active members for team assignment dropdowns
 $allMembers = $db->fetchAll(
-    "SELECT m.id, m.member_id AS member_code, CONCAT(m.first_name,' ',m.last_name) AS full_name
-     FROM members m WHERE m.status='active' ORDER BY m.first_name",
+    "SELECT m.id, m.member_id AS member_code, u.full_name
+     FROM members m JOIN users u ON u.id = m.user_id
+     WHERE m.status='active' ORDER BY u.full_name",
     []
 );
 
