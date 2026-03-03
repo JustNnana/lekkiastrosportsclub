@@ -75,6 +75,9 @@ include dirname(__DIR__) . '/includes/sidebar.php';
         </h1>
         <p class="content-subtitle">
             Member ID: <strong><?php echo e($member['member_id'] ?? '—'); ?></strong>
+            <?php if (!empty($member['position'])): ?>
+            &nbsp;·&nbsp;<i class="fas fa-running" style="font-size:11px"></i> <?php echo e($member['position']); ?>
+            <?php endif; ?>
             &nbsp;·&nbsp;
             <?php echo date('l, d F Y'); ?>
         </p>
@@ -84,7 +87,11 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 <!-- ===== MOBILE GREETING (hidden on desktop) ===== -->
 <div class="ios-mobile-greeting">
     <h2><?php echo timeGreeting(); ?>, <?php echo e(explode(' ', $currentUser->getFullName())[0]); ?>!</h2>
-    <p>Member ID: <?php echo e($member['member_id'] ?? '—'); ?> · <?php echo date('d F Y'); ?></p>
+    <p>
+        <?php echo e($member['member_id'] ?? '—'); ?>
+        <?php if (!empty($member['position'])): ?> · <?php echo e($member['position']); ?><?php endif; ?>
+        · <?php echo date('d F Y'); ?>
+    </p>
 </div>
 
 <!-- ===== STAT CARDS ===== -->
