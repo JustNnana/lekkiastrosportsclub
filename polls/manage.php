@@ -238,6 +238,9 @@ button.ios-menu-item { border: none; border-bottom: 1px solid var(--border-color
             </nav>
         </div>
         <div class="content-actions">
+            <a href="<?php echo BASE_URL; ?>polls/index.php" class="btn btn-outline-secondary">
+                <i class="fas fa-poll-h me-2"></i>View Polls
+            </a>
             <a href="<?php echo BASE_URL; ?>polls/form.php" class="btn btn-primary">
                 <i class="fas fa-plus me-2"></i>New Poll
             </a>
@@ -425,8 +428,8 @@ button.ios-menu-item { border: none; border-bottom: 1px solid var(--border-color
                     <div class="ios-menu-item-left">
                         <div class="ios-menu-item-icon blue"><i class="fas fa-poll-h"></i></div>
                         <div class="ios-menu-item-content">
-                            <span class="ios-menu-item-label">Member View</span>
-                            <span class="ios-menu-item-desc">See polls as members do</span>
+                            <span class="ios-menu-item-label">View Polls</span>
+                            <span class="ios-menu-item-desc">See all polls</span>
                         </div>
                     </div>
                     <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
