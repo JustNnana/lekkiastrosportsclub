@@ -198,26 +198,32 @@ window.showFlashNotification = function (message, type, duration) {
 })();
 </script>
 
+<?php
+// Show install banner only on the first page after login.
+// $_SESSION is destroyed on logout, so the flag resets automatically.
+$_pwaBannerAllowed = isset($_SESSION['user_id']) && empty($_SESSION['pwa_banner_shown']);
+if ($_pwaBannerAllowed) { $_SESSION['pwa_banner_shown'] = true; }
+?>
 <!-- ===== PWA LOGIC ===== -->
 <script>
 (function () {
-    var deferred = null;
-    var isInstalled = window.matchMedia('(display-mode: standalone)').matches
-                   || window.navigator.standalone === true;
+    var deferred      = null;
+    var isInstalled   = window.matchMedia('(display-mode: standalone)').matches
+                      || window.navigator.standalone === true;
+    var bannerAllowed = <?php echo $_pwaBannerAllowed ? 'true' : 'false'; ?>;
 
     var sidebarBtn = document.getElementById('pwa-install-btn');
     var banner     = document.getElementById('pwa-install-banner');
     var bannerBtn  = document.getElementById('pwa-banner-install-btn');
     var dismissBtn = document.getElementById('pwa-banner-dismiss-btn');
 
-    if (isInstalled) { return; } // Already installed — do nothing
+    if (isInstalled) { return; }
 
     window.addEventListener('beforeinstallprompt', function (e) {
         e.preventDefault();
         deferred = e;
         if (sidebarBtn) sidebarBtn.style.display = 'flex';
-        var dismissed = sessionStorage.getItem('pwa-dismissed');
-        if (!dismissed) {
+        if (bannerAllowed) {
             setTimeout(function () { if (banner) banner.style.display = 'block'; }, 6000);
         }
     });
@@ -239,7 +245,6 @@ window.showFlashNotification = function (message, type, duration) {
     if (bannerBtn)  bannerBtn.addEventListener('click', install);
     if (dismissBtn) dismissBtn.addEventListener('click', function () {
         if (banner) banner.style.display = 'none';
-        localStorage.setItem('pwa-dismissed', Date.now().toString());
     });
 
     window.addEventListener('appinstalled', function () {
