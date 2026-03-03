@@ -64,6 +64,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     grid-template-columns: 1fr 300px;
     gap: var(--spacing-6);
     max-width: 1200px;
+    margin: 0 auto;
 }
 @media (max-width: 992px) { .form-container { grid-template-columns: 1fr; } }
 
