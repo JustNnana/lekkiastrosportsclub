@@ -99,6 +99,23 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 }
 .ios-link-btn:hover { text-decoration: underline; }
 
+/* ── Mobile page header ── */
+.ios-mobile-header {
+    display: none;
+    align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+}
+.ios-mobile-header-text h1 { font-size: 22px; font-weight: 700; color: var(--text-primary); margin: 0 0 2px; }
+.ios-mobile-header-text p  { font-size: 13px; color: var(--text-muted); margin: 0; }
+.ios-dots-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg-secondary); border: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 15px; cursor: pointer;
+    flex-shrink: 0; transition: background .15s;
+}
+.ios-dots-btn:hover { background: var(--bg-hover); }
+
 /* Events grid layout */
 .ios-events-layout {
     display: grid;
@@ -120,8 +137,6 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 }
 
 /* Calendar */
-
-
 .ios-cal-nav {
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 20px; border-bottom: 1px solid var(--border-color);
@@ -177,6 +192,20 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 }
 .cal-more { font-size: 10px; color: var(--text-muted); }
 
+/* Colored dots (shown on small mobile instead of text events) */
+.cal-dots {
+    display: none;
+    flex-direction: row; gap: 3px; flex-wrap: wrap;
+    margin-top: 2px;
+}
+.cal-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    display: block; flex-shrink: 0;
+    text-decoration: none;
+    transition: opacity .15s;
+}
+.cal-dot:hover { opacity: .7; }
+
 /* Upcoming list */
 .ios-event-list-item {
     display: flex; align-items: flex-start; gap: 12px;
@@ -203,9 +232,9 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     font-size: 10px; font-weight: 600; padding: 2px 8px;
     border-radius: 20px; flex-shrink: 0; align-self: center;
 }
-.rsvp-attending    { background: rgba(48,209,88,.12);  color: #16a34a; }
+.rsvp-attending     { background: rgba(48,209,88,.12);  color: #16a34a; }
 .rsvp-not_attending { background: rgba(255,69,58,.12);  color: #ef4444; }
-.rsvp-maybe        { background: rgba(245,158,11,.12); color: #ca8a04; }
+.rsvp-maybe         { background: rgba(245,158,11,.12); color: #ca8a04; }
 
 /* Stats row */
 .ios-type-stats {
@@ -222,6 +251,42 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 .ios-empty-state i { font-size: 40px; opacity: .4; display: block; margin-bottom: 12px; }
 .ios-empty-state p { font-size: 14px; margin: 0; }
 
+/* ── iOS Bottom Sheet (page menu) ── */
+.ios-menu-backdrop {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,.4); backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+.ios-menu-backdrop.active { display: block; }
+.ios-page-menu {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 10000;
+    background: var(--bg-card); border-radius: 20px 20px 0 0;
+    padding: 0 0 max(20px, env(safe-area-inset-bottom));
+    transform: translateY(100%); transition: transform .35s cubic-bezier(.32,1,.23,1);
+    touch-action: none;
+}
+.ios-page-menu.open { transform: translateY(0); }
+.ios-sheet-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: var(--border-color); margin: 10px auto 6px; cursor: grab;
+}
+.ios-sheet-title {
+    font-size: 13px; font-weight: 600; color: var(--text-muted);
+    text-align: center; padding: 4px 20px 12px; border-bottom: 1px solid var(--border-color);
+}
+.ios-sheet-link {
+    display: flex; align-items: center; gap: 14px;
+    padding: 15px 20px; border-bottom: 1px solid var(--border-color);
+    text-decoration: none; color: var(--text-primary);
+    font-size: 15px; font-weight: 500; transition: background .15s;
+}
+.ios-sheet-link:last-child { border-bottom: none; }
+.ios-sheet-link:hover { background: var(--bg-hover); text-decoration: none; color: var(--text-primary); }
+.ios-sheet-link-icon {
+    width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+}
+
 /* ── Responsive ─────────────────────── */
 @media (max-width: 1100px) {
     .ios-events-layout { grid-template-columns: 1fr 300px; }
@@ -230,7 +295,8 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     .ios-events-layout { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
-    .content-header { display: none !important; }
+    .content-header      { display: none !important; }
+    .ios-mobile-header   { display: flex; }
 
     /* Calendar — smaller cells, keep visible */
     .cal-cell       { min-height: 52px; padding: 3px; }
@@ -247,20 +313,33 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 @media (max-width: 480px) {
     .cal-cell       { min-height: 44px; padding: 2px; }
     .cal-header     { font-size: 8px; padding: 5px 1px; }
-    .cal-day-num    { font-size: 10px; }
+    .cal-day-num    { font-size: 10px; margin-bottom: 1px; }
     .cal-today .cal-day-num { width: 18px; height: 18px; font-size: 9px; }
-    .cal-event      { display: none; } /* too small — just show dots */
-    .cal-has-events::after {
-        content: ''; display: block;
-        width: 5px; height: 5px; border-radius: 50%;
-        background: var(--primary); margin: 2px auto 0;
-    }
+
+    /* Hide text labels, show colored clickable dots */
+    .cal-event { display: none; }
+    .cal-more  { display: none; }
+    .cal-dots  { display: flex; }
+
     .ios-type-stats { grid-template-columns: repeat(5,1fr); gap: 4px; padding: 10px; }
     .ios-type-stat-value { font-size: 14px; }
     .ios-type-stat-label { font-size: 9px; }
     .ios-event-list-item { padding: 11px 14px; }
 }
 </style>
+
+<!-- ===== MOBILE PAGE HEADER (hidden on desktop) ===== -->
+<div class="ios-mobile-header">
+    <div class="ios-mobile-header-text">
+        <h1>Events</h1>
+        <p>Club activities & calendar</p>
+    </div>
+    <?php if (isAdmin()): ?>
+    <button class="ios-dots-btn" onclick="openPageMenu()" aria-label="More options">
+        <i class="fas fa-ellipsis-h"></i>
+    </button>
+    <?php endif; ?>
+</div>
 
 <!-- Desktop Page Header -->
 <div class="content-header d-flex justify-content-between align-items-start flex-wrap gap-3">
@@ -316,12 +395,16 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                 <?php endfor; ?>
 
                 <?php for ($d = 1; $d <= $daysInMonth; $d++):
-                    $isToday = $d === (int)date('j') && $month === (int)date('n') && $year === (int)date('Y');
+                    $isToday  = $d === (int)date('j') && $month === (int)date('n') && $year === (int)date('Y');
+                    $dayEvs   = $byDay[$d] ?? [];
                 ?>
-                <div class="cal-cell <?php echo $isToday ? 'cal-today' : ''; ?> <?php echo !empty($byDay[$d]) ? 'cal-has-events' : ''; ?>">
+                <div class="cal-cell <?php echo $isToday ? 'cal-today' : ''; ?> <?php echo !empty($dayEvs) ? 'cal-has-events' : ''; ?>">
                     <div class="cal-day-num"><?php echo $d; ?></div>
-                    <?php if (!empty($byDay[$d])): ?>
-                    <?php foreach (array_slice($byDay[$d], 0, 2) as $ev):
+
+                    <?php if (!empty($dayEvs)): ?>
+
+                    <!-- Desktop: text event labels (up to 2) -->
+                    <?php foreach (array_slice($dayEvs, 0, 2) as $ev):
                         $clr = $typeColors[$ev['event_type'] ?? 'other'] ?? $typeColors['other'];
                     ?>
                     <a href="<?php echo BASE_URL; ?>events/view.php?id=<?php echo $ev['id']; ?>"
@@ -331,9 +414,22 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                         <?php echo e(mb_substr($ev['title'], 0, 16)); ?>
                     </a>
                     <?php endforeach; ?>
-                    <?php if (count($byDay[$d]) > 2): ?>
-                    <span class="cal-more">+<?php echo count($byDay[$d])-2; ?> more</span>
+                    <?php if (count($dayEvs) > 2): ?>
+                    <span class="cal-more">+<?php echo count($dayEvs)-2; ?> more</span>
                     <?php endif; ?>
+
+                    <!-- Mobile: colored clickable dots (up to 3) -->
+                    <div class="cal-dots">
+                        <?php foreach (array_slice($dayEvs, 0, 3) as $ev):
+                            $clr = $typeColors[$ev['event_type'] ?? 'other'] ?? $typeColors['other'];
+                        ?>
+                        <a href="<?php echo BASE_URL; ?>events/view.php?id=<?php echo $ev['id']; ?>"
+                           class="cal-dot"
+                           style="background:<?php echo $clr['hex']; ?>"
+                           title="<?php echo e($ev['title']); ?>"></a>
+                        <?php endforeach; ?>
+                    </div>
+
                     <?php endif; ?>
                 </div>
                 <?php endfor; ?>
@@ -376,7 +472,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
             </div>
             <?php else: ?>
             <?php foreach ($upcomingList as $ev):
-                $clr     = $typeColors[$ev['event_type'] ?? 'other'] ?? $typeColors['other'];
+                $clr      = $typeColors[$ev['event_type'] ?? 'other'] ?? $typeColors['other'];
                 $userRsvp = $eventObj->getUserRsvp($ev['id'], $userId);
             ?>
             <div class="ios-event-list-item">
@@ -405,5 +501,49 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     </div>
 
 </div><!-- /ios-events-layout -->
+
+<?php if (isAdmin()): ?>
+<!-- ===== ADMIN MOBILE PAGE MENU ===== -->
+<div class="ios-menu-backdrop" id="pageMenuBackdrop" onclick="closePageMenu()"></div>
+<div class="ios-page-menu" id="pageMenu">
+    <div class="ios-sheet-handle"></div>
+    <div class="ios-sheet-title">Events</div>
+    <a href="<?php echo BASE_URL; ?>events/form.php" class="ios-sheet-link">
+        <div class="ios-sheet-link-icon" style="background:rgba(10,132,255,.15);color:#0a84ff">
+            <i class="fas fa-plus"></i>
+        </div>
+        New Event
+    </a>
+    <a href="<?php echo BASE_URL; ?>events/manage.php" class="ios-sheet-link">
+        <div class="ios-sheet-link-icon" style="background:rgba(107,114,128,.15);color:#6b7280">
+            <i class="fas fa-list"></i>
+        </div>
+        Manage Events
+    </a>
+</div>
+
+<script>
+(function () {
+    var backdrop = document.getElementById('pageMenuBackdrop');
+    var menu     = document.getElementById('pageMenu');
+
+    window.openPageMenu = function () {
+        backdrop.classList.add('active');
+        requestAnimationFrame(function () { menu.classList.add('open'); });
+    };
+    window.closePageMenu = function () {
+        menu.classList.remove('open');
+        setTimeout(function () { backdrop.classList.remove('active'); }, 350);
+    };
+
+    // Swipe down to close
+    var startY = 0;
+    menu.addEventListener('touchstart', function (e) { startY = e.touches[0].clientY; }, { passive: true });
+    menu.addEventListener('touchend', function (e) {
+        if (e.changedTouches[0].clientY - startY > 60) closePageMenu();
+    }, { passive: true });
+})();
+</script>
+<?php endif; ?>
 
 <?php include dirname(__DIR__) . '/includes/footer.php'; ?>
