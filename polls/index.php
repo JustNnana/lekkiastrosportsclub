@@ -223,6 +223,60 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 @media (max-width: 480px) {
     .ios-polls-grid { grid-template-columns: 1fr; }
 }
+
+/* ── Mobile 3-dot header btn ──────────────────────────────── */
+.polls-header-menu-btn {
+    display: none;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg-secondary); border: 1px solid var(--border-color);
+    align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+    transition: background 0.2s, transform 0.15s;
+}
+.polls-header-menu-btn:hover  { background: var(--border-color); }
+.polls-header-menu-btn:active { transform: scale(0.95); }
+.polls-header-menu-btn i { color: var(--text-primary); font-size: 15px; }
+
+@media (max-width: 768px) {
+    .polls-page-actions     { display: none !important; }
+    .polls-header-menu-btn  { display: flex; }
+    .polls-page-header      { align-items: center; }
+}
+
+/* ── Bottom sheet (shared) ────────────────────────────────── */
+.ios-menu-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 9998; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+.ios-menu-backdrop.active { opacity: 1; visibility: visible; }
+.ios-menu-modal { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-primary); border-radius: 16px 16px 0 0; z-index: 9999; max-height: 80vh; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32,0.72,0,1); overflow: hidden; display: flex; flex-direction: column; }
+.ios-menu-modal.active { transform: translateY(0); }
+.ios-menu-handle { width: 36px; height: 5px; background: var(--border-color); border-radius: 3px; margin: 8px auto 4px; flex-shrink: 0; }
+.ios-menu-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px 16px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
+.ios-menu-title  { font-size: 17px; font-weight: 600; color: var(--text-primary); margin: 0; }
+.ios-menu-close  { width: 30px; height: 30px; border-radius: 50%; background: var(--bg-secondary); border: none; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); cursor: pointer; transition: background 0.2s; }
+.ios-menu-close:hover { background: var(--border-color); }
+.ios-menu-content { padding: 16px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+.ios-menu-section { margin-bottom: 20px; }
+.ios-menu-section:last-child { margin-bottom: 0; }
+.ios-menu-section-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; padding-left: 4px; }
+.ios-menu-card { background: var(--bg-secondary); border-radius: 12px; overflow: hidden; }
+.ios-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border-color); text-decoration: none; color: var(--text-primary); transition: background 0.15s; cursor: pointer; }
+.ios-menu-item:last-child { border-bottom: none; }
+.ios-menu-item:active { background: var(--bg-subtle); }
+.ios-menu-item-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.ios-menu-item-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.ios-menu-item-icon.primary{ background: rgba(34,197,94,0.15);  color: var(--ios-green);  }
+.ios-menu-item-icon.orange { background: rgba(255,159,10,0.15); color: var(--ios-orange); }
+.ios-menu-item-icon.blue   { background: rgba(10,132,255,0.15); color: var(--ios-blue);   }
+.ios-menu-item-icon.purple { background: rgba(191,90,242,0.15); color: var(--ios-purple); }
+.ios-menu-item-icon.red    { background: rgba(255,69,58,0.15);  color: var(--ios-red);    }
+.ios-menu-item-content  { flex: 1; min-width: 0; }
+.ios-menu-item-label    { font-size: 15px; font-weight: 500; }
+.ios-menu-item-desc     { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.ios-menu-item-chevron  { color: var(--text-muted); font-size: 12px; }
+.ios-menu-stat-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border-color); }
+.ios-menu-stat-row:last-child { border-bottom: none; }
+.ios-menu-stat-label { font-size: 15px; color: var(--text-primary); }
+.ios-menu-stat-value { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.ios-menu-stat-value.success { color: var(--ios-green); }
 </style>
 
 <!-- Page Header -->
@@ -232,6 +286,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
         <p class="polls-page-sub">Cast your vote and see what the club thinks.</p>
     </div>
     <?php if (isAdmin()): ?>
+    <!-- Desktop buttons -->
     <div class="polls-page-actions">
         <a href="<?php echo BASE_URL; ?>polls/manage.php" class="btn btn-secondary btn-sm">
             <i class="fas fa-cog me-1"></i> Manage
@@ -240,6 +295,10 @@ include dirname(__DIR__) . '/includes/sidebar.php';
             <i class="fas fa-plus me-1"></i> New Poll
         </a>
     </div>
+    <!-- Mobile 3-dot -->
+    <button class="polls-header-menu-btn" onclick="openPollsMenu()" aria-label="More options">
+        <i class="fas fa-ellipsis-v"></i>
+    </button>
     <?php endif; ?>
 </div>
 
@@ -436,6 +495,90 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 </div>
 <?php endif; ?>
 <?php endif; ?>
+<?php endif; ?>
+
+<?php if (isAdmin()): ?>
+<!-- ===== MOBILE ADMIN MENU SHEET ===== -->
+<div class="ios-menu-backdrop" id="pollsMenuBackdrop" onclick="closePollsMenu()"></div>
+<div class="ios-menu-modal" id="pollsMenuSheet">
+    <div class="ios-menu-handle"></div>
+    <div class="ios-menu-header">
+        <h3 class="ios-menu-title">Polls & Voting</h3>
+        <button class="ios-menu-close" onclick="closePollsMenu()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="ios-menu-content">
+        <div class="ios-menu-section">
+            <div class="ios-menu-section-title">Admin Actions</div>
+            <div class="ios-menu-card">
+                <a href="<?php echo BASE_URL; ?>polls/form.php" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon primary"><i class="fas fa-plus"></i></div>
+                        <div class="ios-menu-item-content">
+                            <span class="ios-menu-item-label">New Poll</span>
+                            <span class="ios-menu-item-desc">Create a new poll for members</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+                <a href="<?php echo BASE_URL; ?>polls/manage.php" class="ios-menu-item">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon orange"><i class="fas fa-cog"></i></div>
+                        <div class="ios-menu-item-content">
+                            <span class="ios-menu-item-label">Manage Polls</span>
+                            <span class="ios-menu-item-desc">Edit, close or delete polls</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ios-menu-section">
+            <div class="ios-menu-section-title">Overview</div>
+            <div class="ios-menu-card">
+                <div class="ios-menu-stat-row">
+                    <span class="ios-menu-stat-label">Active Polls</span>
+                    <span class="ios-menu-stat-value success"><?php echo number_format($activeTotal); ?></span>
+                </div>
+                <div class="ios-menu-stat-row">
+                    <span class="ios-menu-stat-label">Past Polls</span>
+                    <span class="ios-menu-stat-value"><?php echo number_format($closedTotal); ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    var backdrop  = document.getElementById('pollsMenuBackdrop');
+    var sheet     = document.getElementById('pollsMenuSheet');
+    var startY = 0, curY = 0;
+
+    window.openPollsMenu = function () {
+        backdrop.classList.add('active');
+        sheet.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+    window.closePollsMenu = function () {
+        backdrop.classList.remove('active');
+        sheet.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    sheet.addEventListener('touchstart', function(e){ startY = e.touches[0].clientY; }, { passive: true });
+    sheet.addEventListener('touchmove', function(e){
+        curY = e.touches[0].clientY;
+        var diff = curY - startY;
+        if (diff > 0) sheet.style.transform = 'translateY(' + diff + 'px)';
+    }, { passive: true });
+    sheet.addEventListener('touchend', function(){
+        var diff = curY - startY;
+        sheet.style.transform = '';
+        if (diff > 100) closePollsMenu();
+        startY = curY = 0;
+    });
+}());
+</script>
 <?php endif; ?>
 
 <?php include dirname(__DIR__) . '/includes/footer.php'; ?>
