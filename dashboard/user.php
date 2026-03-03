@@ -370,7 +370,6 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 /* ── Stat cards — iOS left-aligned layout ── */
 .stat-card {
     text-align: left !important;
-    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 18px;
@@ -402,7 +401,6 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 }
 .ios-quick-action {
     display: flex; align-items: center; gap: 14px;
-    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 16px;
@@ -430,7 +428,6 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 .ios-mobile-actions {
     display: none;
     margin-bottom: 20px;
-    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 16px;
@@ -457,7 +454,6 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 
 /* ── iOS Section cards ── */
 .ios-section-card {
-    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 16px;
     overflow: hidden;

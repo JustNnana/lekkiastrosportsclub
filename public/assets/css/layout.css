@@ -662,7 +662,7 @@
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     border-radius: 0;
-    border-right: none;                         /* remove old active indicator */
+    border: none;                               /* reset all button borders */
     border-bottom: 1px solid var(--border-color);
     background: transparent;
     cursor: pointer;

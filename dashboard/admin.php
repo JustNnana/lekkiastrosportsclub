@@ -503,7 +503,6 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 /* ── Stat cards — iOS horizontal layout ── */
 .stat-card {
     text-align: left !important;
-    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 20px;
@@ -541,7 +540,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 }
 .ios-quick-action {
     display: flex; align-items: center; gap: 14px;
-    background: var(--bg-card); border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 14px; padding: 18px;
     text-decoration: none; transition: all 0.2s ease;
 }
@@ -563,7 +562,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 /* ── Mobile quick actions ── */
 .ios-mobile-actions {
     display: none; margin-bottom: 20px;
-    background: var(--bg-card); border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 14px; padding: 16px;
 }
 .ios-mobile-actions-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 0 0 14px; }
@@ -597,7 +596,7 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 .ios-mobile-greeting { display: none; margin-bottom: 20px; }
 .ios-mobile-greeting-card {
     display: flex; align-items: center; gap: 14px;
-    background: var(--bg-card); border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 14px; padding: 16px 18px;
 }
 .ios-mobile-greeting-icon {
@@ -621,7 +620,6 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 
 /* ── iOS Section cards ── */
 .ios-section-card {
-    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 16px;
     overflow: hidden;
