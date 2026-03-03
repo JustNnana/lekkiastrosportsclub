@@ -502,7 +502,7 @@ button.ios-menu-item { border: none; border-bottom: 1px solid var(--border-color
             <!-- Comment form -->
             <div class="ios-comment-form">
                 <div class="ios-comment-avatar">
-                    <?php echo strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)); ?>
+                    <?php echo strtoupper(substr($_SESSION['full_name'] ?? 'U', 0, 1)); ?>
                 </div>
                 <div class="ios-comment-input-wrap">
                     <textarea id="newComment" class="form-control" rows="2"
@@ -696,7 +696,8 @@ button.ios-menu-item { border: none; border-bottom: 1px solid var(--border-color
 <script>
 const BASE_URL     = '<?php echo BASE_URL; ?>';
 const ANN_ID       = <?php echo $id; ?>;
-const USER_INITIAL = '<?php echo strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)); ?>';
+const USER_NAME    = '<?php echo addslashes(e($_SESSION['full_name'] ?? 'Member')); ?>';
+const USER_INITIAL = '<?php echo strtoupper(substr($_SESSION['full_name'] ?? 'U', 0, 1)); ?>';
 
 /* ── iOS menu ── */
 function openIosMenu() {
@@ -753,14 +754,36 @@ document.querySelectorAll('.ios-reaction-btn').forEach(function(btn) {
     });
 });
 
+/* ── Comment helpers ── */
+function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function buildCommentHtml(id, content, parentId) {
+    var avatarColors = ['#0A84FF','#30D158','#FF9F0A','#BF5AF2','#FF453A'];
+    var color = avatarColors[USER_INITIAL.charCodeAt(0) % avatarColors.length];
+    var now   = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'})
+              + ', ' + new Date().toLocaleTimeString('en-US', {hour:'numeric',minute:'2-digit',hour12:true});
+    var safe  = escHtml(content).replace(/\n/g, '<br>');
+    var html  = '<div class="ios-comment-item" id="comment-' + id + '">';
+    html += '<div class="ios-comment-item-avatar" style="background:' + color + ';color:#fff">' + USER_INITIAL + '</div>';
+    html += '<div class="ios-comment-body">';
+    html += '<div class="ios-comment-meta"><strong>' + escHtml(USER_NAME) + '</strong> ' + now + '</div>';
+    html += '<div class="ios-comment-text">' + safe + '</div>';
+    html += '<div class="ios-comment-actions">';
+    if (!parentId) html += '<a class="reply-link" data-id="' + id + '">↩ Reply</a>';
+    html += '<a class="del-link" onclick="deleteComment(' + id + ')">Delete</a>';
+    html += '</div></div></div>';
+    return html;
+}
+
 /* ── Comments ── */
 document.getElementById('submitComment').addEventListener('click', function() {
     var content = document.getElementById('newComment').value.trim();
     if (!content) return;
-    postComment(ANN_ID, null, content, function(html) {
+    postComment(ANN_ID, null, content, function(id) {
         var noComments = document.getElementById('noComments');
         if (noComments) noComments.remove();
-        document.getElementById('commentList').insertAdjacentHTML('afterbegin', html);
+        document.getElementById('commentList').insertAdjacentHTML('afterbegin', buildCommentHtml(id, content, null));
         document.getElementById('newComment').value = '';
         incrementCommentCount();
     });
@@ -777,7 +800,7 @@ function postComment(annId, parentId, content, onSuccess) {
     .then(function(r) { return r.json(); })
     .then(function(data) {
         if (!data.success) { console.warn('Comment error:', data.message); return; }
-        onSuccess(data.html);
+        onSuccess(data.id);
     })
     .catch(function(err) { console.error('Comment fetch error:', err); });
 }
@@ -813,7 +836,7 @@ document.getElementById('commentList').addEventListener('click', function(e) {
 function submitReply(parentId, annId) {
     var content = document.getElementById('replyText-' + parentId).value.trim();
     if (!content) return;
-    postComment(annId, parentId, content, function(html) {
+    postComment(annId, parentId, content, function(id) {
         var form = document.getElementById('replyForm-' + parentId);
         var repliesDiv = document.getElementById('replies-' + parentId);
         if (!repliesDiv) {
@@ -822,7 +845,7 @@ function submitReply(parentId, annId) {
             repliesDiv.className = 'ios-replies';
             form.parentNode.parentNode.after(repliesDiv);
         }
-        repliesDiv.insertAdjacentHTML('beforeend', html);
+        repliesDiv.insertAdjacentHTML('beforeend', buildCommentHtml(id, content, parentId));
         form.remove();
         incrementCommentCount();
     });
