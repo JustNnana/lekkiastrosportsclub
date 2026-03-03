@@ -407,6 +407,62 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                 <p class="ios-options-hint">Enter one choice per field. At least 2 options are required.</p>
             </div>
 
+            <!-- ===== MOBILE-ONLY: Settings + Submit ===== -->
+            <div class="d-md-none">
+
+                <!-- Deadline + toggle card (mobile) -->
+                <div class="ios-section-card">
+                    <div class="ios-section-header">
+                        <div class="ios-section-icon blue">
+                            <i class="fas fa-sliders-h"></i>
+                        </div>
+                        <div class="ios-section-title">
+                            <h5>Poll Settings</h5>
+                        </div>
+                    </div>
+                    <div class="ios-section-body">
+                        <div class="ios-form-group" style="margin-bottom:0">
+                            <label class="ios-form-label">Voting Deadline <span class="req">*</span></label>
+                            <input type="datetime-local" id="deadlineMobile" class="form-control" style="border-radius:10px">
+                            <p style="font-size:12px;color:var(--text-muted);margin:6px 0 0">Poll auto-closes at this date &amp; time.</p>
+                        </div>
+                    </div>
+                    <div class="ios-toggle-row" style="border-top:1px solid var(--border-color)">
+                        <div class="ios-toggle-info">
+                            <strong>Allow vote changes</strong>
+                            <small>Members can update their vote before the deadline</small>
+                        </div>
+                        <label class="ios-toggle">
+                            <input type="checkbox" id="allowChangeMobile">
+                            <span class="ios-toggle-track">
+                                <span class="ios-toggle-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <?php if ($isEdit): ?>
+                <div class="ios-section-card">
+                    <div class="ios-warning-banner" style="margin:var(--spacing-4)">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Editing this poll will <strong>reset all existing votes</strong>. Members will need to vote again.</span>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- Submit button (mobile) -->
+                <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:var(--spacing-4)">
+                    <button type="submit" class="btn btn-primary w-100" style="border-radius:12px;padding:14px">
+                        <i class="fas fa-<?php echo $isEdit ? 'save' : 'paper-plane'; ?> me-2"></i>
+                        <?php echo $isEdit ? 'Update Poll' : 'Create Poll'; ?>
+                    </button>
+                    <a href="<?php echo BASE_URL; ?>polls/manage.php" class="btn btn-secondary w-100" style="border-radius:12px;padding:14px">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+
+            </div><!-- /mobile-only -->
+
         </div><!-- /left -->
 
         <!-- ===== RIGHT: SIDEBAR ===== -->
@@ -521,47 +577,10 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 <div class="ios-menu-modal" id="iosMenuModal">
     <div class="ios-menu-handle"></div>
     <div class="ios-menu-header">
-        <h5 class="ios-menu-title">Poll Settings</h5>
+        <h5 class="ios-menu-title"><?php echo $isEdit ? 'Edit Poll' : 'New Poll'; ?></h5>
         <button class="ios-menu-close" onclick="closeIosMenu()"><i class="fas fa-times"></i></button>
     </div>
     <div class="ios-menu-content">
-
-        <!-- Settings (mobile) -->
-        <div class="ios-menu-section">
-            <p class="ios-menu-section-title">Settings</p>
-            <div class="ios-sheet-settings">
-                <div class="ios-sheet-field">
-                    <label>Voting Deadline *</label>
-                    <input type="datetime-local" id="deadlineMobile" class="form-control" style="border-radius:8px;font-size:14px">
-                </div>
-                <div class="ios-sheet-field" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-                    <div>
-                        <div style="font-size:14px;font-weight:500;color:var(--text-primary)">Allow vote changes</div>
-                        <div style="font-size:12px;color:var(--text-secondary)">Members can change their vote</div>
-                    </div>
-                    <label class="ios-toggle">
-                        <input type="checkbox" id="allowChangeMobile">
-                        <span class="ios-toggle-track">
-                            <span class="ios-toggle-thumb"></span>
-                        </span>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Submit shortcut -->
-        <div class="ios-menu-section">
-            <p class="ios-menu-section-title">Actions</p>
-            <div class="ios-menu-card">
-                <button type="button" class="ios-menu-item" onclick="closeIosMenu();document.getElementById('pollForm').requestSubmit()">
-                    <div class="ios-menu-item-left">
-                        <div class="ios-menu-item-icon green"><i class="fas fa-check"></i></div>
-                        <div class="ios-menu-item-label"><?php echo $isEdit ? 'Update Poll' : 'Create Poll'; ?></div>
-                    </div>
-                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
-                </button>
-            </div>
-        </div>
 
         <!-- Navigation -->
         <div class="ios-menu-section">
