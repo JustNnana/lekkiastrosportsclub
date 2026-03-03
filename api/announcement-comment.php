@@ -84,22 +84,25 @@ $userRow = $db->fetchOne(
 );
 $authorName  = $userRow['author_name'] ?: ($userRow['author_email'] ?? 'Member');
 $initial     = strtoupper(substr($authorName, 0, 1));
-$canDelete   = true; // always can delete own comment
 
 $now         = date('d M Y, g:i A');
 $safeContent = nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
 $commentId   = $newId;
+$colors      = ['#0A84FF','#30D158','#FF9F0A','#BF5AF2','#FF453A'];
+$color       = $colors[ord($initial) % count($colors)];
+$safeName    = htmlspecialchars($authorName, ENT_QUOTES);
+$safeInitial = htmlspecialchars($initial, ENT_QUOTES);
 
-$html  = "<div class=\"comment-item\" id=\"comment-{$commentId}\">";
-$html .= "<div class=\"comment-avatar\">" . htmlspecialchars($initial, ENT_QUOTES) . "</div>";
-$html .= "<div class=\"comment-body\">";
-$html .= "<div class=\"comment-meta\"><strong>" . htmlspecialchars($authorName, ENT_QUOTES) . "</strong> · {$now}</div>";
-$html .= "<div class=\"comment-text\">{$safeContent}</div>";
-$html .= "<div class=\"comment-actions\">";
+$html  = "<div class=\"ios-comment-item\" id=\"comment-{$commentId}\">";
+$html .= "<div class=\"ios-comment-item-avatar\" style=\"background:{$color};color:#fff\">{$safeInitial}</div>";
+$html .= "<div class=\"ios-comment-body\">";
+$html .= "<div class=\"ios-comment-meta\"><strong>{$safeName}</strong> {$now}</div>";
+$html .= "<div class=\"ios-comment-text\">{$safeContent}</div>";
+$html .= "<div class=\"ios-comment-actions\">";
 if (!$parentId) {
     $html .= "<a class=\"reply-link\" data-id=\"{$commentId}\">↩ Reply</a>";
 }
-$html .= "<a onclick=\"deleteComment({$commentId})\" class=\"text-danger\">Delete</a>";
+$html .= "<a class=\"del-link\" onclick=\"deleteComment({$commentId})\">Delete</a>";
 $html .= "</div></div></div>";
 
 echo json_encode(['success' => true, 'html' => $html, 'id' => $newId]);
