@@ -216,8 +216,8 @@ window.showFlashNotification = function (message, type, duration) {
         e.preventDefault();
         deferred = e;
         if (sidebarBtn) sidebarBtn.style.display = 'flex';
-        var dismissed = localStorage.getItem('pwa-dismissed');
-        if (!dismissed || (Date.now() - parseInt(dismissed)) > 7 * 86400000) {
+        var dismissed = sessionStorage.getItem('pwa-dismissed');
+        if (!dismissed) {
             setTimeout(function () { if (banner) banner.style.display = 'block'; }, 6000);
         }
     });
