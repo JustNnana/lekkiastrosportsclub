@@ -255,17 +255,27 @@ class Payment
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TIMEOUT        => 30,
         ]);
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $response  = curl_exec($ch);
+        $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
         curl_close($ch);
 
-        if (!$response || $httpCode !== 200) {
-            return ['error' => 'Could not reach Paystack. Please try again.'];
+        if ($curlError || !$response) {
+            error_log('[Paystack] cURL error: ' . $curlError);
+            return ['error' => 'Could not reach Paystack. Check your internet connection or try again shortly.'];
         }
 
         $data = json_decode($response, true);
-        if (!($data['status'] ?? false)) {
-            return ['error' => $data['message'] ?? 'Paystack initialization failed.'];
+
+        if ($httpCode === 401) {
+            error_log('[Paystack] 401 Unauthorized — check PAYSTACK_SECRET_KEY');
+            return ['error' => 'Payment gateway authentication failed. Please contact an administrator.'];
+        }
+
+        if ($httpCode !== 200 || !($data['status'] ?? false)) {
+            $msg = $data['message'] ?? "Paystack returned HTTP {$httpCode}.";
+            error_log('[Paystack] Init failed: ' . $msg . ' | Response: ' . $response);
+            return ['error' => 'Payment error: ' . $msg];
         }
 
         return [
