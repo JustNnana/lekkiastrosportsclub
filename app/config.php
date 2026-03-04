@@ -30,7 +30,8 @@ define('DB_CHARSET',  'utf8mb4');
 
 // ===== MAIL CONFIG =====
 define('MAIL_HOST',       $_ENV['MAIL_HOST']       ?? 'smtp.gmail.com');
-define('MAIL_PORT',       $_ENV['MAIL_PORT']        ?? 587);
+define('MAIL_PORT',       (int)($_ENV['MAIL_PORT'] ?? 587));
+define('MAIL_ENCRYPTION', $_ENV['MAIL_ENCRYPTION'] ?? 'tls');
 define('MAIL_USERNAME',   $_ENV['MAIL_USERNAME']    ?? '');
 define('MAIL_PASSWORD',   $_ENV['MAIL_PASSWORD']    ?? '');
 define('MAIL_FROM_EMAIL', $_ENV['MAIL_FROM_EMAIL']  ?? 'noreply@lekkiastro.com');
