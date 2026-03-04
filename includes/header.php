@@ -198,7 +198,7 @@ try {
                 <a class="desktop-dropdown-item" href="<?php echo BASE_URL; ?>profile/">
                     <i class="fas fa-user"></i> My Profile
                 </a>
-                <a class="desktop-dropdown-item" href="<?php echo BASE_URL; ?>profile/settings.php">
+                <a class="desktop-dropdown-item" href="<?php echo BASE_URL; ?>admin/settings.php">
                     <i class="fas fa-cog"></i> Settings
                 </a>
                 <?php if (isAdmin()): ?>
@@ -305,7 +305,7 @@ if (strpos($_requestUri, '/profile/') !== false) {
                     <span class="ios-menu-item-label">My Profile</span>
                     <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
                 </a>
-                <a href="<?php echo BASE_URL; ?>profile/edit.php" class="ios-menu-item">
+                <a href="<?php echo BASE_URL; ?>admin/settings.php" class="ios-menu-item">
                     <div class="ios-menu-item-icon orange"><i class="fas fa-cog"></i></div>
                     <span class="ios-menu-item-label">Settings</span>
                     <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
@@ -318,7 +318,7 @@ if (strpos($_requestUri, '/profile/') !== false) {
         <div class="ios-menu-section">
             <div class="ios-menu-section-title">Administration</div>
             <div class="ios-menu-card">
-                <a href="<?php echo BASE_URL; ?>admin/" class="ios-menu-item">
+                <a href="<?php echo BASE_URL; ?>admin/admins.php" class="ios-menu-item">
                     <div class="ios-menu-item-icon primary"><i class="fas fa-shield-alt"></i></div>
                     <span class="ios-menu-item-label">Admin Panel</span>
                     <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
