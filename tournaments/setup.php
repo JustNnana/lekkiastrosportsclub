@@ -53,8 +53,6 @@ include dirname(__DIR__) . '/includes/sidebar.php';
     display: grid;
     grid-template-columns: 1fr 290px;
     gap: var(--spacing-5);
-    max-width: 1100px;
-    margin: 0 auto;
 }
 @media (max-width: 992px) { .ios-view-layout { grid-template-columns: 1fr; } }
 
