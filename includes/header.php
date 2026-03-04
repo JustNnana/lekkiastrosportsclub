@@ -198,12 +198,12 @@ try {
                 <a class="desktop-dropdown-item" href="<?php echo BASE_URL; ?>profile/">
                     <i class="fas fa-user"></i> My Profile
                 </a>
-                <a class="desktop-dropdown-item" href="<?php echo BASE_URL; ?>profile/edit.php">
+                <a class="desktop-dropdown-item" href="<?php echo BASE_URL; ?>profile/settings.php">
                     <i class="fas fa-cog"></i> Settings
                 </a>
                 <?php if (isAdmin()): ?>
                 <div class="desktop-dropdown-divider"></div>
-                <a class="desktop-dropdown-item" href="<?php echo BASE_URL; ?>admin/">
+                <a class="desktop-dropdown-item" href="<?php echo BASE_URL; ?>admin/admins.php">
                     <i class="fas fa-shield-alt"></i> Admin Panel
                 </a>
                 <?php endif; ?>
@@ -308,11 +308,6 @@ if (strpos($_requestUri, '/profile/') !== false) {
                 <a href="<?php echo BASE_URL; ?>profile/edit.php" class="ios-menu-item">
                     <div class="ios-menu-item-icon orange"><i class="fas fa-cog"></i></div>
                     <span class="ios-menu-item-label">Settings</span>
-                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
-                </a>
-                <a href="<?php echo BASE_URL; ?>profile/notifications.php" class="ios-menu-item">
-                    <div class="ios-menu-item-icon green"><i class="fas fa-bell"></i></div>
-                    <span class="ios-menu-item-label">Notification Settings</span>
                     <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
                 </a>
             </div>
