@@ -238,4 +238,28 @@ class PushService
         // Push notification (best-effort)
         $this->sendToUser($userId, $title, $body, $url);
     }
+
+    /**
+     * Broadcast an in-app notification to ALL active users + push to all subscribers.
+     * Returns the number of successful push deliveries.
+     */
+    public function notifyAll(string $type, string $title, string $body, string $url = ''): int
+    {
+        // In-app: insert for every active user
+        $users = $this->db->fetchAll("SELECT id FROM users WHERE status = 'active'");
+        foreach ($users as $user) {
+            try {
+                $this->db->insert(
+                    "INSERT INTO notifications (user_id, type, title, message, link, created_at)
+                     VALUES (?, ?, ?, ?, ?, NOW())",
+                    [$user['id'], $type, $title, $body, $url ?: null]
+                );
+            } catch (Throwable $e) {
+                error_log('[PushService] notifyAll in-app error user_id=' . $user['id'] . ': ' . $e->getMessage());
+            }
+        }
+
+        // Push: send to all subscribed devices
+        return $this->sendToAll($title, $body, $url);
+    }
 }

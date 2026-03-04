@@ -60,6 +60,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $fixtureId = $tourObj->createFixture($data);
                 flashSuccess('Fixture added.');
+
+                // Notify all members (push + in-app + email)
+                try {
+                    require_once dirname(__DIR__) . '/classes/PushService.php';
+                    require_once dirname(__DIR__) . '/app/mail/emails.php';
+
+                    // Resolve team names from already-loaded $allTeams
+                    $teamMap  = array_column($allTeams, 'name', 'id');
+                    $homeName = $teamMap[$data['home_team_id']] ?? 'Home';
+                    $awayName = $teamMap[$data['away_team_id']] ?? 'Away';
+                    $dateStr  = $data['match_date'] ? date('d M Y, g:i A', strtotime($data['match_date'])) : 'TBC';
+                    $matchTitle = "{$homeName} vs {$awayName}";
+                    $pushBody   = "New fixture in {$tour['name']}: {$matchTitle} — {$dateStr}.";
+                    $notifUrl   = BASE_URL . "tournaments/view.php?id={$tourId}";
+                    $push = new PushService();
+                    $push->notifyAll('fixture', 'New Fixture: ' . $matchTitle, $pushBody, $notifUrl);
+
+                    $db      = Database::getInstance();
+                    $members = $db->fetchAll("SELECT full_name, email FROM users WHERE status = 'active' AND role = 'user'");
+                    $emailMsg = "<p>A new fixture has been scheduled:</p>
+                        <table style='background:#f4f6f8;border-radius:8px;padding:20px;width:100%;margin:16px 0;border-collapse:collapse;'>
+                            <tr><td style='padding:8px 0;color:#637381;width:120px;'>Tournament</td>
+                                <td style='padding:8px 0;font-weight:700;color:#1c252e;'>" . htmlspecialchars($tour['name']) . "</td></tr>
+                            <tr><td style='padding:8px 0;color:#637381;'>Match</td>
+                                <td style='padding:8px 0;font-weight:700;color:#1c252e;'>{$matchTitle}</td></tr>
+                            <tr><td style='padding:8px 0;color:#637381;'>Date</td>
+                                <td style='padding:8px 0;font-weight:700;color:#1c252e;'>{$dateStr}</td></tr>"
+                        . ($data['location'] ? "<tr><td style='padding:8px 0;color:#637381;'>Location</td>
+                                <td style='padding:8px 0;color:#1c252e;'>" . htmlspecialchars($data['location']) . "</td></tr>" : '')
+                        . "</table>";
+                    foreach ($members as $m) {
+                        sendNotificationEmail($m['email'], $m['full_name'], 'New Fixture: ' . $matchTitle, 'New Fixture Scheduled', $emailMsg, $notifUrl, 'View Tournament');
+                    }
+                } catch (Throwable $e) {
+                    error_log('Fixture notification failed: ' . $e->getMessage());
+                }
             }
             redirect('tournaments/view.php?id=' . $tourId);
         }

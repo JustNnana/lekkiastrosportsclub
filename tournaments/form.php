@@ -49,6 +49,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $newId = $tourObj->create($data);
             flashSuccess('Tournament created. Now set up your groups and teams.');
+
+            // Notify all members (push + in-app + email)
+            try {
+                require_once dirname(__DIR__) . '/classes/PushService.php';
+                require_once dirname(__DIR__) . '/app/mail/emails.php';
+                $dateStr  = $start_date ? date('d M Y', strtotime($start_date)) : 'TBC';
+                $pushBody = "A new tournament has been created: {$name}. Starting: {$dateStr}.";
+                $notifUrl = BASE_URL . "tournaments/view.php?id={$newId}";
+                $push = new PushService();
+                $push->notifyAll('tournament', 'New Tournament: ' . $name, $pushBody, $notifUrl);
+
+                $db      = Database::getInstance();
+                $members = $db->fetchAll("SELECT full_name, email FROM users WHERE status = 'active' AND role = 'user'");
+                $emailMsg = "<p>A new tournament has been created. Get ready to compete!</p>
+                    <table style='background:#f4f6f8;border-radius:8px;padding:20px;width:100%;margin:16px 0;border-collapse:collapse;'>
+                        <tr><td style='padding:8px 0;color:#637381;width:120px;'>Tournament</td>
+                            <td style='padding:8px 0;font-weight:700;color:#1c252e;'>" . htmlspecialchars($name) . "</td></tr>
+                        <tr><td style='padding:8px 0;color:#637381;'>Start Date</td>
+                            <td style='padding:8px 0;font-weight:700;color:#1c252e;'>{$dateStr}</td></tr>"
+                    . ($description ? "<tr><td style='padding:8px 0;color:#637381;'>Details</td>
+                            <td style='padding:8px 0;color:#1c252e;'>" . htmlspecialchars($description) . "</td></tr>" : '')
+                    . "</table>";
+                foreach ($members as $m) {
+                    sendNotificationEmail($m['email'], $m['full_name'], 'New Tournament: ' . $name, 'New Tournament', $emailMsg, $notifUrl, 'View Tournament');
+                }
+            } catch (Throwable $e) {
+                error_log('Tournament notification failed: ' . $e->getMessage());
+            }
+
             redirect('tournaments/setup.php?id=' . $newId);
         }
     }

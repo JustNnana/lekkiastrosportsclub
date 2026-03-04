@@ -57,6 +57,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $newId = $eventObj->create($data);
             flashSuccess('Event created.');
+
+            // Notify all members (push + in-app + email)
+            try {
+                require_once dirname(__DIR__) . '/classes/PushService.php';
+                require_once dirname(__DIR__) . '/app/mail/emails.php';
+                $dateStr  = date('d M Y', strtotime($start_date));
+                $pushBody = "A new event has been scheduled: {$title} on {$dateStr}" . ($location ? " at {$location}" : '') . '.';
+                $notifUrl = BASE_URL . "events/view.php?id={$newId}";
+                $push = new PushService();
+                $push->notifyAll('event', 'New Event: ' . $title, $pushBody, $notifUrl);
+
+                $db      = Database::getInstance();
+                $members = $db->fetchAll("SELECT full_name, email FROM users WHERE status = 'active' AND role = 'user'");
+                $emailMsg = "<p>A new club event has been scheduled:</p>
+                    <table style='background:#f4f6f8;border-radius:8px;padding:20px;width:100%;margin:16px 0;border-collapse:collapse;'>
+                        <tr><td style='padding:8px 0;color:#637381;width:120px;'>Event</td>
+                            <td style='padding:8px 0;font-weight:700;color:#1c252e;'>" . htmlspecialchars($title) . "</td></tr>
+                        <tr><td style='padding:8px 0;color:#637381;'>Date</td>
+                            <td style='padding:8px 0;font-weight:700;color:#1c252e;'>{$dateStr}</td></tr>"
+                    . ($location ? "<tr><td style='padding:8px 0;color:#637381;'>Location</td>
+                            <td style='padding:8px 0;font-weight:700;color:#1c252e;'>" . htmlspecialchars($location) . "</td></tr>" : '')
+                    . "</table>";
+                foreach ($members as $m) {
+                    sendNotificationEmail($m['email'], $m['full_name'], 'New Event: ' . $title, 'New Event Scheduled', $emailMsg, $notifUrl, 'View Event');
+                }
+            } catch (Throwable $e) {
+                error_log('Event notification failed: ' . $e->getMessage());
+            }
+
             redirect("events/view.php?id=$newId");
         }
     }

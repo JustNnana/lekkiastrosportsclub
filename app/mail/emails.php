@@ -91,3 +91,45 @@ function sendPaymentReminderEmail(string $email, string $name, string $dueTitle,
     $mailer = new Mailer();
     return $mailer->send($email, $name, 'Payment Reminder — ' . SITE_NAME, $body);
 }
+
+/**
+ * Send a general notification email to one recipient.
+ * Used for broadcasting new dues, events, polls, announcements, fixtures, etc.
+ *
+ * @param string $email      Recipient email
+ * @param string $name       Recipient name
+ * @param string $subject    Email subject line
+ * @param string $heading    Bold heading inside the email
+ * @param string $message    Main body text (HTML allowed)
+ * @param string $url        CTA button URL (optional)
+ * @param string $urlLabel   CTA button label (default: "View")
+ */
+function sendNotificationEmail(
+    string $email,
+    string $name,
+    string $subject,
+    string $heading,
+    string $message,
+    string $url = '',
+    string $urlLabel = 'View'
+): bool {
+    require_once __DIR__ . '/Mailer.php';
+
+    $ctaBlock = $url ? "
+        <p style='text-align:center;margin:32px 0;'>
+            <a href='{$url}' style='display:inline-block;background:#00a76f;color:#fff;padding:14px 36px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;'>
+                {$urlLabel} →
+            </a>
+        </p>" : '';
+
+    $body = "
+        <h2 style='color:#1c252e;margin-top:0'>" . htmlspecialchars($heading) . "</h2>
+        <p>Dear <strong>" . htmlspecialchars($name) . "</strong>,</p>
+        {$message}
+        {$ctaBlock}
+        <p style='color:#637381;font-size:13px;'>This is an automated notification from " . SITE_NAME . ". Please do not reply to this email.</p>
+    ";
+
+    $mailer = new Mailer();
+    return $mailer->send($email, $name, $subject . ' — ' . SITE_NAME, $body);
+}

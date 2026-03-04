@@ -93,6 +93,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $newId = $annObj->create($data);
             flashSuccess('Announcement created.');
+
+            // Only notify when publishing immediately (not draft or scheduled)
+            if ($is_published) {
+                try {
+                    require_once dirname(__DIR__) . '/classes/PushService.php';
+                    require_once dirname(__DIR__) . '/app/mail/emails.php';
+                    $pushBody = strlen($content) > 120 ? substr(strip_tags($content), 0, 120) . '…' : strip_tags($content);
+                    $notifUrl = BASE_URL . "announcements/view.php?id={$newId}";
+                    $push = new PushService();
+                    $push->notifyAll('announcement', $title, $pushBody, $notifUrl);
+
+                    $db      = Database::getInstance();
+                    $members = $db->fetchAll("SELECT full_name, email FROM users WHERE status = 'active' AND role = 'user'");
+                    $preview = nl2br(htmlspecialchars(substr(strip_tags($content), 0, 300)));
+                    $emailMsg = "<p>" . htmlspecialchars($title) . "</p>
+                        <blockquote style='border-left:4px solid #00a76f;margin:16px 0;padding:12px 20px;background:#f4f6f8;border-radius:0 8px 8px 0;color:#1c252e;'>
+                            {$preview}" . (strlen(strip_tags($content)) > 300 ? '…' : '') . "
+                        </blockquote>";
+                    foreach ($members as $m) {
+                        sendNotificationEmail($m['email'], $m['full_name'], 'New Announcement: ' . $title, 'New Announcement', $emailMsg, $notifUrl, 'Read More');
+                    }
+                } catch (Throwable $e) {
+                    error_log('Announcement notification failed: ' . $e->getMessage());
+                }
+            }
+
             redirect('announcements/view.php?id=' . $newId);
         }
         redirect('announcements/manage.php');

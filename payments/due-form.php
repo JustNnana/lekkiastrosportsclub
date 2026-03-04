@@ -63,6 +63,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $count  = $payObj->assignToAll($newId, $data['amount'], $data['due_date']);
                 if ($count > 0) flashInfo("Auto-assigned to {$count} active member(s).");
             }
+
+            // Notify all members (push + in-app + email)
+            try {
+                require_once dirname(__DIR__) . '/classes/PushService.php';
+                require_once dirname(__DIR__) . '/app/mail/emails.php';
+                $dueDateStr = $data['due_date'] ? date('d M Y', strtotime($data['due_date'])) : 'TBC';
+                $pushBody   = "A new payment due of ₦" . number_format($data['amount']) . " has been added. Due: {$dueDateStr}.";
+                $notifUrl   = BASE_URL . 'payments/';
+                $push = new PushService();
+                $push->notifyAll('due', 'New Due: ' . $data['title'], $pushBody, $notifUrl);
+
+                $db      = Database::getInstance();
+                $members = $db->fetchAll("SELECT full_name, email FROM users WHERE status = 'active' AND role = 'user'");
+                $emailMsg = "<p>A new payment due has been added:</p>
+                    <table style='background:#f4f6f8;border-radius:8px;padding:20px;width:100%;margin:16px 0;border-collapse:collapse;'>
+                        <tr><td style='padding:8px 0;color:#637381;width:120px;'>Due</td>
+                            <td style='padding:8px 0;font-weight:700;color:#1c252e;'>" . htmlspecialchars($data['title']) . "</td></tr>
+                        <tr><td style='padding:8px 0;color:#637381;'>Amount</td>
+                            <td style='padding:8px 0;font-weight:700;color:#00a76f;'>₦" . number_format($data['amount']) . "</td></tr>
+                        <tr><td style='padding:8px 0;color:#637381;'>Due Date</td>
+                            <td style='padding:8px 0;font-weight:700;color:#ff5630;'>{$dueDateStr}</td></tr>
+                    </table>";
+                foreach ($members as $m) {
+                    sendNotificationEmail($m['email'], $m['full_name'], 'New Payment Due', 'New Payment Due', $emailMsg, $notifUrl, 'View Payments');
+                }
+            } catch (Throwable $e) {
+                error_log('Due notification failed: ' . $e->getMessage());
+            }
+
             redirect('payments/dues.php');
         }
     }

@@ -64,6 +64,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $newId = $pollObj->create($data, array_values($options));
             flashSuccess('Poll created and is now active.');
+
+            // Notify all members (push + in-app + email)
+            try {
+                require_once dirname(__DIR__) . '/classes/PushService.php';
+                require_once dirname(__DIR__) . '/app/mail/emails.php';
+                $deadlineStr = date('d M Y', strtotime($deadline));
+                $pushBody    = "A new poll is open for your vote. Deadline: {$deadlineStr}.";
+                $notifUrl    = BASE_URL . "polls/view.php?id={$newId}";
+                $push = new PushService();
+                $push->notifyAll('poll', 'New Poll: ' . $question, $pushBody, $notifUrl);
+
+                $db      = Database::getInstance();
+                $members = $db->fetchAll("SELECT full_name, email FROM users WHERE status = 'active' AND role = 'user'");
+                $emailMsg = "<p>A new poll has been posted and your vote is needed:</p>
+                    <table style='background:#f4f6f8;border-radius:8px;padding:20px;width:100%;margin:16px 0;border-collapse:collapse;'>
+                        <tr><td style='padding:8px 0;color:#637381;width:120px;'>Question</td>
+                            <td style='padding:8px 0;font-weight:700;color:#1c252e;'>" . htmlspecialchars($question) . "</td></tr>
+                        <tr><td style='padding:8px 0;color:#637381;'>Deadline</td>
+                            <td style='padding:8px 0;font-weight:700;color:#ff5630;'>{$deadlineStr}</td></tr>
+                    </table>";
+                foreach ($members as $m) {
+                    sendNotificationEmail($m['email'], $m['full_name'], 'New Poll — Your Vote Needed', 'New Poll', $emailMsg, $notifUrl, 'Vote Now');
+                }
+            } catch (Throwable $e) {
+                error_log('Poll notification failed: ' . $e->getMessage());
+            }
+
             redirect("polls/view.php?id=$newId");
         }
     }
