@@ -6,7 +6,7 @@
  *   0 2 * * * php /var/www/html/lekkiastrosportsclub/cron/overdue.php >> /var/log/lasc-cron.log 2>&1
  *
  * This script:
- *   1. Marks `pending` member_dues as `overdue` where the due date has passed.
+ *   1. Marks `pending` payments as `overdue` where the due date has passed.
  *   2. Sends a notification to each affected member.
  *   3. Logs a summary to stdout (captured by cron).
  *
@@ -30,7 +30,7 @@ $today = date('Y-m-d');
 echo "[" . date('Y-m-d H:i:s') . "] LASC Overdue Cron Started\n";
 
 // ─── 1. MARK OVERDUE ─────────────────────────────────────────────────────────
-$overdueSql = "UPDATE member_dues
+$overdueSql = "UPDATE payments
                SET status = 'overdue', updated_at = NOW()
                WHERE status = 'pending'
                  AND due_date IS NOT NULL
@@ -48,10 +48,10 @@ try {
 if ($marked > 0) {
     // Fetch members with newly overdue dues (updated in the last minute to catch this run)
     $affected = $db->fetchAll(
-        "SELECT md.id AS member_due_id, md.member_id, md.due_id,
-                m.user_id, d.name AS due_name, d.amount,
+        "SELECT md.id AS payment_id, md.member_id, md.due_id,
+                m.user_id, d.title AS due_name, d.amount,
                 md.due_date
-         FROM member_dues md
+         FROM payments md
          JOIN members m ON m.id = md.member_id
          JOIN dues d ON d.id = md.due_id
          WHERE md.status = 'overdue'
@@ -82,8 +82,8 @@ if ($marked > 0) {
 
 // ─── 3. OPTIONAL: SEND UPCOMING DUE REMINDERS (7 days before) ────────────────
 $upcoming = $db->fetchAll(
-    "SELECT md.id, md.member_id, m.user_id, d.name AS due_name, d.amount, md.due_date
-     FROM member_dues md
+    "SELECT md.id, md.member_id, m.user_id, d.title AS due_name, d.amount, md.due_date
+     FROM payments md
      JOIN members m ON m.id = md.member_id
      JOIN dues d ON d.id = md.due_id
      WHERE md.status = 'pending'

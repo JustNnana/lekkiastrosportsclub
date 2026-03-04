@@ -404,6 +404,50 @@ include dirname(__DIR__) . '/includes/sidebar.php';
 .ios-menu-item-label { font-size: 14px; font-weight: 500; }
 .ios-menu-item-chevron { color: var(--text-secondary); font-size: 11px; }
 
+/* ── iOS Toggle Switch ──────────────── */
+.ios-switch { position: relative; display: inline-block; width: 51px; height: 31px; }
+.ios-switch input { opacity: 0; width: 0; height: 0; }
+.ios-switch-track {
+    position: absolute; inset: 0;
+    background: var(--border-color); border-radius: 31px;
+    cursor: pointer; transition: background .3s;
+}
+.ios-switch input:checked + .ios-switch-track { background: var(--ios-green); }
+.ios-switch-track::before {
+    content: ''; position: absolute;
+    width: 27px; height: 27px; border-radius: 50%;
+    background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.22);
+    left: 2px; top: 2px;
+    transition: transform .3s cubic-bezier(.35,.82,.29,.97);
+}
+.ios-switch input:checked + .ios-switch-track::before { transform: translateX(20px); }
+.ios-switch input:disabled + .ios-switch-track { opacity: .5; cursor: not-allowed; }
+
+/* ── Notification settings rows ─────── */
+.ios-notif-list { background: var(--bg-secondary); border-radius: 14px; overflow: hidden; margin-bottom: 16px; }
+.ios-notif-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; border-bottom: 1px solid var(--border-color);
+}
+.ios-notif-row:last-child { border-bottom: none; }
+.ios-notif-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.ios-notif-icon {
+    width: 36px; height: 36px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+}
+.ios-notif-icon.green  { background: rgba(48,209,88,.15);  color: var(--ios-green); }
+.ios-notif-icon.blue   { background: rgba(10,132,255,.15); color: var(--ios-blue); }
+.ios-notif-text-title  { font-size: 15px; font-weight: 500; color: var(--text-primary); margin: 0; line-height: 1.3; }
+.ios-notif-text-sub    { font-size: 12px; color: var(--text-muted); margin: 2px 0 0; }
+
+/* ── Status indicator ───────────────── */
+#notification-status {
+    padding: 11px 14px; border-radius: 12px;
+    font-size: 13px; margin-bottom: 14px;
+    line-height: 1.4;
+}
+
 /* ── Responsive ─────────────────────── */
 @media (max-width: 1100px) {
     .ios-grid { grid-template-columns: 300px 1fr; }
@@ -601,6 +645,9 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                         <i class="fas fa-receipt me-1"></i>Payments
                     </button>
                     <?php endif; ?>
+                    <button class="ios-tab-btn" data-tab="notifications">
+                        <i class="fas fa-bell me-1"></i>Notifications
+                    </button>
                 </div>
 
                 <!-- ── Tab: Profile Info ── -->
@@ -787,6 +834,45 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                 </div>
                 <?php endif; ?>
 
+                <!-- ── Tab: Notifications ── -->
+                <div class="ios-tab-content" id="notifications">
+
+                    <!-- Status indicator -->
+                    <div id="notification-status" style="display:none"></div>
+
+                    <!-- Push notifications toggle row -->
+                    <div class="ios-notif-list">
+                        <div class="ios-notif-row">
+                            <div class="ios-notif-left">
+                                <div class="ios-notif-icon green">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <div>
+                                    <p class="ios-notif-text-title">Push Notifications</p>
+                                    <p class="ios-notif-text-sub">Dues, events &amp; announcements on this device</p>
+                                </div>
+                            </div>
+                            <label class="ios-switch" style="flex-shrink:0;margin-left:14px" aria-label="Toggle push notifications">
+                                <input type="checkbox" id="push-notification-toggle"
+                                       data-user-id="<?php echo $userId; ?>">
+                                <span class="ios-switch-track"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Test button -->
+                    <button id="test-push-notification" class="ios-btn primary full" disabled>
+                        <i class="fas fa-paper-plane"></i> Send Test Notification
+                    </button>
+
+                    <!-- Info note -->
+                    <div style="margin-top:14px;padding:12px 14px;background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.12);border-radius:12px;font-size:12px;color:var(--text-secondary);line-height:1.6">
+                        <i class="fas fa-info-circle me-1" style="color:var(--ios-blue)"></i>
+                        Requires browser permission and HTTPS. You can revoke access anytime via your browser settings.
+                    </div>
+
+                </div>
+
             </div><!-- /ios-section-body -->
         </div><!-- /settings card -->
 
@@ -856,6 +942,13 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                     </div>
                     <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
                 </a>
+                <div class="ios-menu-item" onclick="switchTab('notifications')">
+                    <div class="ios-menu-item-left">
+                        <div class="ios-menu-item-icon green"><i class="fas fa-bell"></i></div>
+                        <span class="ios-menu-item-label">Notification Settings</span>
+                    </div>
+                    <i class="fas fa-chevron-right ios-menu-item-chevron"></i>
+                </div>
                 <a href="<?php echo BASE_URL; ?>logout.php" class="ios-menu-item">
                     <div class="ios-menu-item-left">
                         <div class="ios-menu-item-icon red"><i class="fas fa-sign-out-alt"></i></div>
@@ -918,6 +1011,59 @@ function switchTab(id) {
         setTimeout(function () { btn.click(); }, 280);
     }
 }
+
+// ── Test push notification button ────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+    var testBtn = document.getElementById('test-push-notification');
+    if (!testBtn) return;
+
+    testBtn.addEventListener('click', async function () {
+        testBtn.disabled = true;
+        var status = document.getElementById('notification-status');
+        if (status) {
+            status.style.display = 'block';
+            status.style.background = 'var(--bg-secondary)';
+            status.style.color = 'var(--text-secondary)';
+            status.style.border = '1px solid var(--border-color)';
+            status.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending test notification…';
+        }
+
+        try {
+            var base = (window.LASC_BASE_URL || '/').replace(/\/?$/, '/');
+            var resp = await fetch(base + 'api/send-test-push.php', { method: 'POST' });
+            var data = await resp.json();
+
+            if (status) {
+                status.style.display = 'block';
+                if (data.success) {
+                    status.style.background = 'rgba(48,209,88,.08)';
+                    status.style.color = 'var(--ios-green)';
+                    status.style.border = '1px solid rgba(48,209,88,.2)';
+                    status.innerHTML = '<i class="fas fa-check-circle me-2"></i>Test notification sent — check your device!';
+                } else {
+                    status.style.background = 'rgba(255,69,58,.08)';
+                    status.style.color = 'var(--ios-red)';
+                    status.style.border = '1px solid rgba(255,69,58,.2)';
+                    status.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + (data.message || 'Failed to send test notification.');
+                }
+                setTimeout(function () { status.style.display = 'none'; }, 6000);
+            }
+        } catch (err) {
+            if (status) {
+                status.style.display = 'block';
+                status.style.background = 'rgba(255,69,58,.08)';
+                status.style.color = 'var(--ios-red)';
+                status.style.border = '1px solid rgba(255,69,58,.2)';
+                status.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>Error: ' + err.message;
+            }
+        }
+
+        // Re-enable only if still subscribed
+        if (typeof pushNotifications !== 'undefined') {
+            testBtn.disabled = !pushNotifications.isSubscribed;
+        }
+    });
+});
 </script>
 
 <?php include dirname(__DIR__) . '/includes/footer.php'; ?>
