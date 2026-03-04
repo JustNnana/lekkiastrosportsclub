@@ -179,11 +179,15 @@ include dirname(__DIR__) . '/includes/sidebar.php';
                         </div>
                     </div>
 
-                    <div class="mt-4 text-end">
+                    <div class="mt-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <button type="button" class="btn btn-secondary" id="btn-test-paystack">
+                            <i class="fas fa-plug me-1"></i> Test Connection
+                        </button>
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-1"></i> Save Keys
                         </button>
                     </div>
+                    <div id="paystack-test-result" class="mt-3" style="display:none"></div>
                 </form>
             </div>
         </div>
@@ -287,6 +291,36 @@ document.getElementById('sk-toggle').addEventListener('click', function () {
         inp.type = 'password';
         ico.className = 'fas fa-eye';
     }
+});
+
+document.getElementById('btn-test-paystack').addEventListener('click', function () {
+    var btn = this;
+    var result = document.getElementById('paystack-test-result');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Testing…';
+    result.style.display = 'none';
+
+    fetch('<?php echo BASE_URL; ?>api/test-paystack.php', { method: 'POST' })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+            result.style.display = 'block';
+            if (d.success) {
+                result.className = 'alert alert-success mt-3';
+                result.innerHTML = '<i class="fas fa-check-circle me-2"></i><strong>Connected!</strong> ' + d.message;
+            } else {
+                result.className = 'alert alert-danger mt-3';
+                result.innerHTML = '<i class="fas fa-times-circle me-2"></i><strong>Failed:</strong> ' + d.message;
+            }
+        })
+        .catch(function (e) {
+            result.style.display = 'block';
+            result.className = 'alert alert-danger mt-3';
+            result.innerHTML = '<i class="fas fa-times-circle me-2"></i>Could not reach test endpoint: ' + e.message;
+        })
+        .finally(function () {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-plug me-1"></i> Test Connection';
+        });
 });
 </script>
 
