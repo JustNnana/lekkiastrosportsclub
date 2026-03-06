@@ -43,8 +43,10 @@
 /* Navbar logo image — light/dark variants */
 .logo-light,
 .logo-dark {
-    width: 120px;
-    height: auto;
+    height: 48px;
+    width: auto;
+    max-width: 200px;
+    object-fit: contain;
     transition: var(--transition-normal);
 }
 
@@ -80,15 +82,15 @@
 @media (max-width: 768px) {
     .sidebar-toggle-btn { display: flex; align-items: center; }
     .navbar { padding: 0 var(--spacing-4); }
-    .logo-light, .logo-dark { width: 100px; }
+    .logo-light, .logo-dark { height: 44px; }
 }
 
 @media (max-width: 576px) {
-    .logo-light, .logo-dark { width: 90px; }
+    .logo-light, .logo-dark { height: 40px; }
 }
 
 @media (max-width: 390px) {
-    .logo-light, .logo-dark { width: 70px; }
+    .logo-light, .logo-dark { height: 36px; }
 }
 
 /* Nav icon buttons */
